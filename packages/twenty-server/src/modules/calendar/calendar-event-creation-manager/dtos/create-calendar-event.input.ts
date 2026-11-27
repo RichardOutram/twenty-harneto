@@ -1,7 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
 
-import { CalendarEventRecurrenceInput } from 'src/modules/calendar/calendar-event-creation-manager/dtos/calendar-event-recurrence.input';
-
 @InputType()
 export class CreateCalendarEventInput {
   @Field(() => String)
@@ -37,7 +35,4 @@ export class CreateCalendarEventInput {
 
   @Field(() => Boolean, { nullable: true })
   addConferencing?: boolean;
-
-  @Field(() => CalendarEventRecurrenceInput, { nullable: true })
-  recurrence?: CalendarEventRecurrenceInput;
 }

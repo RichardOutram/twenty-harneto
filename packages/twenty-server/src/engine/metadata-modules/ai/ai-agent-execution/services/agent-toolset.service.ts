@@ -198,18 +198,10 @@ export class AgentToolsetService {
           directTools: await this.toolRegistry.getToolsByName(
             preloadedToolNames.filter(isToolAllowed),
             toolContext,
-            {
-              shouldAddChatReferences: true,
-              compactOutput: true,
-              spillLargeOutput: true,
-            },
+            { compactOutput: true, spillLargeOutput: true },
           ),
           metaTools: {
-            ...this.buildMetaTools({
-              toolContext,
-              isToolAllowed,
-              shouldAddChatReferences: true,
-            }),
+            ...this.buildMetaTools(toolContext, isToolAllowed),
             [LOAD_SKILL_TOOL_NAME]: createLoadSkillTool(
               (skillNames) =>
                 this.skillService.findFlatSkillsByNames(
@@ -246,11 +238,7 @@ export class AgentToolsetService {
 
         return {
           directTools: {},
-          metaTools: this.buildMetaTools({
-            toolContext,
-            isToolAllowed,
-            shouldAddChatReferences: false,
-          }),
+          metaTools: this.buildMetaTools(toolContext, isToolAllowed),
           toolCatalog,
           isToolAllowed,
         };
@@ -280,15 +268,10 @@ export class AgentToolsetService {
     }
   }
 
-  private buildMetaTools({
-    toolContext,
-    isToolAllowed,
-    shouldAddChatReferences,
-  }: {
-    toolContext: ToolContext;
-    isToolAllowed: (toolName: string) => boolean;
-    shouldAddChatReferences: boolean;
-  }): ToolSet {
+  private buildMetaTools(
+    toolContext: ToolContext,
+    isToolAllowed: (toolName: string) => boolean,
+  ): ToolSet {
     return {
       [LEARN_TOOLS_TOOL_NAME]: createLearnToolsTool(
         this.toolRegistry,
@@ -298,12 +281,7 @@ export class AgentToolsetService {
       [EXECUTE_TOOL_TOOL_NAME]: createExecuteToolTool(
         this.toolRegistry,
         toolContext,
-        {
-          isToolAllowed,
-          shouldAddChatReferences,
-          compactOutput: true,
-          spillLargeOutput: true,
-        },
+        { isToolAllowed, compactOutput: true, spillLargeOutput: true },
       ),
     };
   }

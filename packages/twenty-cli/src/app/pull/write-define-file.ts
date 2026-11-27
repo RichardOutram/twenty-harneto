@@ -23,6 +23,7 @@ import {
   ViewOpenRecordIn,
   ViewSortDirection,
   ViewType,
+  ViewVisibility,
   WidgetType,
 } from 'twenty-shared/types';
 import { SystemPermissionFlag } from 'twenty-shared/constants';
@@ -177,6 +178,7 @@ export const VIEW_FIELD_ENUM_BINDINGS: EnumBinding[] = [
 
 export const VIEW_ENUM_BINDINGS: EnumBinding[] = [
   { path: ['type'], symbol: 'ViewType', members: ViewType },
+  { path: ['visibility'], symbol: 'ViewVisibility', members: ViewVisibility },
   {
     path: ['openRecordIn'],
     symbol: 'ViewOpenRecordIn',

@@ -43,24 +43,23 @@ import { isPrivatableEntityVisibleToCaller } from 'src/engine/permissions/metada
 import { WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';
 import { ApplicationTargetGuard } from 'src/engine/guards/application-target.guard';
 import { AccessPolicyGuard } from 'src/engine/guards/access-policy.guard';
-import { type AccessPolicy } from 'src/engine/guards/types/access-policy.type';
-import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 
-const APPLICATION_READ_ACCESS_POLICY: AccessPolicy = {
-  authPrincipals: {
-    userSession: {
-      standard: true,
-      impersonated: true,
-      playground: true,
-      workspaceAgnostic: false,
+@UseGuards(
+  AccessPolicyGuard({
+    authPrincipals: {
+      userSession: {
+        standard: true,
+        impersonated: true,
+        playground: true,
+        workspaceAgnostic: false,
+      },
+      apiKey: true,
+      oauthClient: true,
+      application: true,
     },
-    apiKey: true,
-    oauthClient: true,
-    application: true,
-  },
-  requiredPermissionFlags: [],
-};
-
+    requiredPermissionFlags: [],
+  }),
+)
 @MetadataResolver(() => ApplicationDTO)
 @UseFilters(ApplicationExceptionFilter)
 export class ApplicationResolver {
@@ -75,10 +74,7 @@ export class ApplicationResolver {
   ) {}
 
   @Query(() => SdkClientChecksumsDTO, { nullable: true })
-  @UseGuards(
-    AccessPolicyGuard(APPLICATION_READ_ACCESS_POLICY),
-    ApplicationTargetGuard,
-  )
+  @UseGuards(ApplicationTargetGuard)
   async applicationSdkClientChecksums(
     @ApplicationTargetArg(
       'applicationId',
@@ -109,10 +105,7 @@ export class ApplicationResolver {
   // temporarily stopped and behaving in a degraded way. Kept as a dedicated
   // query so listing applications does not trigger one Redis read per app.
   @Query(() => Boolean)
-  @UseGuards(
-    AccessPolicyGuard(APPLICATION_READ_ACCESS_POLICY),
-    ApplicationTargetGuard,
-  )
+  @UseGuards(ApplicationTargetGuard)
   async isApplicationStopped(
     @ApplicationTargetArg('applicationUniversalIdentifier', {
       kind: 'applicationUniversalIdentifier',
@@ -126,7 +119,6 @@ export class ApplicationResolver {
   }
 
   @ResolveField(() => String, { nullable: true })
-  @UseGuards(NoPermissionGuard)
   logoUrl(
     @Parent()
     application: Pick<ApplicationDTO, 'id' | 'logo' | 'universalIdentifier'>,
@@ -145,7 +137,6 @@ export class ApplicationResolver {
   }
 
   @ResolveField(() => String, { nullable: true })
-  @UseGuards(NoPermissionGuard)
   description(
     @Parent()
     application: Pick<ApplicationDTO, 'description' | 'universalIdentifier'>,
@@ -159,7 +150,6 @@ export class ApplicationResolver {
   }
 
   @ResolveField(() => UUIDScalarType, { nullable: true })
-  @UseGuards(NoPermissionGuard)
   async grantRoleId(
     @Parent() application: Pick<ApplicationDTO, 'id'>,
     @AuthWorkspace() { id: workspaceId }: Pick<WorkspaceEntity, 'id'>,
@@ -186,7 +176,6 @@ export class ApplicationResolver {
     nullable: true,
     deprecationReason: 'Use requestedRoleId instead',
   })
-  @UseGuards(NoPermissionGuard)
   defaultRoleId(
     @Parent() application: Pick<ApplicationDTO, 'requestedRoleId'>,
   ): string | null {
@@ -194,7 +183,6 @@ export class ApplicationResolver {
   }
 
   @ResolveField(() => Boolean)
-  @UseGuards(NoPermissionGuard)
   runHealthCheckOnUserPreferences(
     @Parent()
     application: Partial<
@@ -210,7 +198,6 @@ export class ApplicationResolver {
   }
 
   @ResolveField(() => Boolean)
-  @UseGuards(NoPermissionGuard)
   isUninstallBlockedByOtherWorkspaceInstallations(
     @Parent()
     application: Pick<ApplicationDTO, 'id' | 'applicationRegistrationId'>,
@@ -226,7 +213,6 @@ export class ApplicationResolver {
   }
 
   @ResolveField(() => [AgentDTO])
-  @UseGuards(NoPermissionGuard)
   async agents(
     @Parent() application: Pick<ApplicationDTO, 'id'>,
     @AuthWorkspace()
@@ -257,7 +243,6 @@ export class ApplicationResolver {
   }
 
   @ResolveField(() => [FrontComponentDTO])
-  @UseGuards(NoPermissionGuard)
   frontComponents(
     @Parent() application: Pick<ApplicationDTO, 'id'>,
     @AuthWorkspace()
@@ -284,7 +269,6 @@ export class ApplicationResolver {
   }
 
   @ResolveField(() => [CommandMenuItemDTO])
-  @UseGuards(NoPermissionGuard)
   commandMenuItems(
     @Parent() application: Pick<ApplicationDTO, 'id'>,
     @AuthWorkspace()
@@ -311,7 +295,6 @@ export class ApplicationResolver {
   }
 
   @ResolveField(() => [SettingsMenuItemDTO], { nullable: true })
-  @UseGuards(NoPermissionGuard)
   settingsMenuItems(
     @Parent() application: Pick<ApplicationDTO, 'id'>,
     @AuthWorkspace()
@@ -338,7 +321,6 @@ export class ApplicationResolver {
   }
 
   @ResolveField(() => [LogicFunctionDTO])
-  @UseGuards(NoPermissionGuard)
   logicFunctions(
     @Parent() application: Pick<ApplicationDTO, 'id'>,
     @AuthWorkspace()
@@ -365,7 +347,6 @@ export class ApplicationResolver {
   }
 
   @ResolveField(() => [ObjectMetadataDTO])
-  @UseGuards(NoPermissionGuard)
   objects(
     @Parent() application: Pick<ApplicationDTO, 'id'>,
     @AuthWorkspace()
@@ -392,7 +373,6 @@ export class ApplicationResolver {
   }
 
   @ResolveField(() => ApplicationContentDTO, { nullable: true })
-  @UseGuards(NoPermissionGuard)
   async content(
     @Parent()
     application: Pick<ApplicationDTO, 'id' | 'applicationRegistrationId'>,
@@ -423,7 +403,6 @@ export class ApplicationResolver {
   }
 
   @ResolveField(() => [ApplicationVariableEntityDTO])
-  @UseGuards(NoPermissionGuard)
   applicationVariables(
     @Parent() application: Pick<ApplicationDTO, 'id'>,
     @AuthWorkspace() workspace: WorkspaceEntity,

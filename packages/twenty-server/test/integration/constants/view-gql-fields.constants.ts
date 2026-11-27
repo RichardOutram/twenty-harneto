@@ -13,6 +13,7 @@ export const VIEW_GQL_FIELDS = `
     anyFieldFilterValue
     createdAt
     updatedAt
+    deletedAt
 `;
 
 export const VIEW_FIELD_GQL_FIELDS = `
@@ -28,6 +29,7 @@ export const VIEW_FIELD_GQL_FIELDS = `
     viewFieldGroupId
     createdAt
     updatedAt
+    deletedAt
 `;
 
 export const VIEW_SORT_GQL_FIELDS = `
@@ -38,6 +40,7 @@ export const VIEW_SORT_GQL_FIELDS = `
     viewId
     createdAt
     updatedAt
+    deletedAt
 `;
 
 export const VIEW_FILTER_GQL_FIELDS = `
@@ -48,6 +51,7 @@ export const VIEW_FILTER_GQL_FIELDS = `
     viewId
     createdAt
     updatedAt
+    deletedAt
 `;
 
 export const VIEW_GROUP_GQL_FIELDS = `
@@ -58,6 +62,7 @@ export const VIEW_GROUP_GQL_FIELDS = `
     viewId
     createdAt
     updatedAt
+    deletedAt
 `;
 
 export const VIEW_FILTER_GROUP_GQL_FIELDS = `
@@ -68,6 +73,7 @@ export const VIEW_FILTER_GROUP_GQL_FIELDS = `
     viewId
     createdAt
     updatedAt
+    deletedAt
 `;
 
 export const VIEW_FIELD_GROUP_GQL_FIELDS = `
@@ -78,4 +84,5 @@ export const VIEW_FIELD_GROUP_GQL_FIELDS = `
     viewId
     createdAt
     updatedAt
+    deletedAt
 `;

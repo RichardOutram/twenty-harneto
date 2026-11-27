@@ -20,11 +20,6 @@ export type GroupRatePaceRequest = {
   jobCount: number;
 };
 
-export type GroupRatePaceResult = {
-  nowMs: number;
-  delays: number[][];
-};
-
 type GroupRatePacerOptions = {
   getClient: (queueName: MessageQueue) => Promise<RedisClient>;
   keyPrefix: string;
@@ -49,7 +44,7 @@ export class GroupRatePacer {
     queueName: MessageQueue;
     requests: GroupRatePaceRequest[];
     notBeforeDelayMs?: number;
-  }): Promise<GroupRatePaceResult | undefined> {
+  }): Promise<number[][] | undefined> {
     const pacedKeysByRequest = requests.map(({ limiters }) =>
       limiters.flatMap(({ groupKey, limiter }): PacedGroupKey[] => {
         if (!isValidMessageQueueLimiter(limiter)) {
@@ -112,7 +107,7 @@ export class GroupRatePacer {
         );
       }
 
-      const delays = requests.map(({ jobCount }, requestIndex) => {
+      return requests.map(({ jobCount }, requestIndex) => {
         const firstDueTimeIndex = pacedKeysByRequest
           .slice(0, requestIndex)
           .reduce((count, pacedKeys) => count + pacedKeys.length, 0);
@@ -133,8 +128,6 @@ export class GroupRatePacer {
           ),
         );
       });
-
-      return { nowMs, delays };
     } catch (error) {
       this.logger.warn(
         `Failed to pace the group keys on queue ${queueName}: ${error instanceof Error ? error.message : String(error)}`,

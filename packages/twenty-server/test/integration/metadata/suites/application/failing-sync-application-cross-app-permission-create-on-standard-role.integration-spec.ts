@@ -45,8 +45,6 @@ describe('Sync application should fail when creating permissions on a standard r
           {
             universalIdentifier: STANDARD_ROLE.admin.universalIdentifier,
             label: 'Stolen Admin Role',
-            canBeAssignedToUsers: false,
-            canBeAssignedToApiKeys: false,
             description:
               'Attempts to add permissions to the standard admin role',
             permissionFlagUniversalIdentifiers: [
@@ -79,8 +77,6 @@ describe('Sync application should fail when creating permissions on a standard r
           {
             universalIdentifier: STANDARD_ROLE.admin.universalIdentifier,
             label: 'Stolen Admin Role',
-            canBeAssignedToUsers: false,
-            canBeAssignedToApiKeys: false,
             description:
               'Attempts to add object permission to the standard admin role',
             objectPermissions: [
@@ -116,8 +112,6 @@ describe('Sync application should fail when creating permissions on a standard r
           {
             universalIdentifier: STANDARD_ROLE.admin.universalIdentifier,
             label: 'Stolen Admin Role',
-            canBeAssignedToUsers: false,
-            canBeAssignedToApiKeys: false,
             description:
               'Attempts to add field permission to the standard admin role',
             fieldPermissions: [

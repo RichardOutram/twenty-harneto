@@ -294,36 +294,6 @@ msgstr "S'ha produït un error del gestor de DNS."
 msgid "A field with this name already exists."
 msgstr "Ja existeix un camp amb aquest nom."
 
-#. js-lingui-id: lDO6A7
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-msgid "A formula cannot read its own value, directly or through other formulas"
-msgstr "Una fórmula no pot llegir el seu propi valor, directament ni a través d'altres fórmules"
-
-#. js-lingui-id: 01ujS8
-#: src/engine/api/common/common-args-processors/data-arg-processor/data-arg-processor.service.ts
-msgid "A formula field cannot be edited."
-msgstr "No es pot editar un camp de fórmula."
-
-#. js-lingui-id: Mx5uL9
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-msgid "A formula field cannot be searched"
-msgstr "No es pot cercar un camp de fórmula"
-
-#. js-lingui-id: qD6oq6
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-msgid "A formula field cannot be unique"
-msgstr "Un camp de fórmula no pot ser únic"
-
-#. js-lingui-id: Ie62ou
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-msgid "A formula needs an expression"
-msgstr "Una fórmula necessita una expressió"
-
-#. js-lingui-id: yCrWFs
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-name-read-by-formulas.util.ts
-msgid "A formula reads this field, so it cannot be named \"{name}\""
-msgstr "Una fórmula llegeix aquest camp, per tant no pot tenir el nom \"{name}\""
-
 #. js-lingui-id: L6D4W7
 #: src/engine/core-modules/enterprise/enterprise.exception.ts
 msgid "A free development instance requires an active production instance on this Organization subscription."
@@ -365,28 +335,6 @@ msgstr "Un enllaç amb seguiment en una campanya"
 #: src/engine/core-modules/emailing-domain/drivers/exceptions/emailing-domain-driver.exception.ts
 msgid "A marketing email can only be sent to one recipient at a time, so each person gets their own unsubscribe link."
 msgstr "Un correu electrònic de màrqueting només es pot enviar a un destinatari alhora, de manera que cada persona rep el seu propi enllaç per donar-se de baixa."
-
-#. js-lingui-id: TS5uum
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/get-marketplace-application-role-restriction-errors.util.ts
-msgid "A marketplace application cannot declare row-level rules or field permissions"
-msgstr "Una aplicació del mercat no pot declarar regles de nivell de fila ni permisos de camp"
-
-#. js-lingui-id: bH9jpk
-#: src/engine/permissions/permissions.exception.ts
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/get-marketplace-application-role-restriction-errors.util.ts
-msgid "A marketplace application cannot declare row-level rules or field permissions."
-msgstr "Una aplicació del mercat no pot declarar regles de nivell de fila ni permisos de camp."
-
-#. js-lingui-id: +//ajp
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/get-marketplace-application-role-assignability-errors.util.ts
-msgid "A marketplace application role can only be assigned to agents"
-msgstr "Un rol d'aplicació del mercat només es pot assignar a agents"
-
-#. js-lingui-id: BRZH6M
-#: src/engine/permissions/permissions.exception.ts
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/get-marketplace-application-role-assignability-errors.util.ts
-msgid "A marketplace application role can only be assigned to agents."
-msgstr "Un rol d'aplicació del mercat només es pot assignar a agents."
 
 #. js-lingui-id: Spm4/x
 #: src/engine/metadata-modules/message-channel/services/application-message-send.service.ts
@@ -446,13 +394,13 @@ msgstr "Un giny de relació niada ha d'utilitzar la disposició en taula."
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-field-permission-unreadable-nested-source.util.ts
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-field-permission-unreadable-nested-source.util.ts
 msgid "A nested unreadable field cannot be tied to a row level permission rule"
-msgstr "Un camp niat il·legible no es pot vincular a una regla de permisos de nivell de fila"
+msgstr ""
 
 #. js-lingui-id: +cMY8o
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-field-permission-unreadable-nested-source.util.ts
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-field-permission-unreadable-nested-source.util.ts
 msgid "A nested unreadable field cannot use itself as its source"
-msgstr "Un camp niat il·legible no es pot utilitzar a si mateix com a font"
+msgstr ""
 
 #. js-lingui-id: ChJFls
 #: src/modules/calendar/calendar-event-import-manager/drivers/exceptions/calendar-event-import-driver.exception.ts
@@ -549,11 +497,6 @@ msgstr "Ja existeix un registre amb aquest valor."
 msgctxt "objectMetadata.description"
 msgid "A recording of a meeting"
 msgstr "Una gravació d'una reunió"
-
-#. js-lingui-id: l+tyko
-#: src/modules/calendar/calendar-event-creation-manager/utils/normalize-calendar-event-recurrence.util.ts
-msgid "A recurrence ends either on recurrence.endDate or after recurrence.endOccurrenceCount, not both"
-msgstr "Una recurrència acaba o bé a recurrence.endDate o bé després de recurrence.endOccurrenceCount, però no totes dues coses"
 
 #. js-lingui-id: TmGFqW
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-field-relation-target.util.ts
@@ -809,18 +752,6 @@ msgstr "S'ha produït un error del grup de vistes."
 msgid "A view sort error occurred."
 msgstr "S'ha produït un error de l'ordenació de la vista."
 
-#. js-lingui-id: r0+ZZA
-#: src/engine/metadata-modules/flat-navigation-menu-item/validators/utils/validate-navigation-menu-item-type-required-properties.util.ts
-#: src/engine/metadata-modules/flat-navigation-menu-item/validators/utils/validate-navigation-menu-item-type-required-properties.util.ts
-msgid "A visibleItemLimit is only allowed on SECTION type"
-msgstr "Un visibleItemLimit només es permet en el tipus SECTION"
-
-#. js-lingui-id: +DI2pX
-#: src/engine/metadata-modules/flat-navigation-menu-item/validators/utils/validate-navigation-menu-item-type-required-properties.util.ts
-#: src/engine/metadata-modules/flat-navigation-menu-item/validators/utils/validate-navigation-menu-item-type-required-properties.util.ts
-msgid "A visibleItemLimit must be an integer between {NAVIGATION_MENU_ITEM_VISIBLE_ITEM_LIMIT_MIN} and {NAVIGATION_MENU_ITEM_VISIBLE_ITEM_LIMIT_MAX}"
-msgstr "Un visibleItemLimit ha de ser un nombre enter entre {NAVIGATION_MENU_ITEM_VISIBLE_ITEM_LIMIT_MIN} i {NAVIGATION_MENU_ITEM_VISIBLE_ITEM_LIMIT_MAX}"
-
 #. js-lingui-id: SMhyGZ
 #: src/engine/metadata-modules/webhook/webhook.exception.ts
 msgid "A webhook with this configuration already exists."
@@ -846,12 +777,12 @@ msgstr "Un membre de l'espai de treball"
 #. js-lingui-id: EAIj51
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 msgid "A workspace member relation filter needs a field and at least one value"
-msgstr "Un filtre de relació de membre de l'espai de treball necessita un camp i almenys un valor"
+msgstr ""
 
 #. js-lingui-id: mZ5k8L
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 msgid "A workspace member relation filter needs a workspace member relation"
-msgstr "Un filtre de relació de membre de l'espai de treball necessita una relació de membre de l'espai de treball"
+msgstr ""
 
 #. js-lingui-id: /WlOrK
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
@@ -1244,12 +1175,6 @@ msgstr "Torns de l'agent"
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-agent-name-uniqueness.util.ts
 msgid "Agent with name \"{name}\" already exists"
 msgstr "Ja existeix un agent anomenat \"{name}\""
-
-#. js-lingui-id: 6KWIu6
-#: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
-msgctxt "commandMenuItem.shortLabel"
-msgid "Agents"
-msgstr "Agents"
 
 #. js-lingui-id: wqJIjz
 #: src/engine/metadata-modules/flat-page-layout-widget/validators/utils/validate-base-graph-fields.util.ts
@@ -1884,12 +1809,6 @@ msgctxt "fieldMetadata.label"
 msgid "Assigned tasks"
 msgstr "Tasques assignades"
 
-#. js-lingui-id: n0weTx
-#: src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-agent-chat-thread-views.util.ts
-msgctxt "view.name"
-msgid "Assigned to me"
-msgstr "Assignat a mi"
-
 #. js-lingui-id: JytrLO
 #: src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-task-views.util.ts
 msgctxt "view.name"
@@ -2108,12 +2027,6 @@ msgstr "URL de la plantilla creada"
 msgctxt "fieldMetadata.label"
 msgid "Automatically assigned"
 msgstr "Assignat automàticament"
-
-#. js-lingui-id: J9HcLf
-#: src/engine/workspace-manager/twenty-standard-application/constants/standard-navigation-menu-item.constant.ts
-msgctxt "navigationMenuItem.name"
-msgid "Automations"
-msgstr "Automatitzacions"
 
 #. js-lingui-id: bhFnpx
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
@@ -3214,12 +3127,6 @@ msgctxt "fieldMetadata.label"
 msgid "Chats"
 msgstr "Xats"
 
-#. js-lingui-id: bK/UPN
-#: src/engine/workspace-manager/twenty-standard-application/constants/standard-navigation-menu-item.constant.ts
-msgctxt "navigationMenuItem.name"
-msgid "Chats"
-msgstr "Xats"
-
 #. js-lingui-id: 68T2AN
 #: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
 msgctxt "objectMetadata.labelPlural"
@@ -3249,6 +3156,11 @@ msgctxt "fieldMetadata.description"
 msgid "Chats tied to the opportunity"
 msgstr "Xats vinculats a l'oportunitat"
 
+#. js-lingui-id: YNDJWu
+#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
+msgid "Checking whether a one-to-many relation is empty requires relation hops in row level permission predicates"
+msgstr "Comprovar si una relació d'un a molts és buida requereix salts de relació en predicats de permisos de nivell de fila"
+
 #. js-lingui-id: ZgijCO
 #: src/engine/metadata-modules/page-layout/tools/services/page-layout-tool.service.ts
 msgid "Choose an active tab and a widget position matching its layout mode."
@@ -3267,7 +3179,7 @@ msgstr "Tria una persona o un rol amb qui compartir."
 #. js-lingui-id: 8+4T+u
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 msgid "Choose the field and the values to keep on the related records"
-msgstr "Trieu el camp i els valors que voleu conservar als registres relacionats"
+msgstr ""
 
 #. js-lingui-id: IkeRn2
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
@@ -3282,7 +3194,7 @@ msgstr "Trieu l'objecte que emet aquest tipus d'activitat de la línia de temps"
 #. js-lingui-id: fr9dvq
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 msgid "Choose the relation of the workspace member to filter"
-msgstr "Trieu la relació del membre de l'espai de treball que voleu filtrar"
+msgstr ""
 
 #. js-lingui-id: PDwfT5
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-timeline-activity-type-validator.service.ts
@@ -4275,16 +4187,6 @@ msgstr "Higiene del CRM"
 msgid "Cron pattern \"{pattern}\" is invalid"
 msgstr "El patró cron \"{pattern}\" no és vàlid"
 
-#. js-lingui-id: sJbCNC
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-logic-function-cron-trigger-spread.util.ts
-msgid "Cron trigger spread must be between 2 minutes and 24 hours."
-msgstr "L'interval del desencadenador cron ha d'estar entre 2 minuts i 24 hores."
-
-#. js-lingui-id: GbygrC
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-logic-function-cron-trigger-spread.util.ts
-msgid "Cron trigger spreadMs must be an integer between {CRON_TRIGGER_MIN_SPREAD_MS} and {CRON_TRIGGER_MAX_SPREAD_MS}"
-msgstr "El spreadMs del desencadenador cron ha de ser un nombre enter entre {CRON_TRIGGER_MIN_SPREAD_MS} i {CRON_TRIGGER_MAX_SPREAD_MS}"
-
 #. js-lingui-id: ViG9dm
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-agent-triggers.util.ts
 msgid "Cron triggers need a valid cron pattern such as \"0 9 * * 1\""
@@ -4958,12 +4860,6 @@ msgstr "Fet"
 #. js-lingui-id: uyJle/
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
 msgctxt "fieldMetadata.label"
-msgid "Done"
-msgstr "Fet"
-
-#. js-lingui-id: yXCB4Q
-#: src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-agent-chat-thread-views.util.ts
-msgctxt "view.name"
 msgid "Done"
 msgstr "Fet"
 
@@ -5832,7 +5728,7 @@ msgstr "El camp \"{workspaceMemberRelationFieldName}\" no és una relació d'un 
 #. js-lingui-id: yfFA+h
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 msgid "Field \"{workspaceMemberRelationFilterFieldName}\" is not a select, text or boolean field of the related records"
-msgstr "El camp \"{workspaceMemberRelationFilterFieldName}\" no és un camp de selecció, de text o booleà dels registres relacionats"
+msgstr ""
 
 #. js-lingui-id: CKPTLC
 #. placeholder {0}: query.objectName
@@ -6286,7 +6182,7 @@ msgstr "L'operand de filtre no és compatible amb aquest tipus de camp"
 #. js-lingui-id: twPawb
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 msgid "Filter the related records on one of their select, text or boolean fields"
-msgstr "Filtreu els registres relacionats per un dels seus camps de selecció, de text o booleans"
+msgstr ""
 
 #. js-lingui-id: dzteua
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/get-invalid-view-filter-select-option-error.util.ts
@@ -6383,11 +6279,6 @@ msgstr "L'acció de formulari ha de tenir almenys un camp"
 #: src/engine/metadata-modules/ai/ai-chat/utils/build-agent-chat-web-push-notification.util.ts
 msgid "Former member"
 msgstr "Membre anterior"
-
-#. js-lingui-id: Ngac6o
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-msgid "Formula fields are not enabled for this workspace"
-msgstr "Els camps de fórmula no estan activats en aquest espai de treball"
 
 #. js-lingui-id: JRr+QW
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-logic-function-forwarded-request-headers.util.ts
@@ -6638,29 +6529,17 @@ msgctxt "commandMenuItem.label"
 msgid "Go to {objectLabelPlural}"
 msgstr "Ves a {objectLabelPlural}"
 
-#. js-lingui-id: RQG1+p
+#. js-lingui-id: tKVJbL
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Admin Panel"
-msgstr "Ves al tauler d'administració"
+msgid "Go to Admin Panel Settings"
+msgstr "Ves a la configuració del tauler d'administració"
 
-#. js-lingui-id: zPVvLp
+#. js-lingui-id: iLqs3S
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Agents"
-msgstr "Anar als agents"
-
-#. js-lingui-id: EiL/A6
-#: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
-msgctxt "commandMenuItem.label"
-msgid "Go to AI"
-msgstr "Ves a la IA"
-
-#. js-lingui-id: OVO+nS
-#: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
-msgctxt "commandMenuItem.label"
-msgid "Go to Apps"
-msgstr "Ves a les aplicacions"
+msgid "Go to AI Settings"
+msgstr "Ves a la configuració d'IA"
 
 #. js-lingui-id: TndVqR
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
@@ -6668,77 +6547,77 @@ msgctxt "commandMenuItem.label"
 msgid "Go to Apps preferences"
 msgstr "Ves a les preferències de les aplicacions"
 
-#. js-lingui-id: zsFm1q
+#. js-lingui-id: 60o/+J
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Billing"
-msgstr "Anar a Facturació"
+msgid "Go to Apps Settings"
+msgstr "Ves a la configuració d'aplicacions"
 
-#. js-lingui-id: xk8nZG
+#. js-lingui-id: tlIbgN
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Community"
-msgstr "Anar a Comunitat"
+msgid "Go to Billing Settings"
+msgstr "Ves a la configuració de facturació"
 
-#. js-lingui-id: TMv4vU
+#. js-lingui-id: u5u/QJ
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Data Model"
-msgstr "Anar a Model de dades"
+msgid "Go to Community Settings"
+msgstr "Ves a la configuració de la comunitat"
 
-#. js-lingui-id: nvVoDQ
+#. js-lingui-id: dZPXqH
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Developers"
-msgstr "Anar a Desenvolupadors"
+msgid "Go to Data Model Settings"
+msgstr "Ves a la configuració del model de dades"
 
-#. js-lingui-id: YTMzOA
+#. js-lingui-id: SNbGsK
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Domains"
-msgstr "Anar a Dominis"
+msgid "Go to Developers Settings"
+msgstr "Ves a la configuració de desenvolupadors"
 
-#. js-lingui-id: 8V43iD
+#. js-lingui-id: OLopIl
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Experience"
-msgstr "Anar a Experiència"
+msgid "Go to Domains Settings"
+msgstr "Ves a la configuració de dominis"
 
-#. js-lingui-id: YA1mxo
+#. js-lingui-id: 46ZD9h
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to General"
-msgstr "Anar a General"
+msgid "Go to Experience Settings"
+msgstr "Ves a la configuració de l'experiència"
 
-#. js-lingui-id: bSctn/
+#. js-lingui-id: gfZlPy
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Members"
-msgstr "Anar a Membres"
+msgid "Go to General Settings"
+msgstr "Ves a la configuració general"
 
-#. js-lingui-id: F15zBM
+#. js-lingui-id: vPl+B/
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Roles"
-msgstr "Anar a Rols"
+msgid "Go to Members Settings"
+msgstr "Ves a la configuració de membres"
 
-#. js-lingui-id: R1fbZB
+#. js-lingui-id: qN3wNQ
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Security"
-msgstr "Anar a Seguretat"
+msgid "Go to Roles Settings"
+msgstr "Ves a la configuració de rols"
+
+#. js-lingui-id: xAAHTC
+#: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
+msgctxt "commandMenuItem.label"
+msgid "Go to Security Settings"
+msgstr "Ves a la configuració de seguretat"
 
 #. js-lingui-id: Rrvufq
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
 msgid "Go to Settings"
 msgstr "Anar a Configuració"
-
-#. js-lingui-id: 7rUSjX
-#: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
-msgctxt "commandMenuItem.label"
-msgid "Go to Workflows"
-msgstr "Anar als fluxos de treball"
 
 #. js-lingui-id: cvJ2e6
 #: src/engine/core-modules/auth/auth.exception.ts
@@ -7504,16 +7383,6 @@ msgstr "Filtre no vàlid: no s'ha trobat el camp amb el qual comparar"
 #: src/engine/api/common/common-args-processors/filter-arg-processor/filter-arg-processor.service.ts
 msgid "Invalid filter: use \"{joinColumnName}\" to filter by this relation field"
 msgstr "Filtre no vàlid: utilitza \"{joinColumnName}\" per filtrar per aquest camp de relació"
-
-#. js-lingui-id: QgIcr0
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-msgid "Invalid formula: {errorMessage}"
-msgstr "Fórmula no vàlida: {errorMessage}"
-
-#. js-lingui-id: uJjrgd
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-msgid "Invalid formula: write it as text"
-msgstr "Fórmula no vàlida: escriviu-la com a text"
 
 #. js-lingui-id: rFH0az
 #: src/engine/metadata-modules/front-component/front-component.exception.ts
@@ -8671,22 +8540,6 @@ msgctxt "fieldMetadata.description"
 msgid "List of opportunities for which that person is the point of contact"
 msgstr "Llista d'oportunitats per a les quals aquesta persona és el contacte principal"
 
-#. js-lingui-id: rbXxvc
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-list-pinned-field.util.ts
-msgid "List pinned field metadata not found"
-msgstr "Metadades del camp fixat de la llista no trobades"
-
-#. js-lingui-id: j3iJjW
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-list-pinned-field.util.ts
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-list-pinned-field.util.ts
-msgid "List pinned field must belong to the view object"
-msgstr "El camp fixat de la llista ha de pertànyer a l'objecte de la vista"
-
-#. js-lingui-id: ucNAgC
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-list-pinned-field.util.ts
-msgid "List pinned field not found"
-msgstr "Camp fixat de la llista no trobat"
-
 #. js-lingui-id: Lgr7Gd
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-list-standard-flat-field-metadata.util.ts
 msgctxt "fieldMetadata.description"
@@ -8981,12 +8834,6 @@ msgstr "Membres"
 msgctxt "objectMetadata.description"
 msgid "Members of a role who receive the same evaluated grant"
 msgstr "Membres d'un rol que reben la mateixa concessió avaluada"
-
-#. js-lingui-id: 3dY3eR
-#: src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-agent-chat-thread-views.util.ts
-msgctxt "view.name"
-msgid "Mentions"
-msgstr "Mencions"
 
 #. js-lingui-id: fqpInK
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-agent-chat-thread-participant-standard-flat-field-metadata.util.ts
@@ -9617,11 +9464,6 @@ msgstr "Nom"
 msgid "Name \"{name}\" is not available"
 msgstr "Aquest nom no està disponible \"{name}\"."
 
-#. js-lingui-id: 2tJW5E
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-composite-flat-field-metadata-column-names-availability.util.ts
-msgid "Name \"{name}\" is not available as \"{columnName}\" is already used by another field"
-msgstr "El nom \"{name}\" no està disponible, ja que \"{columnName}\" ja és utilitzat per un altre camp"
-
 #. js-lingui-id: U8mbyw
 #: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-name-availability.util.ts
 msgid "Name \"{name}\" is not available as it is already used by another field"
@@ -9743,12 +9585,6 @@ msgstr "Objecte de destinació de navegació no trobat"
 msgctxt "fieldMetadata.label"
 msgid "Needs Action"
 msgstr "Requereix acció"
-
-#. js-lingui-id: xYrVeE
-#: src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-agent-chat-thread-views.util.ts
-msgctxt "view.name"
-msgid "Needs input"
-msgstr "Cal introduir dades"
 
 #. js-lingui-id: 1NsPsQ
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
@@ -10446,6 +10282,16 @@ msgstr "Només es pot cancel·lar una campanya programada o en procés d'enviame
 msgid "Only a server administrator can manage recovery codes for this member."
 msgstr "Només un administrador del servidor pot gestionar els codis de recuperació d'aquest membre."
 
+#. js-lingui-id: NcQgJA
+#: src/engine/metadata-modules/flat-workflow/utils/from-update-core-workflow-input-to-flat-workflow-to-update-or-throw.util.ts
+msgid "Only a workspace member can change who sees a workflow"
+msgstr "Només un membre de l'espai de treball pot canviar qui veu un flux de treball"
+
+#. js-lingui-id: yT1QOm
+#: src/engine/metadata-modules/ai/ai-agent/utils/from-create-agent-input-to-flat-agent.util.ts
+msgid "Only a workspace member can create a private agent."
+msgstr "Només un membre de l'espai de treball pot crear un agent privat."
+
 #. js-lingui-id: VBcVkv
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-field-relation-scope.util.ts
 msgid "Only added columns can filter, sort or limit related records"
@@ -10512,10 +10358,11 @@ msgstr "Només es permet un giny d'alçada completa per pestanya"
 msgid "Only the application that owns this agent can change its triggers"
 msgstr "Només l'aplicació propietària d'aquest agent en pot canviar els activadors"
 
-#. js-lingui-id: xCGjjr
-#: src/engine/permissions/metadata-permissions/utils/get-privatable-entity-privacy-validation-errors.util.ts
-msgid "Only the person who created this can change who sees it"
-msgstr "Només la persona que ha creat això pot canviar qui ho veu"
+#. js-lingui-id: 2ztmK7
+#: src/engine/metadata-modules/ai/ai-agent/utils/compute-agent-privacy-update-or-throw.util.ts
+#: src/engine/metadata-modules/ai/ai.exception.ts
+msgid "Only the member who owns an agent can change who sees it."
+msgstr "Només el membre propietari d'un agent pot canviar qui el pot veure."
 
 #. js-lingui-id: MPDvEo
 #: src/engine/core-modules/workflow/exceptions/core-workflow-metadata.exception.ts
@@ -10541,12 +10388,6 @@ msgstr "Només l'espai de treball pot assignar rols a les aplicacions"
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-role-target-application-target.util.ts
 msgid "Only the workspace custom application can assign roles to applications"
 msgstr "Només l'aplicació personalitzada de l'espai de treball pot assignar rols a les aplicacions"
-
-#. js-lingui-id: /Ybnwz
-#: src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-agent-chat-thread-views.util.ts
-msgctxt "view.name"
-msgid "Open"
-msgstr "Obrir"
 
 #. js-lingui-id: 9rFxst
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
@@ -10700,12 +10541,12 @@ msgstr "L'opció \"{optionLabel}\" s'inclou amb el camp i no es pot eliminar. De
 #. js-lingui-id: xTWr3W
 #: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-metadata-option-description.util.ts
 msgid "Option \"{optionLabel}\" description exceeds {OPTION_DESCRIPTION_MAX_CHAR_LENGTH} characters"
-msgstr "La descripció de l'opció \"{optionLabel}\" supera els {OPTION_DESCRIPTION_MAX_CHAR_LENGTH} caràcters"
+msgstr ""
 
 #. js-lingui-id: cCRBHe
 #: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-metadata-option-description.util.ts
 msgid "Option \"{optionLabel}\" has an invalid description"
-msgstr "L'opció \"{optionLabel}\" té una descripció no vàlida"
+msgstr ""
 
 #. js-lingui-id: znHKeT
 #: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-metadata-option-color.util.ts
@@ -11487,6 +11328,16 @@ msgstr "Al predicat li falta un valor"
 msgid "Predicate value is not valid for this operand"
 msgstr "El valor del predicat no és vàlid per a aquest operand"
 
+#. js-lingui-id: nSv3rP
+#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
+msgid "Predicates reaching a field through a relation are not enabled for this workspace"
+msgstr "Els predicats que accedeixen a un camp mitjançant una relació no estan habilitats per a aquest espai de treball"
+
+#. js-lingui-id: v5akl/
+#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
+msgid "Predicates reading the current member through a relation are not enabled for this workspace"
+msgstr "Els predicats que llegeixen el membre actual mitjançant una relació no estan habilitats per a aquest espai de treball"
+
 #. js-lingui-id: /h13bI
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workspace-member-standard-flat-field-metadata.util.ts
 msgctxt "fieldMetadata.description"
@@ -11935,16 +11786,6 @@ msgstr "No es poden ordenar els registres segons una relació del registre relac
 msgctxt "fieldMetadata.description"
 msgid "Records this thread is attached to"
 msgstr "Registres als quals està adjunt aquest fil"
-
-#. js-lingui-id: Q/3t6e
-#: src/modules/calendar/calendar-event-creation-manager/utils/normalize-calendar-event-recurrence.util.ts
-msgid "recurrence.endDate must be a YYYY-MM-DD date on or after the event's start date ({firstOccurrenceDate})"
-msgstr "recurrence.endDate ha de ser una data YYYY-MM-DD igual o posterior a la data d'inici de l'esdeveniment ({firstOccurrenceDate})"
-
-#. js-lingui-id: wM8dZb
-#: src/modules/calendar/calendar-event-creation-manager/utils/normalize-calendar-event-recurrence.util.ts
-msgid "recurrence.interval and recurrence.endOccurrenceCount must be positive whole numbers"
-msgstr "recurrence.interval i recurrence.endOccurrenceCount han de ser nombres enters positius"
 
 #. js-lingui-id: TPccfi
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util.ts
@@ -12811,6 +12652,12 @@ msgctxt "fieldMetadata.label"
 msgid "Rule"
 msgstr "Regla"
 
+#. js-lingui-id: zhLAHJ
+#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
+#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
+msgid "Rules through a relation are not enabled for this workspace"
+msgstr "Les regles mitjançant una relació no estan habilitades per a aquest espai de treball"
+
 #. js-lingui-id: F1qT/F
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
 msgctxt "fieldMetadata.label"
@@ -13471,12 +13318,6 @@ msgstr "Posposa"
 msgid "Snooze time must be in the future."
 msgstr "L'hora de posposar ha de ser futura."
 
-#. js-lingui-id: dVYfIF
-#: src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-agent-chat-thread-views.util.ts
-msgctxt "view.name"
-msgid "Snoozed"
-msgstr "Posposat"
-
 #. js-lingui-id: Q/HVbF
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-agent-chat-thread-participant-standard-flat-field-metadata.util.ts
 msgctxt "fieldMetadata.label"
@@ -13610,12 +13451,12 @@ msgstr "Títol del document d'origen"
 #. js-lingui-id: gAdogO
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-field-permission-unreadable-nested-source.util.ts
 msgid "Source field metadata not found"
-msgstr "No s'han trobat les metadades del camp font"
+msgstr ""
 
 #. js-lingui-id: 8Fgyo1
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-field-permission-unreadable-nested-source.util.ts
 msgid "Source field not found"
-msgstr "No s'ha trobat el camp font"
+msgstr ""
 
 #. js-lingui-id: o0N9e6
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-logic-function-validator.service.ts
@@ -14463,14 +14304,9 @@ msgid "The condition of a database event trigger must be text"
 msgstr "La condició d'un desencadenador d'esdeveniments de base de dades ha de ser text"
 
 #. js-lingui-id: kxzWhP
-#: src/engine/metadata-modules/ai/ai-agent-trigger/utils/add-agent-trigger-condition-trees-or-throw.util.ts
+#: src/engine/metadata-modules/ai/ai-agent-trigger/utils/add-agent-trigger-condition-bindings-or-throw.util.ts
 msgid "The condition of an agent trigger is invalid"
 msgstr "La condició d'un activador d'agent no és vàlida"
-
-#. js-lingui-id: 2l+SMV
-#: src/engine/metadata-modules/logic-function/services/logic-function-from-source.service.ts
-msgid "The condition of the database event trigger is invalid"
-msgstr "La condició del desencadenador d'esdeveniments de la base de dades no és vàlida"
 
 #. js-lingui-id: odbiqA
 #. placeholder {0}: connectedAccount.provider
@@ -14638,12 +14474,6 @@ msgstr "No s'ha pogut trobar el camp configurat per a aquest giny."
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-sort-relation-target.util.ts
 msgid "The field must belong to the related object"
 msgstr "El camp ha de pertànyer a l'objecte relacionat"
-
-#. js-lingui-id: YcdJzW
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-#: src/engine/metadata-modules/flat-object-metadata/validators/utils/validate-flat-object-metadata-identifiers.util.ts
-msgid "The field used as record label cannot be a formula"
-msgstr "El camp utilitzat com a etiqueta de registre no pot ser una fórmula"
 
 #. js-lingui-id: LdhPiK
 #: src/engine/metadata-modules/object-permission/field-permission/field-permission.service.ts
@@ -15530,11 +15360,6 @@ msgstr "Aquest domini ja està registrat."
 msgid "This domain is already taken."
 msgstr "Aquest domini ja està ocupat."
 
-#. js-lingui-id: IBjn2S
-#: src/engine/core-modules/public-domain/public-domain.exception.ts
-msgid "This domain is used by Twenty itself and cannot be a public domain."
-msgstr ""
-
 #. js-lingui-id: Ukfndw
 #: src/engine/metadata-modules/ai/ai-front-component/ai-front-component.service.ts
 msgid "This draft is being updated. Try again."
@@ -15630,11 +15455,6 @@ msgstr "Aquest camp fa referència a un objecte que no s'ha pogut trobar"
 #: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-searchable-flat-field-metadata.util.ts
 msgid "This field type cannot be searched"
 msgstr "No es pot cercar aquest tipus de camp"
-
-#. js-lingui-id: bVmvpb
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-msgid "This field type does not support formulas"
-msgstr "Aquest tipus de camp no admet fórmules"
 
 #. js-lingui-id: 5F02zD
 #: src/engine/core-modules/file/file-upload/services/file-upload-completion.service.ts
@@ -15832,6 +15652,7 @@ msgid "This operand is not supported for this field"
 msgstr "Aquest operand no és compatible amb aquest camp"
 
 #. js-lingui-id: sf5yLA
+#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 msgid "This operand is not supported for this relation"
@@ -16110,7 +15931,7 @@ msgstr "Aquesta versió de l'aplicació ja està instal·lada en aquest espai de
 #. js-lingui-id: lJw5/K
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-type-object.util.ts
 msgid "This view type is not available on this object"
-msgstr "Aquest tipus de vista no està disponible en aquest objecte"
+msgstr ""
 
 #. js-lingui-id: 2s7ieZ
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-workflow-validator.service.ts
@@ -17748,7 +17569,7 @@ msgstr "Vista per actualitzar no trobada"
 #. js-lingui-id: OZdSbV
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-type-object.util.ts
 msgid "View type is not available on the view object"
-msgstr "El tipus de vista no està disponible en l'objecte de vista"
+msgstr ""
 
 #. js-lingui-id: RvdHYC
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-creation.util.ts
@@ -18408,9 +18229,9 @@ msgctxt "fieldMetadata.label"
 msgid "WorkflowRun"
 msgstr "WorkflowRun"
 
-#. js-lingui-id: RWPUPQ
-#: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
-msgctxt "commandMenuItem.shortLabel"
+#. js-lingui-id: zSsbOe
+#: src/engine/workspace-manager/twenty-standard-application/constants/standard-navigation-menu-item.constant.ts
+msgctxt "navigationMenuItem.name"
 msgid "Workflows"
 msgstr "Fluxos de treball"
 
@@ -18594,7 +18415,7 @@ msgstr "No s'han trobat les metadades del camp de relació del membre de l'espai
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 msgid "Workspace member relation filter field metadata not found"
-msgstr "No s'han trobat les metadades del camp de filtre de relació del membre de l'espai de treball"
+msgstr ""
 
 #. js-lingui-id: 62xYnj
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-agent-chat-thread-standard-flat-field-metadata.util.ts

@@ -148,7 +148,7 @@ describe('View Field Resolver - Successful Create Many Operations', () => {
           },
         });
 
-        expect(deleteViewField.id).toBe(viewFieldId);
+        expect(deleteViewField.deletedAt).not.toBeNull();
       }
     }
     createdViewFieldIds = [];

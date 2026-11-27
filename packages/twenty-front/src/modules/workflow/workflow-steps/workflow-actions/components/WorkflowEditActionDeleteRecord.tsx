@@ -83,7 +83,7 @@ export const WorkflowEditActionDeleteRecord = ({
 
   const saveAction = useDebouncedCallback(
     async (formData: DeleteRecordFormData) => {
-      if (actionOptions.readonly) {
+      if (actionOptions.readonly === true) {
         return;
       }
 

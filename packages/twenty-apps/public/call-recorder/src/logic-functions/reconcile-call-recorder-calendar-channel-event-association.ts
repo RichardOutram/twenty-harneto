@@ -1,3 +1,4 @@
+import { CoreApiClient } from 'twenty-client-sdk/core';
 import {
   defineLogicFunction,
   type ObjectRecordBaseEvent,
@@ -10,7 +11,7 @@ import { type CalendarChannelEventAssociationForDatabaseEvent } from 'src/logic-
 import { type UpcomingCalendarEventsReconciliationResult } from 'src/logic-functions/types/upcoming-calendar-events-reconciliation-result.type';
 import { getCalendarEventIdsFromDatabaseEvents } from 'src/logic-functions/domain/get-calendar-event-ids-from-database-events.util';
 import { reconcileCallRecorderForUpcomingCalendarEventIds } from 'src/logic-functions/flows/reconcile-call-recorder-for-upcoming-calendar-event-ids.util';
-import { createCoreApiClientRunningAsApplication } from 'src/logic-functions/utils/create-core-api-client-running-as-application.util';
+import { fetchWithRateLimitRetry } from 'src/logic-functions/utils/fetch-with-rate-limit-retry.util';
 
 export const reconcileCallRecorderCalendarChannelEventAssociationHandler =
   async (
@@ -22,7 +23,7 @@ export const reconcileCallRecorderCalendarChannelEventAssociationHandler =
     >,
   ): Promise<UpcomingCalendarEventsReconciliationResult> =>
     reconcileCallRecorderForUpcomingCalendarEventIds({
-      client: createCoreApiClientRunningAsApplication(),
+      client: new CoreApiClient({ fetch: fetchWithRateLimitRetry }),
       calendarEventIds: getCalendarEventIdsFromDatabaseEvents(batch.events),
     });
 

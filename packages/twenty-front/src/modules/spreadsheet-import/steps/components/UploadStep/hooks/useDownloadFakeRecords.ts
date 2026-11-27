@@ -4,7 +4,6 @@ import { getCompositeSubFieldLabelWithFieldLabel } from '@/object-record/spreads
 import { SETTINGS_COMPOSITE_FIELD_TYPE_CONFIGS } from '@/settings/data-model/constants/SettingsCompositeFieldTypeConfigs';
 import { SETTINGS_NON_COMPOSITE_FIELD_TYPE_CONFIGS } from '@/settings/data-model/constants/SettingsNonCompositeFieldTypeConfigs';
 import {
-  formatRecordExportHeader,
   formatValueForCSV,
   sanitizeValueForCSVExport,
 } from 'twenty-shared/utils';
@@ -141,12 +140,8 @@ export const useDownloadFakeRecords = () => {
 
   const downloadSample = () => {
     const { headerRow, bodyRows } = buildTableWithFakeRecords();
-    const header = formatRecordExportHeader(
-      headerRow.map((label) => ({ label })),
-    );
-    const blob = new Blob([header, ...formatToCsvContent(bodyRows)], {
-      type: 'text/csv',
-    });
+    const csvContent = formatToCsvContent([headerRow, ...bodyRows]);
+    const blob = new Blob(csvContent, { type: 'text/csv' });
     saveAs(blob, `${objectMetadataItem.labelPlural.toLowerCase()}-sample.csv`);
   };
 

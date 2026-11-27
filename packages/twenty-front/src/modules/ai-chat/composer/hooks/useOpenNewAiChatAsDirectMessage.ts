@@ -38,21 +38,22 @@ export const useOpenNewAiChatAsDirectMessage = () => {
               threadId: newChatThreadId,
             }),
           ),
+        ) ||
+        isNonEmptyArray(
+          store.get(
+            aiChatComposerAttachmentsFamilyState.atomFamily({
+              threadId: newChatThreadId,
+            }),
+          ),
         )
       ) {
         enqueueToast({
           status: 'error',
-          children: t`Wait for the attachments to finish uploading.`,
+          children: t`Direct messages don't support attachments.`,
         });
 
         return;
       }
-
-      const newChatAttachmentsAtom =
-        aiChatComposerAttachmentsFamilyState.atomFamily({
-          threadId: newChatThreadId,
-        });
-      const newChatAttachments = store.get(newChatAttachmentsAtom);
 
       const isSendingMessageAtom =
         aiChatThreadReplyIsSendingFamilyState.atomFamily({
@@ -73,12 +74,6 @@ export const useOpenNewAiChatAsDirectMessage = () => {
         );
         assertIsDefinedOrThrow(directMessageThread);
 
-        store.set(newChatAttachmentsAtom, (attachments) =>
-          attachments.filter(
-            (attachment) => !newChatAttachments.includes(attachment),
-          ),
-        );
-
         if (
           store.get(aiChatComposerDraftsState.atom)[newChatThreadId] ===
           serializedDraft
@@ -98,7 +93,7 @@ export const useOpenNewAiChatAsDirectMessage = () => {
           );
         }
 
-        return { directMessageThreadId, attachments: newChatAttachments };
+        return directMessageThreadId;
       } catch (error) {
         enqueueToast(getToastOptionsFromError({ error }));
       } finally {

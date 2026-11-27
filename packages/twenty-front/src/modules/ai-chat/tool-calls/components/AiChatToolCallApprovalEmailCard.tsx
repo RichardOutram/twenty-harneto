@@ -102,6 +102,7 @@ export const AiChatToolCallApprovalEmailCard = ({
           : t`Send email`
       }
       Icon={IconMail}
+      approval={approval}
       actions={
         <>
           <Button

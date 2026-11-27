@@ -100,7 +100,7 @@ export class AgentTriggerRunnerService
           instructions: trigger.instructions,
           payload,
         }),
-        senderWorkspaceMemberId: null,
+        senderUserWorkspaceId: null,
         senderApplicationId: agent.applicationId,
       },
     });

@@ -34,6 +34,7 @@ import { ApplicationStopService } from 'src/engine/core-modules/application/appl
 import { UserApplicationVariableValueService } from 'src/engine/core-modules/application/application-variable/user-application-variable-value.service';
 import { ApplicationVariableEntityService } from 'src/engine/core-modules/application/application-variable/application-variable.service';
 import { type FlatApplicationVariableMaps } from 'src/engine/metadata-modules/flat-application-variable/types/flat-application-variable-maps.type';
+import { ApplicationService } from 'src/engine/core-modules/application/application.service';
 import { FlatApplication } from 'src/engine/core-modules/application/types/flat-application.type';
 import { ApplicationTokenService } from 'src/engine/core-modules/auth/token/services/application-token.service';
 import { WorkspaceDomainsService } from 'src/engine/core-modules/domain/workspace-domains/services/workspace-domains.service';
@@ -49,7 +50,7 @@ import { buildLogicFunctionExecutionUsage } from 'src/engine/core-modules/logic-
 import { buildLogicFunctionRunMetricEvent } from 'src/engine/core-modules/logic-function/logic-function-executor/utils/build-logic-function-run-metric-event.util';
 import { buildWorkflowCodeStepFlatLogicFunction } from 'src/engine/core-modules/logic-function/logic-function-executor/utils/build-workflow-code-step-flat-logic-function.util';
 import { isLogicFunctionRetryScheduled } from 'src/engine/core-modules/logic-function/logic-function-executor/utils/is-logic-function-retry-scheduled.util';
-import { LogicFunctionPrebuiltInstallService } from 'src/engine/core-modules/logic-function/logic-function-prebuilt-install/logic-function-prebuilt-install.service';
+import { LogicFunctionPrebuiltWarmUpService } from 'src/engine/core-modules/logic-function/logic-function-prebuilt-warm-up/logic-function-prebuilt-warm-up.service';
 import { SERVER_ROUTE_PATH } from 'src/engine/core-modules/server-route-trigger/constants/server-route-path.constant';
 import {
   ThrottlerExceptionCode,
@@ -129,7 +130,7 @@ export class LogicFunctionExecutorService {
 
   constructor(
     private readonly logicFunctionDriverFactory: LogicFunctionDriverFactory,
-    private readonly logicFunctionPrebuiltInstallService: LogicFunctionPrebuiltInstallService,
+    private readonly logicFunctionPrebuiltWarmUpService: LogicFunctionPrebuiltWarmUpService,
     private readonly logicFunctionExecutionThrottleService: LogicFunctionExecutionThrottleService,
     private readonly twentyConfigService: TwentyConfigService,
     private readonly workspaceCacheService: WorkspaceCacheService,
@@ -143,6 +144,7 @@ export class LogicFunctionExecutorService {
     private readonly usageQuotaAdmissionService: UsageQuotaAdmissionService,
     private readonly usageLimitQuotaService: UsageLimitQuotaService,
     private readonly workspaceDomainsService: WorkspaceDomainsService,
+    private readonly applicationService: ApplicationService,
     private readonly applicationStopService: ApplicationStopService,
     private readonly coreEntityCacheService: CoreEntityCacheService,
     @InjectRepository(WorkspaceEntity)
@@ -209,41 +211,6 @@ export class LogicFunctionExecutorService {
         applicationId: flatApplication.id,
       },
     });
-  }
-
-  // Best-effort: a failed warm-up only costs the first real execution a cold start.
-  async warmUp({
-    workspaceId,
-    logicFunctionId,
-  }: {
-    workspaceId: string;
-    logicFunctionId: string;
-  }): Promise<void> {
-    try {
-      const {
-        flatApplication,
-        flatLogicFunction,
-        flatApplicationVariableMaps,
-      } = await this.getFlatEntitiesOrThrow({ workspaceId, logicFunctionId });
-
-      await this.assertApplicationNotStopped(flatApplication);
-
-      // The bundle's module scope may read process.env, and real executions reuse the warmed module.
-      const envVariables = await this.getExecutionEnvVariables({
-        workspaceId,
-        flatApplication,
-        flatApplicationVariableMaps,
-      });
-
-      await this.logicFunctionDriverFactory
-        .getCurrentDriver()
-        .warmUp({ flatLogicFunction, env: envVariables });
-    } catch (error) {
-      this.logger.warn(
-        `Failed to warm up logic function ${logicFunctionId} in workspace ${workspaceId}: ` +
-          `${error instanceof Error ? error.message : String(error)}`,
-      );
-    }
   }
 
   // The build runs after admission so a rejected run never spends a compilation
@@ -372,7 +339,7 @@ export class LogicFunctionExecutorService {
       executionMode ?? flatLogicFunction.executionMode;
 
     if (effectiveExecutionMode === LogicFunctionExecutionMode.PREBUILT) {
-      await this.logicFunctionPrebuiltInstallService.ensurePrebuiltBundleInstalled(
+      await this.logicFunctionPrebuiltWarmUpService.ensurePrebuiltBundleInstalled(
         {
           flatLogicFunction,
           flatApplication,
@@ -693,9 +660,15 @@ export class LogicFunctionExecutorService {
       return undefined;
     }
 
-    return this.workspaceDomainsService.buildApplicationFunctionsBaseUrl({
-      workspace: { id: workspaceId, subdomain: workspace.subdomain },
-      flatApplication,
+    const primaryPublicDomain =
+      await this.applicationService.findPrimaryPublicDomainName({
+        applicationId: flatApplication.id,
+        workspaceId,
+      });
+
+    return this.workspaceDomainsService.buildPublicFunctionBaseUrl({
+      workspace,
+      primaryPublicDomain,
     });
   }
 

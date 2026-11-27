@@ -116,31 +116,25 @@ export class BillingArrangementService {
   async endArrangement({
     arrangement,
     revokedByUserId,
-    now = new Date(),
-    entityManager,
   }: {
     arrangement: Pick<
       BillingArrangementEntity,
       'id' | 'workspaceId' | 'endsAt' | 'revokedAt'
     >;
     revokedByUserId: string | null;
-    now?: Date;
-    entityManager?: EntityManager;
   }): Promise<BillingArrangementEntity> {
-    const billingArrangementRepository = isDefined(entityManager)
-      ? this.billingArrangementRepository.withManager(entityManager)
-      : this.billingArrangementRepository;
+    const now = new Date();
     const endDate = getBillingArrangementEndDate(arrangement);
 
     if (!isDefined(endDate) || endDate > now) {
-      await billingArrangementRepository.update(
+      await this.billingArrangementRepository.update(
         arrangement.workspaceId,
         { id: arrangement.id, revokedAt: IsNull() },
         { revokedAt: now, revokedByUserId },
       );
     }
 
-    return await billingArrangementRepository.findOneOrFail(
+    return await this.billingArrangementRepository.findOneOrFail(
       arrangement.workspaceId,
       { where: { id: arrangement.id } },
     );

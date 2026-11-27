@@ -9,6 +9,7 @@ import {
 } from 'test/integration/metadata/suites/utils/webhook-test.util';
 import { createOneViewOnObject } from 'test/integration/metadata/suites/view/utils/create-one-view-on-object.util';
 import { destroyOneView } from 'test/integration/metadata/suites/view/utils/destroy-one-view.util';
+import { ViewVisibility } from 'twenty-shared/types';
 
 describe('private metadata webhooks (integration)', () => {
   let unlistedViewId: string;
@@ -28,7 +29,7 @@ describe('private metadata webhooks (integration)', () => {
       objectNameSingular: 'company',
       input: {
         name: 'Guest private webhook companies',
-        isPrivate: true,
+        visibility: ViewVisibility.UNLISTED,
       },
       token: APPLE_PHIL_GUEST_ACCESS_TOKEN,
     });
@@ -36,7 +37,7 @@ describe('private metadata webhooks (integration)', () => {
       objectNameSingular: 'company',
       input: {
         name: 'Workspace webhook companies',
-        isPrivate: false,
+        visibility: ViewVisibility.WORKSPACE,
       },
     });
 

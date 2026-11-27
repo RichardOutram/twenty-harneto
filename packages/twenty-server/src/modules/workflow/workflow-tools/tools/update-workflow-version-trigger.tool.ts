@@ -34,6 +34,7 @@ export const createUpdateWorkflowVersionTriggerTool = (
         const { trigger } =
           await deps.coreWorkflowVersionMutationService.updateTrigger({
             workspaceId: context.workspaceId,
+            userWorkspaceId: context.userWorkspaceId,
             coreWorkflowVersionId: parameters.coreWorkflowVersionId,
             trigger: parameters.trigger,
           });

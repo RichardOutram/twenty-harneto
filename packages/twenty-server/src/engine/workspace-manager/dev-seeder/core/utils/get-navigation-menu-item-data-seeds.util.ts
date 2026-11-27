@@ -53,7 +53,6 @@ export const getNavigationMenuItemFlatEntitySeeds = ({
       agentChatChannelUniversalIdentifier: null,
       nativePageKey: null,
       builtInSectionKey: null,
-      visibleItemLimit: null,
       workflowId: null,
       workflowUniversalIdentifier: null,
       agentId: null,

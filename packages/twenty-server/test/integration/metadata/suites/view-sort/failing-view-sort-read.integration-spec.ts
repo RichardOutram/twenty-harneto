@@ -7,6 +7,7 @@ import { findViewSorts } from 'test/integration/metadata/suites/view-sort/utils/
 import { createViewWithChildren } from 'test/integration/metadata/suites/view/utils/create-view-with-children.util';
 import { deleteOneView } from 'test/integration/metadata/suites/view/utils/delete-one-view.util';
 import { destroyOneView } from 'test/integration/metadata/suites/view/utils/destroy-one-view.util';
+import { setViewRowDeletedAt } from 'test/integration/metadata/suites/view/utils/set-view-row-deleted-at.util';
 import { findAllMetadataRestListPages } from 'test/integration/rest/utils/find-all-metadata-rest-list-pages.util';
 import { makeRestApiRequest } from 'test/integration/rest/utils/make-rest-api-request.util';
 import { maskUuids } from 'test/integration/utils/mask-uuids.util';
@@ -14,6 +15,7 @@ import {
   type EachTestingContext,
   eachTestingContextFilter,
 } from 'twenty-shared/testing';
+import { ViewVisibility } from 'twenty-shared/types';
 
 type ArrangedViewSort = {
   viewSortId: string;
@@ -27,11 +29,11 @@ type TestContext = {
 };
 
 const arrangeViewSort = async ({
-  isPrivate = false,
+  visibility = ViewVisibility.WORKSPACE,
   token,
   prepare = async () => ({}),
 }: {
-  isPrivate?: boolean;
+  visibility?: ViewVisibility;
   token?: string;
   prepare?: (
     arrangedViewSort: ArrangedViewSort,
@@ -39,7 +41,7 @@ const arrangeViewSort = async ({
 } = {}): Promise<ArrangedViewSort> => {
   const { viewId, childIdByChildName } = await createViewWithChildren({
     name: `View Sort read ${randomUUID().slice(0, 8)}`,
-    isPrivate,
+    visibility,
     token,
   });
   const arrangedViewSort = {
@@ -87,6 +89,32 @@ const failingViewSortReadTestCases: EachTestingContext<TestContext>[] = [
     },
   },
   {
+    title: 'when the view sort is soft-deleted',
+    context: {
+      arrange: () =>
+        arrangeViewSort({
+          prepare: async ({ viewSortId, cleanup }) => {
+            await setViewRowDeletedAt({
+              tableName: 'viewSort',
+              id: viewSortId,
+              deletedAt: new Date(),
+            });
+
+            return {
+              cleanup: async () => {
+                await setViewRowDeletedAt({
+                  tableName: 'viewSort',
+                  id: viewSortId,
+                  deletedAt: null,
+                });
+                await cleanup();
+              },
+            };
+          },
+        }),
+    },
+  },
+  {
     title: 'when the view of the view sort is deleted',
     context: {
       arrange: () =>
@@ -105,7 +133,7 @@ const failingViewSortReadTestCases: EachTestingContext<TestContext>[] = [
     context: {
       arrange: () =>
         arrangeViewSort({
-          isPrivate: true,
+          visibility: ViewVisibility.UNLISTED,
           token: APPLE_PHIL_GUEST_ACCESS_TOKEN,
           prepare: async () => ({ token: APPLE_JONY_MEMBER_ACCESS_TOKEN }),
         }),

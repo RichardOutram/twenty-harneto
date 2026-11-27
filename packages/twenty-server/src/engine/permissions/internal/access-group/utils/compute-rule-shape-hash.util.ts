@@ -8,7 +8,6 @@ import {
 } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
-import { RELATION_PREDICATE_SHAPE_HASH_MARKER } from 'src/engine/permissions/internal/access-group/constants/relation-predicate-shape-hash-marker.constant';
 import { type RlsRule } from 'src/engine/permissions/internal/rls/utils/build-rls-record-filter.util';
 
 const sortByContent = <TEntry>(entries: TEntry[]): string[] =>
@@ -43,10 +42,12 @@ const serializeRowLevelPermissionPredicateGroup = ({
   parentPredicateGroupId,
   predicates,
   predicateGroups,
+  isRelationHopEnabled,
 }: {
   parentPredicateGroupId: string | null;
   predicates: RowLevelPermissionPredicate[];
   predicateGroups: RowLevelPermissionPredicateGroup[];
+  isRelationHopEnabled: boolean;
 }): { predicates: string[]; predicateGroups: string[] } => ({
   predicates: sortByContent(
     predicates
@@ -57,10 +58,7 @@ const serializeRowLevelPermissionPredicateGroup = ({
       )
       .map((predicate) => [
         ...(isDefined(predicate.relationFieldMetadataId)
-          ? [
-              predicate.relationFieldMetadataId,
-              RELATION_PREDICATE_SHAPE_HASH_MARKER,
-            ]
+          ? [predicate.relationFieldMetadataId, isRelationHopEnabled]
           : []),
         predicate.fieldMetadataId,
         predicate.subFieldName,
@@ -84,6 +82,7 @@ const serializeRowLevelPermissionPredicateGroup = ({
           parentPredicateGroupId: predicateGroup.id,
           predicates,
           predicateGroups,
+          isRelationHopEnabled,
         }),
       ]),
   ),
@@ -92,9 +91,11 @@ const serializeRowLevelPermissionPredicateGroup = ({
 const serializeRowLevelPermissionRule = ({
   rowLevelPermissionRule,
   splitPredicateId,
+  isRelationHopEnabled,
 }: {
   rowLevelPermissionRule: RlsRule | null;
   splitPredicateId: string | null;
+  isRelationHopEnabled: boolean;
 }): { predicates: string[]; predicateGroups: string[] } | null => {
   if (!isDefined(rowLevelPermissionRule)) {
     return null;
@@ -114,6 +115,7 @@ const serializeRowLevelPermissionRule = ({
     parentPredicateGroupId: null,
     predicates: predicatesWithoutLiteralValue,
     predicateGroups: rowLevelPermissionRule.predicateGroups,
+    isRelationHopEnabled,
   });
 };
 
@@ -122,11 +124,13 @@ export const computeRuleShapeHash = ({
   rowLevelPermissionRule,
   splitPredicateId,
   unreadableFieldIds,
+  isRelationHopEnabled,
 }: {
   objectMetadataId: string;
   rowLevelPermissionRule: RlsRule | null;
   splitPredicateId: string | null;
   unreadableFieldIds: string[];
+  isRelationHopEnabled: boolean;
 }): string =>
   createHash('sha256')
     .update(
@@ -135,6 +139,7 @@ export const computeRuleShapeHash = ({
         serializeRowLevelPermissionRule({
           rowLevelPermissionRule,
           splitPredicateId,
+          isRelationHopEnabled,
         }),
         [...unreadableFieldIds].sort(),
       ]),

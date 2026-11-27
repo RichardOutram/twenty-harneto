@@ -85,7 +85,6 @@ describe('logic function source export', () => {
       workspaceId: identifier,
       applicationUniversalIdentifier: identifier,
       applicationAllFlatEntityMaps: flatMaps(),
-      allFlatEntityMaps: maps,
       shouldIncludeLogicFunctionSources: shouldInclude,
       fileBudget: { remainingBytes: budget },
       exportedFiles,

@@ -233,15 +233,17 @@ export class ActionToolProvider implements ToolProvider {
       ),
     );
 
-    descriptors.push(
-      this.buildDescriptor(
-        'share_record',
-        this.shareRecordTool,
-        includeSchemas,
-        context.locale,
-        { isDestructive: true },
-      ),
-    );
+    if (await this.shareRecordTool.isEnabled(context.workspaceId)) {
+      descriptors.push(
+        this.buildDescriptor(
+          'share_record',
+          this.shareRecordTool,
+          includeSchemas,
+          context.locale,
+          { isDestructive: true },
+        ),
+      );
+    }
 
     const hasCodeInterpreterPermission =
       this.codeInterpreterService.isEnabled() &&

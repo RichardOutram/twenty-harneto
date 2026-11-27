@@ -2,7 +2,6 @@ import { type DerivedFieldMetadataIds } from 'src/engine/metadata-modules/derive
 import { type FieldMetadataDTO } from 'src/engine/metadata-modules/field-metadata/dtos/field-metadata.dto';
 import { type FieldMetadataEntity } from 'src/engine/metadata-modules/field-metadata/field-metadata.entity';
 import { readAuthoredOverrideProperty } from 'src/engine/metadata-modules/overrides/utils/read-authored-override-property.util';
-import { isFieldMetadataUIEditable } from 'src/engine/metadata-modules/flat-field-metadata/utils/is-field-metadata-ui-editable.util';
 
 const resolveEffectiveEntityIsActive = (entity: {
   isActive: boolean;
@@ -34,8 +33,8 @@ export const fromFieldMetadataEntityToFieldMetadataDto = (
   overrides: entity.overrides ?? undefined,
   isActive: resolveEffectiveEntityIsActive(entity),
   isSystem: entity.isSystem,
-  isUIEditable: isFieldMetadataUIEditable(entity),
-  isUIReadOnly: !isFieldMetadataUIEditable(entity),
+  isUIEditable: entity.isUIEditable,
+  isUIReadOnly: !entity.isUIEditable,
   isSystemSideEffect: entity.isSystemSideEffect,
   disabledFieldPermissionActions: entity.disabledFieldPermissionActions,
   isNullable: entity.isNullable ?? false,
@@ -50,7 +49,6 @@ export const fromFieldMetadataEntityToFieldMetadataDto = (
     entity.options ??
     undefined,
   settings: entity.settings ?? undefined,
-  formula: entity.formula ?? null,
   workspaceId: entity.workspaceId,
   objectMetadataId: entity.objectMetadataId,
   isLabelSyncedWithName: entity.isLabelSyncedWithName,

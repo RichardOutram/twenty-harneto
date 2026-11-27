@@ -84,14 +84,17 @@ const resolveTimelineActivityObject = ({
 
 const buildReadableFieldNames = ({
   flatObjectMetadata,
+  isLinkedActivity,
   recordReadRestrictions,
   flatFieldMetadataMaps,
 }: {
   flatObjectMetadata: Pick<FlatObjectMetadata, 'id' | 'fieldIds'>;
+  isLinkedActivity: boolean;
   recordReadRestrictions: RecordReadRestrictions;
   flatFieldMetadataMaps: FlatEntityMaps<OrmFlatFieldMetadata>;
 }): Set<string> => {
   if (
+    isLinkedActivity &&
     recordReadRestrictions.unreadableObjectMetadataIds.has(
       flatObjectMetadata.id,
     )
@@ -143,6 +146,9 @@ export const omitRestrictedFieldsFromTimelineActivity = ({
   const readableFieldNames = isDefined(flatObjectMetadata)
     ? buildReadableFieldNames({
         flatObjectMetadata,
+        isLinkedActivity: isNonEmptyString(
+          timelineActivity.linkedObjectMetadataId,
+        ),
         recordReadRestrictions,
         flatFieldMetadataMaps,
       })

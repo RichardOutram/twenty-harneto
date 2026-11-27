@@ -18,7 +18,6 @@ type ValidationRuleExpressionExtensionOptions = {
   getFieldNodeAttributes: (
     path: string,
   ) => ValidationRuleFieldNodeAttributes | null;
-  functionNames?: string[];
 };
 
 const PARAGRAPH_CONTENT_START_POSITION = 1;
@@ -37,7 +36,7 @@ export const ValidationRuleExpressionExtension =
     }),
 
     addProseMirrorPlugins() {
-      const { getFieldNodeAttributes, functionNames } = this.options;
+      const { getFieldNodeAttributes } = this.options;
 
       return [
         new Plugin({
@@ -108,10 +107,9 @@ export const ValidationRuleExpressionExtension =
             decorations: ({ doc }) =>
               DecorationSet.create(
                 doc,
-                computeValidationRuleExpressionHighlights({
-                  expression: getValidationRuleEditorText(doc),
-                  functionNames,
-                }).flatMap(({ kind, start, end }) => {
+                computeValidationRuleExpressionHighlights(
+                  getValidationRuleEditorText(doc),
+                ).flatMap(({ kind, start, end }) => {
                   const from = getValidationRuleEditorPositionFromTextOffset(
                     doc,
                     start,

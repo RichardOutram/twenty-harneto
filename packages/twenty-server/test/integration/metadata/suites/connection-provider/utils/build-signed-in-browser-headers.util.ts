@@ -22,6 +22,7 @@ export const buildSignedInBrowserHeaders = async ({
   ).createSession({
     userId,
     authProvider: AuthProviderEnum.Password,
+    origin: 'sign_in',
   });
 
   return {

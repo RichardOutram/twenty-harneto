@@ -5,10 +5,6 @@ import { createOneRole } from 'test/integration/metadata/suites/role/utils/creat
 import { deleteOneRole } from 'test/integration/metadata/suites/role/utils/delete-one-role.util';
 import { findRoles } from 'test/integration/metadata/suites/role/utils/find-roles.util';
 import { makeMetadataApiRequest } from 'test/integration/metadata/suites/utils/make-metadata-api-request.util';
-import {
-  grantRoleWideAccessToChannelObjects,
-  revokeRoleWideAccessToChannelObjects,
-} from 'test/integration/utils/role-wide-access-to-channel-objects.util';
 import { jestExpectToBeDefined } from 'test/utils/jest-expect-to-be-defined.util.test';
 import {
   eachTestingContextFilter,
@@ -18,7 +14,6 @@ import { isDefined } from 'twenty-shared/utils';
 import { v4 } from 'uuid';
 
 import { type UpsertObjectPermissionsInput } from 'src/engine/metadata-modules/object-permission/dtos/upsert-object-permissions.input';
-import { WORKSPACE_CUSTOM_APPLICATION_ROLE_LABEL } from 'src/engine/core-modules/application/constants/workspace-custom-application-role.constant';
 
 type GlobalTestContext = {
   editableRoleId: string;
@@ -128,7 +123,6 @@ describe('Object permission upsert should fail', () => {
   let editableRoleWithNoReadId: string;
 
   beforeAll(async () => {
-    await grantRoleWideAccessToChannelObjects();
     const { data: roleData } = await createOneRole({
       expectToFail: false,
       input: {
@@ -181,13 +175,12 @@ describe('Object permission upsert should fail', () => {
     });
 
     jestExpectToBeDefined(rolesData?.getRoles);
-    const nonEditableRole = rolesData.getRoles.find(
+    const adminRole = rolesData.getRoles.find(
       (role: { label: string; isEditable: boolean }) =>
-        role.label === WORKSPACE_CUSTOM_APPLICATION_ROLE_LABEL &&
-        role.isEditable === false,
+        role.label === 'Admin' && role.isEditable === false,
     );
-    jestExpectToBeDefined(nonEditableRole);
-    nonEditableRoleId = nonEditableRole.id;
+    jestExpectToBeDefined(adminRole);
+    nonEditableRoleId = adminRole.id;
 
     const getObjectMetadataOperation = {
       query: gql`
@@ -230,7 +223,6 @@ describe('Object permission upsert should fail', () => {
         input: { idToDelete: editableRoleWithNoReadId },
       });
     }
-    await revokeRoleWideAccessToChannelObjects();
   });
 
   it.each(eachTestingContextFilter(failingObjectPermissionUpsertTestCases))(

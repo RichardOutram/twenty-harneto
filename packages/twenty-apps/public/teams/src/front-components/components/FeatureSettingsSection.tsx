@@ -73,6 +73,7 @@ type FeatureSettingsSectionProps = {
   title: string;
   label: string;
   description: string;
+  isAvailable: boolean;
   isEnabled: boolean;
   isSaving: boolean;
   hasSaveError: boolean;
@@ -83,6 +84,7 @@ export const FeatureSettingsSection = ({
   title,
   label,
   description,
+  isAvailable,
   isEnabled,
   isSaving,
   hasSaveError,
@@ -91,6 +93,7 @@ export const FeatureSettingsSection = ({
   const { t } = useTranslate();
   const controlId = useId();
   const titleId = useId();
+  const availabilityId = useId();
 
   return (
     <StyledSection aria-labelledby={titleId}>
@@ -103,10 +106,14 @@ export const FeatureSettingsSection = ({
           type="button"
           role="switch"
           aria-checked={isEnabled}
-          disabled={isSaving}
+          aria-describedby={!isAvailable ? availabilityId : undefined}
+          disabled={!isAvailable || isSaving}
           onClick={() => onChange(!isEnabled)}
         />
       </StyledControl>
+      {!isAvailable && (
+        <p id={availabilityId}>{t('Not available in this version yet.')}</p>
+      )}
       {hasSaveError && (
         <p role="alert">
           {t('Could not save this setting. Please try again.')}

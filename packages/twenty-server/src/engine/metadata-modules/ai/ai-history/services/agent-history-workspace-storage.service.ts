@@ -1,35 +1,23 @@
 import { AgentHistoryStorageException } from 'src/engine/metadata-modules/ai/ai-history/exceptions/agent-history-storage.exception';
-import { Inject, Injectable } from '@nestjs/common';
+import { type AgentHistoryObjectName } from 'src/engine/metadata-modules/ai/ai-history/types/agent-history-object-name.type';
+import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, type EntityManager } from 'typeorm';
 import { isNonEmptyString } from '@sniptt/guards';
-import {
-  type InboxObjectNamesByLegacyName,
-  type LegacyInboxObjectName,
-} from 'twenty-shared/ai';
 import { doNotTranslate } from 'twenty-shared/i18n';
 
-import { InboxObjectNamesResolverService } from 'src/engine/metadata-modules/ai/ai-history/services/inbox-object-names-resolver.service';
 import { getWorkspaceAgentHistoryTable } from 'src/engine/metadata-modules/ai/ai-history/utils/get-workspace-agent-history-table.util';
 
 export type AgentHistoryStorageContext = {
   manager: EntityManager;
-  table: (name: LegacyInboxObjectName) => string;
-  inboxObjectNamesByLegacyName: InboxObjectNamesByLegacyName;
+  table: (name: AgentHistoryObjectName) => string;
 };
 
 @Injectable()
 export class AgentHistoryWorkspaceStorageService {
-  constructor(
-    @InjectDataSource() private readonly dataSource: DataSource,
-    @Inject(InboxObjectNamesResolverService)
-    private readonly inboxObjectNamesResolverService: Pick<
-      InboxObjectNamesResolverService,
-      'resolve'
-    >,
-  ) {}
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
-  async getContext(workspaceId: string): Promise<AgentHistoryStorageContext> {
+  getContext(workspaceId: string): AgentHistoryStorageContext {
     if (!isNonEmptyString(workspaceId)) {
       throw new AgentHistoryStorageException({
         code: 'INVALID_WORKSPACE',
@@ -37,14 +25,9 @@ export class AgentHistoryWorkspaceStorageService {
       });
     }
 
-    const inboxObjectNamesByLegacyName =
-      await this.inboxObjectNamesResolverService.resolve(workspaceId);
-    const getTable = getWorkspaceAgentHistoryTable(workspaceId);
-
     return {
       manager: this.dataSource.manager,
-      table: (name) => getTable(inboxObjectNamesByLegacyName[name]),
-      inboxObjectNamesByLegacyName,
+      table: getWorkspaceAgentHistoryTable(workspaceId),
     };
   }
 
@@ -52,11 +35,8 @@ export class AgentHistoryWorkspaceStorageService {
     workspaceId: string,
     work: (context: AgentHistoryStorageContext) => Promise<TResult>,
   ): Promise<TResult> {
-    const { table, inboxObjectNamesByLegacyName } =
-      await this.getContext(workspaceId);
+    const { table } = this.getContext(workspaceId);
 
-    return this.dataSource.transaction((manager) =>
-      work({ manager, table, inboxObjectNamesByLegacyName }),
-    );
+    return this.dataSource.transaction((manager) => work({ manager, table }));
   }
 }

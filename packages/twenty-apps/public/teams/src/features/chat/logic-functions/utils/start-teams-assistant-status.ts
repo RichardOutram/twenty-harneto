@@ -4,15 +4,16 @@ import {
   TEAMS_ASSISTANT_INITIAL_STATUS,
   TEAMS_ASSISTANT_STATUS_STEPS,
 } from 'src/features/chat/logic-functions/constants/teams-assistant-status-steps';
+import { TEAMS_ASSISTANT_STREAM_HANDOFF_STEP } from 'src/features/chat/logic-functions/constants/teams-assistant-stream-handoff-step';
 import { TEAMS_PERSONAL_CONVERSATION_TYPE } from 'src/features/chat/logic-functions/constants/teams-personal-conversation-type';
 import { type TeamsAssistantStatusWriter } from 'src/features/chat/logic-functions/types/teams-assistant-status-writer.type';
-import { sendTeamsMessage } from 'src/features/chat/logic-functions/utils/send-teams-message';
-import { startTeamsAssistantPlaceholder } from 'src/features/chat/logic-functions/utils/start-teams-assistant-placeholder';
+import { getTeamsConnectorAccessTokenOrThrow } from 'src/features/chat/logic-functions/utils/get-teams-connector-access-token-or-throw';
+import { sendTeamsActivity } from 'src/features/chat/logic-functions/utils/send-teams-activity';
 import { startTeamsAssistantStream } from 'src/features/chat/logic-functions/utils/start-teams-assistant-stream';
 
 const PENDING_UPDATE_WAIT_MS = 5000;
 
-// REST streaming is only documented for one-on-one chats, so other conversations get a placeholder message.
+// Teams only streams in one-on-one chats, so other conversations get a plain reply at the end.
 export const startTeamsAssistantStatus = async ({
   serviceUrl,
   conversationId,
@@ -23,11 +24,16 @@ export const startTeamsAssistantStatus = async ({
   conversationType: string;
 }): Promise<Pick<TeamsAssistantStatusWriter, 'finish'>> => {
   const sendMessage = async (text: string) => {
-    await sendTeamsMessage({ serviceUrl, conversationId, text });
+    await sendTeamsActivity({
+      serviceUrl,
+      conversationId,
+      accessToken: await getTeamsConnectorAccessTokenOrThrow(),
+      activity: { type: 'message', text },
+    });
   };
 
   if (conversationType !== TEAMS_PERSONAL_CONVERSATION_TYPE) {
-    return startTeamsAssistantPlaceholder({ serviceUrl, conversationId });
+    return { finish: sendMessage };
   }
 
   const writer = await startTeamsAssistantStream({
@@ -47,6 +53,7 @@ export const startTeamsAssistantStatus = async ({
     return { finish: sendMessage };
   }
 
+  let isStreamOpen = true;
   let pendingUpdate = Promise.resolve();
 
   const queueStreamCall = (streamCall: () => Promise<void>) => {
@@ -58,12 +65,23 @@ export const startTeamsAssistantStatus = async ({
     });
   };
 
-  const timers = TEAMS_ASSISTANT_STATUS_STEPS.map((step) =>
-    setTimeout(
-      () => queueStreamCall(() => writer.update(step.text)),
-      step.afterSeconds * 1000,
+  const handOffStream = async () => {
+    isStreamOpen = false;
+    await writer.finish(TEAMS_ASSISTANT_STREAM_HANDOFF_STEP.text);
+  };
+
+  const timers = [
+    ...TEAMS_ASSISTANT_STATUS_STEPS.map((step) =>
+      setTimeout(
+        () => queueStreamCall(() => writer.update(step.text)),
+        step.afterSeconds * 1000,
+      ),
     ),
-  );
+    setTimeout(
+      () => queueStreamCall(handOffStream),
+      TEAMS_ASSISTANT_STREAM_HANDOFF_STEP.afterSeconds * 1000,
+    ),
+  ];
 
   const waitForPendingUpdate = async () => {
     let waitTimer: ReturnType<typeof setTimeout> | undefined;
@@ -81,6 +99,10 @@ export const startTeamsAssistantStatus = async ({
     finish: async (text) => {
       timers.forEach(clearTimeout);
       await waitForPendingUpdate();
+
+      if (!isStreamOpen) {
+        return sendMessage(text);
+      }
 
       await writer.finish(text).catch((error: unknown) => {
         console.warn(

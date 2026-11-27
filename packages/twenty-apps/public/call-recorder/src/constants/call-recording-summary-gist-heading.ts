@@ -1,1 +1,0 @@
-export const CALL_RECORDING_SUMMARY_GIST_HEADING = '## Gist';

@@ -8,7 +8,6 @@ import { DeleteFieldMetadataTool } from 'src/engine/metadata-modules/field-metad
 import { GetFieldMetadataTool } from 'src/engine/metadata-modules/field-metadata/tools/get-field-metadata.tool';
 import { UpdateFieldMetadataTool } from 'src/engine/metadata-modules/field-metadata/tools/update-field-metadata.tool';
 import { UpdateManyFieldMetadataTool } from 'src/engine/metadata-modules/field-metadata/tools/update-many-field-metadata.tool';
-import { ValidateFormulaExpressionTool } from 'src/engine/metadata-modules/field-metadata/tools/validate-formula-expression.tool';
 import { WorkspaceManyOrAllFlatEntityMapsCacheModule } from 'src/engine/metadata-modules/flat-entity/services/workspace-many-or-all-flat-entity-maps-cache.module';
 import { ObjectMetadataModule } from 'src/engine/metadata-modules/object-metadata/object-metadata.module';
 import { CreateManyObjectMetadataTool } from 'src/engine/metadata-modules/object-metadata/tools/create-many-object-metadata.tool';
@@ -23,7 +22,6 @@ import { GetValidationRulesTool } from 'src/engine/metadata-modules/validation-r
 import { UpdateValidationRuleTool } from 'src/engine/metadata-modules/validation-rule/tools/update-validation-rule.tool';
 import { ValidateValidationRuleExpressionTool } from 'src/engine/metadata-modules/validation-rule/tools/validate-validation-rule-expression.tool';
 import { ValidationRuleModule } from 'src/engine/metadata-modules/validation-rule/validation-rule.module';
-import { WorkspaceCacheModule } from 'src/engine/workspace-cache/workspace-cache.module';
 
 @Module({
   imports: [
@@ -31,7 +29,6 @@ import { WorkspaceCacheModule } from 'src/engine/workspace-cache/workspace-cache
     FieldMetadataModule,
     ValidationRuleModule,
     WorkspaceManyOrAllFlatEntityMapsCacheModule,
-    WorkspaceCacheModule,
   ],
   providers: [
     MetadataToolIdentifierService,
@@ -48,7 +45,6 @@ import { WorkspaceCacheModule } from 'src/engine/workspace-cache/workspace-cache
     CreateManyFieldMetadataTool,
     UpdateManyFieldMetadataTool,
     CreateManyRelationFieldsTool,
-    ValidateFormulaExpressionTool,
     GetValidationRulesTool,
     ValidateValidationRuleExpressionTool,
     CreateValidationRuleTool,

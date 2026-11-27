@@ -13,7 +13,6 @@ export type NavigationMenuItemManifest = SyncableEntityOptions & {
   link?: string;
   nativePageKey?: NativePageKey;
   builtInSectionKey?: BuiltInSectionKey;
-  visibleItemLimit?: number;
   parentUniversalIdentifier?: string;
   // TODO(@thomtrp): remove once published apps no longer send it, along with normalizeNavigationMenuItemManifest
   /** @deprecated Use parentUniversalIdentifier instead. */

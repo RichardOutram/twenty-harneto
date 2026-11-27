@@ -110,6 +110,7 @@ describe('CoreWorkflowVersionMutationWorkspaceService.updateStep', () => {
 
     const updatedStep = await service.updateStep({
       workspaceId: WORKSPACE_ID,
+      userWorkspaceId: undefined,
       coreWorkflowVersionId: CORE_WORKFLOW_VERSION_ID,
       step,
     });
@@ -147,6 +148,7 @@ describe('CoreWorkflowVersionMutationWorkspaceService.updateStep', () => {
 
     const updatedStep = await service.updateStep({
       workspaceId: WORKSPACE_ID,
+      userWorkspaceId: undefined,
       coreWorkflowVersionId: CORE_WORKFLOW_VERSION_ID,
       step,
     });

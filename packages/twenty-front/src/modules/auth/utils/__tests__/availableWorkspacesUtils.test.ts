@@ -180,16 +180,17 @@ describe('availableWorkspacesUtils', () => {
       });
     });
 
-    describe('when workspace has personalInviteToken', () => {
-      it('should return SignInUp path with inviteToken in search params', () => {
+    describe('when workspace has personalInviteToken and inviteHash', () => {
+      it('should return Invite path with inviteToken in search params', () => {
         const workspace = createMockAvailableWorkspace({
           personalInviteToken: 'test-invite-token',
+          inviteHash: 'test-invite-hash',
         });
 
         const result = getAvailableWorkspacePathAndSearchParams(workspace);
 
         expect(result).toEqual({
-          pathname: AppPath.SignInUp,
+          pathname: '/invite/test-invite-hash',
           searchParams: { inviteToken: 'test-invite-token' },
         });
       });
@@ -197,6 +198,7 @@ describe('availableWorkspacesUtils', () => {
       it('should include default search params with inviteToken', () => {
         const workspace = createMockAvailableWorkspace({
           personalInviteToken: 'test-invite-token',
+          inviteHash: 'test-invite-hash',
         });
 
         const result = getAvailableWorkspacePathAndSearchParams(workspace, {
@@ -204,8 +206,24 @@ describe('availableWorkspacesUtils', () => {
         });
 
         expect(result).toEqual({
-          pathname: AppPath.SignInUp,
+          pathname: '/invite/test-invite-hash',
           searchParams: { source: 'email', inviteToken: 'test-invite-token' },
+        });
+      });
+    });
+
+    describe('when workspace has only personalInviteToken without inviteHash', () => {
+      it('should return SignInUp path with inviteToken in search params', () => {
+        const workspace = createMockAvailableWorkspace({
+          personalInviteToken: 'test-invite-token',
+          inviteHash: undefined,
+        });
+
+        const result = getAvailableWorkspacePathAndSearchParams(workspace);
+
+        expect(result).toEqual({
+          pathname: AppPath.SignInUp,
+          searchParams: { inviteToken: 'test-invite-token' },
         });
       });
     });
@@ -241,6 +259,7 @@ describe('availableWorkspacesUtils', () => {
         const workspace = createMockAvailableWorkspace({
           loginToken: 'test-login-token',
           personalInviteToken: 'test-invite-token',
+          inviteHash: 'test-invite-hash',
         });
 
         const result = getAvailableWorkspacePathAndSearchParams(workspace);

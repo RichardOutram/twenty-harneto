@@ -82,7 +82,6 @@ import { AccountsToReconnectKeys } from 'src/modules/connected-account/types/acc
 import { WorkspaceMemberWorkspaceEntity } from 'src/modules/workspace-member/standard-objects/workspace-member.workspace-entity';
 import { AccessPolicyGuard } from 'src/engine/guards/access-policy.guard';
 import { type AccessPolicy } from 'src/engine/guards/types/access-policy.type';
-import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 
 const USER_ACCESS_POLICY: AccessPolicy = {
   authPrincipals: {
@@ -93,17 +92,6 @@ const USER_ACCESS_POLICY: AccessPolicy = {
   },
   requiredPermissionFlags: [],
 };
-
-const USER_SESSION_ACCESS_POLICY: AccessPolicy = {
-  authPrincipals: {
-    userSession: true,
-    apiKey: false,
-    oauthClient: false,
-    application: false,
-  },
-  requiredPermissionFlags: [],
-};
-
 const getHMACKey = (email?: string, key?: string | null) => {
   if (!email || !key) {
     return null;
@@ -212,7 +200,6 @@ export class UserResolver {
   @ResolveField(() => GraphQLJSONObject, {
     nullable: true,
   })
-  @UseGuards(NoPermissionGuard)
   async userVars(
     @Parent() user: UserEntity,
     @AuthWorkspace({ allowUndefined: true })
@@ -229,6 +216,7 @@ export class UserResolver {
     const userVarAllowList: string[] = [
       OnboardingStepKeys.ONBOARDING_CONNECT_ACCOUNT_PENDING,
       OnboardingStepKeys.ONBOARDING_INVITE_TEAM_PENDING,
+      OnboardingStepKeys.ONBOARDING_BOOK_CALL_PENDING,
       AccountsToReconnectKeys.ACCOUNTS_TO_RECONNECT_INSUFFICIENT_PERMISSIONS,
       AccountsToReconnectKeys.ACCOUNTS_TO_RECONNECT_EMAIL_ALIASES,
     ];
@@ -243,7 +231,6 @@ export class UserResolver {
   @ResolveField(() => WorkspaceMemberDTO, {
     nullable: true,
   })
-  @UseGuards(NoPermissionGuard)
   async workspaceMember(
     @Parent() user: UserEntity,
     @AuthWorkspace({ allowUndefined: true })
@@ -291,7 +278,6 @@ export class UserResolver {
   @ResolveField(() => [WorkspaceMemberDTO], {
     nullable: true,
   })
-  @UseGuards(NoPermissionGuard)
   async workspaceMembers(
     @Parent() _user: UserEntity,
     @AuthWorkspace({ allowUndefined: true })
@@ -363,7 +349,6 @@ export class UserResolver {
   @ResolveField(() => [DeletedWorkspaceMemberDTO], {
     nullable: true,
   })
-  @UseGuards(NoPermissionGuard)
   async deletedWorkspaceMembers(
     @Parent() _user: UserEntity,
     @AuthWorkspace({ allowUndefined: true })
@@ -385,13 +370,11 @@ export class UserResolver {
   @ResolveField(() => Boolean, {
     name: 'hasPassword',
   })
-  @UseGuards(NoPermissionGuard)
   hasPassword(@Parent() user: UserEntity): boolean {
     return isDefined(user.passwordHash);
   }
 
   @ResolveField(() => Boolean)
-  @UseGuards(NoPermissionGuard)
   canAccessFullAdminPanel(
     @Parent() user: UserEntity,
     @AuthWorkspace({ allowUndefined: true })
@@ -409,7 +392,6 @@ export class UserResolver {
   }
 
   @ResolveField(() => Boolean)
-  @UseGuards(NoPermissionGuard)
   canImpersonate(
     @Parent() user: UserEntity,
     @AuthWorkspace({ allowUndefined: true })
@@ -429,8 +411,14 @@ export class UserResolver {
   @ResolveField(() => String, {
     nullable: true,
   })
-  @UseGuards(AccessPolicyGuard(USER_SESSION_ACCESS_POLICY))
-  supportUserHash(@Parent() parent: UserEntity): string | null {
+  supportUserHash(
+    @Parent() parent: UserEntity,
+    @AuthIsUserSession() isUserSession: boolean,
+  ): string | null {
+    if (!isUserSession) {
+      throw buildUserSessionRequiredError();
+    }
+
     if (
       this.twentyConfigService.get('SUPPORT_DRIVER') !== SupportDriver.FRONT
     ) {
@@ -661,7 +649,6 @@ export class UserResolver {
   @ResolveField(() => OnboardingStatus, {
     nullable: true,
   })
-  @UseGuards(NoPermissionGuard)
   async onboardingStatus(
     @Parent() user: UserEntity,
     @AuthWorkspace({ allowUndefined: true })
@@ -680,7 +667,6 @@ export class UserResolver {
   @ResolveField(() => OnboardingStatus, {
     nullable: true,
   })
-  @UseGuards(NoPermissionGuard)
   async previousOnboardingStatus(
     @Parent() user: UserEntity,
     @AuthWorkspace({ allowUndefined: true })
@@ -699,7 +685,6 @@ export class UserResolver {
   @ResolveField(() => Boolean, {
     nullable: true,
   })
-  @UseGuards(NoPermissionGuard)
   async isWorkspaceCreator(
     @Parent() user: UserEntity,
     @AuthWorkspace({ allowUndefined: true })
@@ -718,7 +703,6 @@ export class UserResolver {
   @ResolveField(() => WorkspaceEntity, {
     nullable: true,
   })
-  @UseGuards(NoPermissionGuard)
   async currentWorkspace(
     @AuthWorkspace({ allowUndefined: true })
     workspace: WorkspaceEntity | undefined,
@@ -735,8 +719,14 @@ export class UserResolver {
   @ResolveField(() => [UserWorkspaceEntity], {
     nullable: false,
   })
-  @UseGuards(AccessPolicyGuard(USER_SESSION_ACCESS_POLICY))
-  async workspaces(@Parent() user: UserEntity) {
+  async workspaces(
+    @Parent() user: UserEntity,
+    @AuthIsUserSession() isUserSession: boolean,
+  ) {
+    if (!isUserSession) {
+      throw buildUserSessionRequiredError();
+    }
+
     return user.userWorkspaces;
   }
 
@@ -745,20 +735,30 @@ export class UserResolver {
     name: 'userWorkspaces',
     nullable: false,
   })
-  @UseGuards(AccessPolicyGuard(USER_SESSION_ACCESS_POLICY))
-  async userWorkspacesField(@Parent() user: UserEntity) {
+  async userWorkspacesField(
+    @Parent() user: UserEntity,
+    @AuthIsUserSession() isUserSession: boolean,
+  ) {
+    if (!isUserSession) {
+      throw buildUserSessionRequiredError();
+    }
+
     return user.userWorkspaces;
   }
 
   @ResolveField(() => AvailableWorkspaces)
-  @UseGuards(AccessPolicyGuard(USER_SESSION_ACCESS_POLICY))
   async availableWorkspaces(
     @AuthUser() user: AuthContextUser,
     @AuthProvider() authProvider: AuthProviderEnum,
     @AuthWorkspace({ allowUndefined: true })
     workspace: WorkspaceEntity | undefined,
     @AuthAuthenticatedAt() authenticatedAt: Date | undefined,
+    @AuthIsUserSession() isUserSession: boolean,
   ): Promise<AvailableWorkspaces> {
+    if (!isUserSession) {
+      throw buildUserSessionRequiredError();
+    }
+
     return this.userWorkspaceService.setLoginTokenToAvailableWorkspacesWhenAuthProviderMatch(
       await this.userWorkspaceService.findAvailableWorkspacesByEmail(
         user.email,

@@ -294,36 +294,6 @@ msgstr "Ett fel i DNS-hanteraren inträffade."
 msgid "A field with this name already exists."
 msgstr "Ett fält med detta namn finns redan."
 
-#. js-lingui-id: lDO6A7
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-msgid "A formula cannot read its own value, directly or through other formulas"
-msgstr "En formel kan inte läsa sitt eget värde, direkt eller via andra formler"
-
-#. js-lingui-id: 01ujS8
-#: src/engine/api/common/common-args-processors/data-arg-processor/data-arg-processor.service.ts
-msgid "A formula field cannot be edited."
-msgstr "Ett formelfält kan inte redigeras."
-
-#. js-lingui-id: Mx5uL9
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-msgid "A formula field cannot be searched"
-msgstr "Ett formelfält kan inte sökas i"
-
-#. js-lingui-id: qD6oq6
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-msgid "A formula field cannot be unique"
-msgstr "Ett formelfält kan inte vara unikt"
-
-#. js-lingui-id: Ie62ou
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-msgid "A formula needs an expression"
-msgstr "En formel behöver ett uttryck"
-
-#. js-lingui-id: yCrWFs
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-name-read-by-formulas.util.ts
-msgid "A formula reads this field, so it cannot be named \"{name}\""
-msgstr "En formel läser det här fältet, så det kan inte heta \"{name}\""
-
 #. js-lingui-id: L6D4W7
 #: src/engine/core-modules/enterprise/enterprise.exception.ts
 msgid "A free development instance requires an active production instance on this Organization subscription."
@@ -365,28 +335,6 @@ msgstr "En länk som spåras i en kampanj"
 #: src/engine/core-modules/emailing-domain/drivers/exceptions/emailing-domain-driver.exception.ts
 msgid "A marketing email can only be sent to one recipient at a time, so each person gets their own unsubscribe link."
 msgstr "Ett marknadsföringsmejl kan endast skickas till en mottagare åt gången, så varje person får sin egen avprenumerationslänk."
-
-#. js-lingui-id: TS5uum
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/get-marketplace-application-role-restriction-errors.util.ts
-msgid "A marketplace application cannot declare row-level rules or field permissions"
-msgstr "En marknadsplatsapplikation kan inte deklarera regler på radnivå eller fältbehörigheter"
-
-#. js-lingui-id: bH9jpk
-#: src/engine/permissions/permissions.exception.ts
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/get-marketplace-application-role-restriction-errors.util.ts
-msgid "A marketplace application cannot declare row-level rules or field permissions."
-msgstr "En marknadsplatsapplikation kan inte deklarera regler på radnivå eller fältbehörigheter."
-
-#. js-lingui-id: +//ajp
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/get-marketplace-application-role-assignability-errors.util.ts
-msgid "A marketplace application role can only be assigned to agents"
-msgstr "En marknadsplatsapplikationsroll kan endast tilldelas agenter"
-
-#. js-lingui-id: BRZH6M
-#: src/engine/permissions/permissions.exception.ts
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/get-marketplace-application-role-assignability-errors.util.ts
-msgid "A marketplace application role can only be assigned to agents."
-msgstr "En marknadsplatsapplikationsroll kan endast tilldelas agenter."
 
 #. js-lingui-id: Spm4/x
 #: src/engine/metadata-modules/message-channel/services/application-message-send.service.ts
@@ -446,13 +394,13 @@ msgstr "En nästlad relationswidget måste använda tabellayouten."
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-field-permission-unreadable-nested-source.util.ts
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-field-permission-unreadable-nested-source.util.ts
 msgid "A nested unreadable field cannot be tied to a row level permission rule"
-msgstr "Ett kapslat oläsbart fält kan inte kopplas till en behörighetsregel på radnivå"
+msgstr ""
 
 #. js-lingui-id: +cMY8o
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-field-permission-unreadable-nested-source.util.ts
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-field-permission-unreadable-nested-source.util.ts
 msgid "A nested unreadable field cannot use itself as its source"
-msgstr "Ett kapslat oläsbart fält kan inte använda sig självt som källa"
+msgstr ""
 
 #. js-lingui-id: ChJFls
 #: src/modules/calendar/calendar-event-import-manager/drivers/exceptions/calendar-event-import-driver.exception.ts
@@ -549,11 +497,6 @@ msgstr "En post med detta värde finns redan."
 msgctxt "objectMetadata.description"
 msgid "A recording of a meeting"
 msgstr "En inspelning av ett möte"
-
-#. js-lingui-id: l+tyko
-#: src/modules/calendar/calendar-event-creation-manager/utils/normalize-calendar-event-recurrence.util.ts
-msgid "A recurrence ends either on recurrence.endDate or after recurrence.endOccurrenceCount, not both"
-msgstr "En upprepning slutar antingen på recurrence.endDate eller efter recurrence.endOccurrenceCount, inte båda"
 
 #. js-lingui-id: TmGFqW
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-field-relation-target.util.ts
@@ -809,18 +752,6 @@ msgstr "Ett fel i vygruppen inträffade."
 msgid "A view sort error occurred."
 msgstr "Ett fel i vysorteringen inträffade."
 
-#. js-lingui-id: r0+ZZA
-#: src/engine/metadata-modules/flat-navigation-menu-item/validators/utils/validate-navigation-menu-item-type-required-properties.util.ts
-#: src/engine/metadata-modules/flat-navigation-menu-item/validators/utils/validate-navigation-menu-item-type-required-properties.util.ts
-msgid "A visibleItemLimit is only allowed on SECTION type"
-msgstr "Ett visibleItemLimit är endast tillåtet för typen SECTION"
-
-#. js-lingui-id: +DI2pX
-#: src/engine/metadata-modules/flat-navigation-menu-item/validators/utils/validate-navigation-menu-item-type-required-properties.util.ts
-#: src/engine/metadata-modules/flat-navigation-menu-item/validators/utils/validate-navigation-menu-item-type-required-properties.util.ts
-msgid "A visibleItemLimit must be an integer between {NAVIGATION_MENU_ITEM_VISIBLE_ITEM_LIMIT_MIN} and {NAVIGATION_MENU_ITEM_VISIBLE_ITEM_LIMIT_MAX}"
-msgstr "Ett visibleItemLimit måste vara ett heltal mellan {NAVIGATION_MENU_ITEM_VISIBLE_ITEM_LIMIT_MIN} och {NAVIGATION_MENU_ITEM_VISIBLE_ITEM_LIMIT_MAX}"
-
 #. js-lingui-id: SMhyGZ
 #: src/engine/metadata-modules/webhook/webhook.exception.ts
 msgid "A webhook with this configuration already exists."
@@ -846,12 +777,12 @@ msgstr "En arbetsplatsmedlem"
 #. js-lingui-id: EAIj51
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 msgid "A workspace member relation filter needs a field and at least one value"
-msgstr "Ett relationsfilter för arbetsytemedlemmar behöver ett fält och minst ett värde"
+msgstr ""
 
 #. js-lingui-id: mZ5k8L
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 msgid "A workspace member relation filter needs a workspace member relation"
-msgstr "Ett relationsfilter för arbetsytemedlemmar behöver en arbetsytemedlemsrelation"
+msgstr ""
 
 #. js-lingui-id: /WlOrK
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
@@ -1244,12 +1175,6 @@ msgstr "Agentturer"
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-agent-name-uniqueness.util.ts
 msgid "Agent with name \"{name}\" already exists"
 msgstr "En agent med namnet \"{name}\" finns redan"
-
-#. js-lingui-id: 6KWIu6
-#: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
-msgctxt "commandMenuItem.shortLabel"
-msgid "Agents"
-msgstr "Agenter"
 
 #. js-lingui-id: wqJIjz
 #: src/engine/metadata-modules/flat-page-layout-widget/validators/utils/validate-base-graph-fields.util.ts
@@ -1884,12 +1809,6 @@ msgctxt "fieldMetadata.label"
 msgid "Assigned tasks"
 msgstr "Tilldelade uppgifter"
 
-#. js-lingui-id: n0weTx
-#: src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-agent-chat-thread-views.util.ts
-msgctxt "view.name"
-msgid "Assigned to me"
-msgstr "Tilldelad till mig"
-
 #. js-lingui-id: JytrLO
 #: src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-task-views.util.ts
 msgctxt "view.name"
@@ -2108,12 +2027,6 @@ msgstr "URL för skapad mall"
 msgctxt "fieldMetadata.label"
 msgid "Automatically assigned"
 msgstr "Tilldelas automatiskt"
-
-#. js-lingui-id: J9HcLf
-#: src/engine/workspace-manager/twenty-standard-application/constants/standard-navigation-menu-item.constant.ts
-msgctxt "navigationMenuItem.name"
-msgid "Automations"
-msgstr "Automationer"
 
 #. js-lingui-id: bhFnpx
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
@@ -3214,12 +3127,6 @@ msgctxt "fieldMetadata.label"
 msgid "Chats"
 msgstr "Chattar"
 
-#. js-lingui-id: bK/UPN
-#: src/engine/workspace-manager/twenty-standard-application/constants/standard-navigation-menu-item.constant.ts
-msgctxt "navigationMenuItem.name"
-msgid "Chats"
-msgstr "Chattar"
-
 #. js-lingui-id: 68T2AN
 #: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
 msgctxt "objectMetadata.labelPlural"
@@ -3249,6 +3156,11 @@ msgctxt "fieldMetadata.description"
 msgid "Chats tied to the opportunity"
 msgstr "Chattar kopplade till affärsmöjligheten"
 
+#. js-lingui-id: YNDJWu
+#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
+msgid "Checking whether a one-to-many relation is empty requires relation hops in row level permission predicates"
+msgstr "Kontroll av om en en-till-många-relation är tom kräver relationshopp i predikat för behörigheter på radnivå"
+
 #. js-lingui-id: ZgijCO
 #: src/engine/metadata-modules/page-layout/tools/services/page-layout-tool.service.ts
 msgid "Choose an active tab and a widget position matching its layout mode."
@@ -3267,7 +3179,7 @@ msgstr "Välj en person eller en roll att dela med."
 #. js-lingui-id: 8+4T+u
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 msgid "Choose the field and the values to keep on the related records"
-msgstr "Välj fältet och värdena som ska behållas i de relaterade posterna"
+msgstr ""
 
 #. js-lingui-id: IkeRn2
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
@@ -3282,7 +3194,7 @@ msgstr "Välj objektet som genererar denna tidslinjeaktivitetstyp."
 #. js-lingui-id: fr9dvq
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 msgid "Choose the relation of the workspace member to filter"
-msgstr "Välj arbetsytemedlemmens relation att filtrera"
+msgstr ""
 
 #. js-lingui-id: PDwfT5
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-timeline-activity-type-validator.service.ts
@@ -4275,16 +4187,6 @@ msgstr "CRM-hygien"
 msgid "Cron pattern \"{pattern}\" is invalid"
 msgstr "Cron-mönstret \"{pattern}\" är ogiltigt"
 
-#. js-lingui-id: sJbCNC
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-logic-function-cron-trigger-spread.util.ts
-msgid "Cron trigger spread must be between 2 minutes and 24 hours."
-msgstr "Spridningen för Cron-utlösaren måste vara mellan 2 minuter och 24 timmar."
-
-#. js-lingui-id: GbygrC
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-logic-function-cron-trigger-spread.util.ts
-msgid "Cron trigger spreadMs must be an integer between {CRON_TRIGGER_MIN_SPREAD_MS} and {CRON_TRIGGER_MAX_SPREAD_MS}"
-msgstr "Spridningen för Cron-utlösaren spreadMs måste vara ett heltal mellan {CRON_TRIGGER_MIN_SPREAD_MS} och {CRON_TRIGGER_MAX_SPREAD_MS}"
-
 #. js-lingui-id: ViG9dm
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-agent-triggers.util.ts
 msgid "Cron triggers need a valid cron pattern such as \"0 9 * * 1\""
@@ -4958,12 +4860,6 @@ msgstr "Klar"
 #. js-lingui-id: uyJle/
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
 msgctxt "fieldMetadata.label"
-msgid "Done"
-msgstr "Klar"
-
-#. js-lingui-id: yXCB4Q
-#: src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-agent-chat-thread-views.util.ts
-msgctxt "view.name"
 msgid "Done"
 msgstr "Klar"
 
@@ -5832,7 +5728,7 @@ msgstr "Fältet \"{workspaceMemberRelationFieldName}\" är inte en en-till-mång
 #. js-lingui-id: yfFA+h
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 msgid "Field \"{workspaceMemberRelationFilterFieldName}\" is not a select, text or boolean field of the related records"
-msgstr "Fältet \"{workspaceMemberRelationFilterFieldName}\" är inte ett urvals-, text- eller booleskt fält i de relaterade posterna"
+msgstr ""
 
 #. js-lingui-id: CKPTLC
 #. placeholder {0}: query.objectName
@@ -6286,7 +6182,7 @@ msgstr "Filteroperanden stöds inte för den här fälttypen"
 #. js-lingui-id: twPawb
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 msgid "Filter the related records on one of their select, text or boolean fields"
-msgstr "Filtrera de relaterade posterna på ett av deras urvals-, text- eller booleska fält"
+msgstr ""
 
 #. js-lingui-id: dzteua
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/get-invalid-view-filter-select-option-error.util.ts
@@ -6383,11 +6279,6 @@ msgstr "Formuläråtgärd måste ha minst ett fält"
 #: src/engine/metadata-modules/ai/ai-chat/utils/build-agent-chat-web-push-notification.util.ts
 msgid "Former member"
 msgstr "Tidigare medlem"
-
-#. js-lingui-id: Ngac6o
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-msgid "Formula fields are not enabled for this workspace"
-msgstr "Formelfält är inte aktiverade i den här arbetsytan"
 
 #. js-lingui-id: JRr+QW
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-logic-function-forwarded-request-headers.util.ts
@@ -6638,29 +6529,17 @@ msgctxt "commandMenuItem.label"
 msgid "Go to {objectLabelPlural}"
 msgstr "Gå till {objectLabelPlural}"
 
-#. js-lingui-id: RQG1+p
+#. js-lingui-id: tKVJbL
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Admin Panel"
-msgstr "Gå till administratörspanelen"
+msgid "Go to Admin Panel Settings"
+msgstr "Gå till Admin Panel - Inställningar"
 
-#. js-lingui-id: zPVvLp
+#. js-lingui-id: iLqs3S
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Agents"
-msgstr "Gå till agenter"
-
-#. js-lingui-id: EiL/A6
-#: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
-msgctxt "commandMenuItem.label"
-msgid "Go to AI"
-msgstr "Gå till AI"
-
-#. js-lingui-id: OVO+nS
-#: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
-msgctxt "commandMenuItem.label"
-msgid "Go to Apps"
-msgstr "Gå till appar"
+msgid "Go to AI Settings"
+msgstr "Gå till AI-inställningar"
 
 #. js-lingui-id: TndVqR
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
@@ -6668,77 +6547,77 @@ msgctxt "commandMenuItem.label"
 msgid "Go to Apps preferences"
 msgstr "Gå till appinställningar"
 
-#. js-lingui-id: zsFm1q
+#. js-lingui-id: 60o/+J
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Billing"
-msgstr "Gå till fakturering"
+msgid "Go to Apps Settings"
+msgstr "Gå till App-inställningar"
 
-#. js-lingui-id: xk8nZG
+#. js-lingui-id: tlIbgN
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Community"
-msgstr "Gå till communityn"
+msgid "Go to Billing Settings"
+msgstr "Gå till Fakturering - Inställningar"
 
-#. js-lingui-id: TMv4vU
+#. js-lingui-id: u5u/QJ
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Data Model"
-msgstr "Gå till datamodell"
+msgid "Go to Community Settings"
+msgstr "Gå till Gemenskap - Inställningar"
 
-#. js-lingui-id: nvVoDQ
+#. js-lingui-id: dZPXqH
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Developers"
-msgstr "Gå till utvecklare"
+msgid "Go to Data Model Settings"
+msgstr "Gå till inställningar för datamodell"
 
-#. js-lingui-id: YTMzOA
+#. js-lingui-id: SNbGsK
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Domains"
-msgstr "Gå till domäner"
+msgid "Go to Developers Settings"
+msgstr "Gå till utvecklarinställningar"
 
-#. js-lingui-id: 8V43iD
+#. js-lingui-id: OLopIl
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Experience"
-msgstr "Gå till upplevelse"
+msgid "Go to Domains Settings"
+msgstr "Gå till domäninställningar"
 
-#. js-lingui-id: YA1mxo
+#. js-lingui-id: 46ZD9h
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to General"
-msgstr "Gå till allmänt"
+msgid "Go to Experience Settings"
+msgstr "Gå till Erfarenhet - Inställningar"
 
-#. js-lingui-id: bSctn/
+#. js-lingui-id: gfZlPy
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Members"
-msgstr "Gå till medlemmar"
+msgid "Go to General Settings"
+msgstr "Gå till Allmänt - Inställningar"
 
-#. js-lingui-id: F15zBM
+#. js-lingui-id: vPl+B/
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Roles"
-msgstr "Gå till roller"
+msgid "Go to Members Settings"
+msgstr "Gå till Medlemmar - Inställningar"
 
-#. js-lingui-id: R1fbZB
+#. js-lingui-id: qN3wNQ
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
-msgid "Go to Security"
-msgstr "Gå till säkerhet"
+msgid "Go to Roles Settings"
+msgstr "Gå till Rollinställningar"
+
+#. js-lingui-id: xAAHTC
+#: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
+msgctxt "commandMenuItem.label"
+msgid "Go to Security Settings"
+msgstr "Gå till säkerhetsinställningar"
 
 #. js-lingui-id: Rrvufq
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
 msgctxt "commandMenuItem.label"
 msgid "Go to Settings"
 msgstr "Gå till inställningar"
-
-#. js-lingui-id: 7rUSjX
-#: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
-msgctxt "commandMenuItem.label"
-msgid "Go to Workflows"
-msgstr "Gå till arbetsflöden"
 
 #. js-lingui-id: cvJ2e6
 #: src/engine/core-modules/auth/auth.exception.ts
@@ -7504,16 +7383,6 @@ msgstr "Ogiltigt filter: fältet att jämföra med hittades inte"
 #: src/engine/api/common/common-args-processors/filter-arg-processor/filter-arg-processor.service.ts
 msgid "Invalid filter: use \"{joinColumnName}\" to filter by this relation field"
 msgstr "Ogiltigt filter: använd \"{joinColumnName}\" för att filtrera efter detta relationsfält"
-
-#. js-lingui-id: QgIcr0
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-msgid "Invalid formula: {errorMessage}"
-msgstr "Ogiltig formel: {errorMessage}"
-
-#. js-lingui-id: uJjrgd
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-msgid "Invalid formula: write it as text"
-msgstr "Ogiltig formel: skriv den som text"
 
 #. js-lingui-id: rFH0az
 #: src/engine/metadata-modules/front-component/front-component.exception.ts
@@ -8671,22 +8540,6 @@ msgctxt "fieldMetadata.description"
 msgid "List of opportunities for which that person is the point of contact"
 msgstr "Lista över affärsmöjligheter där personen är kontaktperson"
 
-#. js-lingui-id: rbXxvc
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-list-pinned-field.util.ts
-msgid "List pinned field metadata not found"
-msgstr "Metadata för listans fästa fält hittades inte"
-
-#. js-lingui-id: j3iJjW
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-list-pinned-field.util.ts
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-list-pinned-field.util.ts
-msgid "List pinned field must belong to the view object"
-msgstr "Listans fästa fält måste tillhöra vyobjektet"
-
-#. js-lingui-id: ucNAgC
-#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-list-pinned-field.util.ts
-msgid "List pinned field not found"
-msgstr "Listans fästa fält hittades inte"
-
 #. js-lingui-id: Lgr7Gd
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-list-standard-flat-field-metadata.util.ts
 msgctxt "fieldMetadata.description"
@@ -8981,12 +8834,6 @@ msgstr "Medlemmar"
 msgctxt "objectMetadata.description"
 msgid "Members of a role who receive the same evaluated grant"
 msgstr "Medlemmar i en roll som får samma utvärderade tilldelning"
-
-#. js-lingui-id: 3dY3eR
-#: src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-agent-chat-thread-views.util.ts
-msgctxt "view.name"
-msgid "Mentions"
-msgstr "Omnämnanden"
 
 #. js-lingui-id: fqpInK
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-agent-chat-thread-participant-standard-flat-field-metadata.util.ts
@@ -9619,11 +9466,6 @@ msgstr "Namn"
 msgid "Name \"{name}\" is not available"
 msgstr "Namnet \"{name}\" är inte tillgängligt"
 
-#. js-lingui-id: 2tJW5E
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-composite-flat-field-metadata-column-names-availability.util.ts
-msgid "Name \"{name}\" is not available as \"{columnName}\" is already used by another field"
-msgstr "Namnet \"{name}\" är inte tillgängligt eftersom \"{columnName}\" redan används av ett annat fält"
-
 #. js-lingui-id: U8mbyw
 #: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-name-availability.util.ts
 msgid "Name \"{name}\" is not available as it is already used by another field"
@@ -9745,12 +9587,6 @@ msgstr "Navigeringsmålobjekt hittades inte"
 msgctxt "fieldMetadata.label"
 msgid "Needs Action"
 msgstr "Åtgärd krävs"
-
-#. js-lingui-id: xYrVeE
-#: src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-agent-chat-thread-views.util.ts
-msgctxt "view.name"
-msgid "Needs input"
-msgstr "Behöver inmatning"
 
 #. js-lingui-id: 1NsPsQ
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
@@ -10448,6 +10284,16 @@ msgstr "Endast en schemalagd eller pågående kampanj kan avbrytas."
 msgid "Only a server administrator can manage recovery codes for this member."
 msgstr "Endast en serveradministratör kan hantera återställningskoder för denna medlem."
 
+#. js-lingui-id: NcQgJA
+#: src/engine/metadata-modules/flat-workflow/utils/from-update-core-workflow-input-to-flat-workflow-to-update-or-throw.util.ts
+msgid "Only a workspace member can change who sees a workflow"
+msgstr "Endast en arbetsytemedlem kan ändra vem som ser ett arbetsflöde"
+
+#. js-lingui-id: yT1QOm
+#: src/engine/metadata-modules/ai/ai-agent/utils/from-create-agent-input-to-flat-agent.util.ts
+msgid "Only a workspace member can create a private agent."
+msgstr "Endast en arbetsytemedlem kan skapa en privat agent."
+
 #. js-lingui-id: VBcVkv
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-field-relation-scope.util.ts
 msgid "Only added columns can filter, sort or limit related records"
@@ -10514,10 +10360,11 @@ msgstr "Endast en widget med full höjd tillåts per flik"
 msgid "Only the application that owns this agent can change its triggers"
 msgstr "Endast applikationen som äger denna agent kan ändra dess utlösare"
 
-#. js-lingui-id: xCGjjr
-#: src/engine/permissions/metadata-permissions/utils/get-privatable-entity-privacy-validation-errors.util.ts
-msgid "Only the person who created this can change who sees it"
-msgstr "Endast personen som skapade detta kan ändra vem som kan se det"
+#. js-lingui-id: 2ztmK7
+#: src/engine/metadata-modules/ai/ai-agent/utils/compute-agent-privacy-update-or-throw.util.ts
+#: src/engine/metadata-modules/ai/ai.exception.ts
+msgid "Only the member who owns an agent can change who sees it."
+msgstr "Endast medlemmen som äger en agent kan ändra vem som kan se den."
 
 #. js-lingui-id: MPDvEo
 #: src/engine/core-modules/workflow/exceptions/core-workflow-metadata.exception.ts
@@ -10543,12 +10390,6 @@ msgstr "Endast arbetsytan kan tilldela roller till applikationer"
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-role-target-application-target.util.ts
 msgid "Only the workspace custom application can assign roles to applications"
 msgstr "Endast arbetsytans anpassade applikation kan tilldela roller till applikationer"
-
-#. js-lingui-id: /Ybnwz
-#: src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-agent-chat-thread-views.util.ts
-msgctxt "view.name"
-msgid "Open"
-msgstr "Öppna"
 
 #. js-lingui-id: 9rFxst
 #: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
@@ -10702,12 +10543,12 @@ msgstr "Alternativet \"{optionLabel}\" ingår i fältet och kan inte tas bort. I
 #. js-lingui-id: xTWr3W
 #: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-metadata-option-description.util.ts
 msgid "Option \"{optionLabel}\" description exceeds {OPTION_DESCRIPTION_MAX_CHAR_LENGTH} characters"
-msgstr "Beskrivningen för alternativet \"{optionLabel}\" överskrider {OPTION_DESCRIPTION_MAX_CHAR_LENGTH} tecken"
+msgstr ""
 
 #. js-lingui-id: cCRBHe
 #: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-metadata-option-description.util.ts
 msgid "Option \"{optionLabel}\" has an invalid description"
-msgstr "Alternativet \"{optionLabel}\" har en ogiltig beskrivning"
+msgstr ""
 
 #. js-lingui-id: znHKeT
 #: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-metadata-option-color.util.ts
@@ -11489,6 +11330,16 @@ msgstr "Predikatet saknar ett värde"
 msgid "Predicate value is not valid for this operand"
 msgstr "Predikatvärdet är inte giltigt för denna operand"
 
+#. js-lingui-id: nSv3rP
+#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
+msgid "Predicates reaching a field through a relation are not enabled for this workspace"
+msgstr "Predikat som når ett fält via en relation är inte aktiverade för denna arbetsyta"
+
+#. js-lingui-id: v5akl/
+#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
+msgid "Predicates reading the current member through a relation are not enabled for this workspace"
+msgstr "Predikat som läser den aktuella medlemmen via en relation är inte aktiverade för den här arbetsytan"
+
 #. js-lingui-id: /h13bI
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workspace-member-standard-flat-field-metadata.util.ts
 msgctxt "fieldMetadata.description"
@@ -11937,16 +11788,6 @@ msgstr "Poster kan inte sorteras efter en relation i den relaterade posten"
 msgctxt "fieldMetadata.description"
 msgid "Records this thread is attached to"
 msgstr "Poster som den här tråden är bifogad till"
-
-#. js-lingui-id: Q/3t6e
-#: src/modules/calendar/calendar-event-creation-manager/utils/normalize-calendar-event-recurrence.util.ts
-msgid "recurrence.endDate must be a YYYY-MM-DD date on or after the event's start date ({firstOccurrenceDate})"
-msgstr "recurrence.endDate måste vara ett datum i formatet YYYY-MM-DD som infaller på eller efter händelsens startdatum ({firstOccurrenceDate})"
-
-#. js-lingui-id: wM8dZb
-#: src/modules/calendar/calendar-event-creation-manager/utils/normalize-calendar-event-recurrence.util.ts
-msgid "recurrence.interval and recurrence.endOccurrenceCount must be positive whole numbers"
-msgstr "recurrence.interval och recurrence.endOccurrenceCount måste vara positiva heltal"
 
 #. js-lingui-id: TPccfi
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util.ts
@@ -12813,6 +12654,12 @@ msgctxt "fieldMetadata.label"
 msgid "Rule"
 msgstr "Regel"
 
+#. js-lingui-id: zhLAHJ
+#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
+#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
+msgid "Rules through a relation are not enabled for this workspace"
+msgstr "Regler via en relation är inte aktiverade för denna arbetsyta"
+
 #. js-lingui-id: F1qT/F
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
 msgctxt "fieldMetadata.label"
@@ -13475,12 +13322,6 @@ msgstr "Snooza"
 msgid "Snooze time must be in the future."
 msgstr "Snoozetiden måste ligga i framtiden."
 
-#. js-lingui-id: dVYfIF
-#: src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-agent-chat-thread-views.util.ts
-msgctxt "view.name"
-msgid "Snoozed"
-msgstr "Snoozad"
-
 #. js-lingui-id: Q/HVbF
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-agent-chat-thread-participant-standard-flat-field-metadata.util.ts
 msgctxt "fieldMetadata.label"
@@ -13614,12 +13455,12 @@ msgstr "Källdokumentets titel"
 #. js-lingui-id: gAdogO
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-field-permission-unreadable-nested-source.util.ts
 msgid "Source field metadata not found"
-msgstr "Källfältets metadata hittades inte"
+msgstr ""
 
 #. js-lingui-id: 8Fgyo1
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-field-permission-unreadable-nested-source.util.ts
 msgid "Source field not found"
-msgstr "Källfältet hittades inte"
+msgstr ""
 
 #. js-lingui-id: o0N9e6
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-logic-function-validator.service.ts
@@ -14469,14 +14310,9 @@ msgid "The condition of a database event trigger must be text"
 msgstr "Villkoret för en databashändelseutlösare måste vara text"
 
 #. js-lingui-id: kxzWhP
-#: src/engine/metadata-modules/ai/ai-agent-trigger/utils/add-agent-trigger-condition-trees-or-throw.util.ts
+#: src/engine/metadata-modules/ai/ai-agent-trigger/utils/add-agent-trigger-condition-bindings-or-throw.util.ts
 msgid "The condition of an agent trigger is invalid"
 msgstr "Villkoret för en agentutlösare är ogiltigt"
-
-#. js-lingui-id: 2l+SMV
-#: src/engine/metadata-modules/logic-function/services/logic-function-from-source.service.ts
-msgid "The condition of the database event trigger is invalid"
-msgstr "Villkoret för databashändelseutlösaren är ogiltigt"
 
 #. js-lingui-id: odbiqA
 #. placeholder {0}: connectedAccount.provider
@@ -14644,12 +14480,6 @@ msgstr "Fältet som är konfigurerat för denna widget kunde inte hittas."
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-sort-relation-target.util.ts
 msgid "The field must belong to the related object"
 msgstr "Fältet måste tillhöra det relaterade objektet"
-
-#. js-lingui-id: YcdJzW
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-#: src/engine/metadata-modules/flat-object-metadata/validators/utils/validate-flat-object-metadata-identifiers.util.ts
-msgid "The field used as record label cannot be a formula"
-msgstr "Fältet som används som postetikett kan inte vara en formel"
 
 #. js-lingui-id: LdhPiK
 #: src/engine/metadata-modules/object-permission/field-permission/field-permission.service.ts
@@ -15536,11 +15366,6 @@ msgstr "Denna domän är redan registrerad."
 msgid "This domain is already taken."
 msgstr "Denna domän är redan upptagen."
 
-#. js-lingui-id: IBjn2S
-#: src/engine/core-modules/public-domain/public-domain.exception.ts
-msgid "This domain is used by Twenty itself and cannot be a public domain."
-msgstr ""
-
 #. js-lingui-id: Ukfndw
 #: src/engine/metadata-modules/ai/ai-front-component/ai-front-component.service.ts
 msgid "This draft is being updated. Try again."
@@ -15636,11 +15461,6 @@ msgstr "Detta fält refererar till ett objekt som inte kunde hittas"
 #: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-searchable-flat-field-metadata.util.ts
 msgid "This field type cannot be searched"
 msgstr "Det går inte att söka i denna fälttyp"
-
-#. js-lingui-id: bVmvpb
-#: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-flat-field-metadata-formula.util.ts
-msgid "This field type does not support formulas"
-msgstr "Den här fälttypen har inte stöd för formler"
 
 #. js-lingui-id: 5F02zD
 #: src/engine/core-modules/file/file-upload/services/file-upload-completion.service.ts
@@ -15838,6 +15658,7 @@ msgid "This operand is not supported for this field"
 msgstr "Den här operanden stöds inte för det här fältet"
 
 #. js-lingui-id: sf5yLA
+#: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 msgid "This operand is not supported for this relation"
@@ -16116,7 +15937,7 @@ msgstr "Den här versionen av applikationen är redan installerad i den här arb
 #. js-lingui-id: lJw5/K
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-type-object.util.ts
 msgid "This view type is not available on this object"
-msgstr "Den här vytypen är inte tillgänglig för det här objektet"
+msgstr ""
 
 #. js-lingui-id: 2s7ieZ
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-workflow-validator.service.ts
@@ -17754,7 +17575,7 @@ msgstr "Vy att uppdatera hittades inte"
 #. js-lingui-id: OZdSbV
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-type-object.util.ts
 msgid "View type is not available on the view object"
-msgstr "Vytypen är inte tillgänglig för vyobjektet"
+msgstr ""
 
 #. js-lingui-id: RvdHYC
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-flat-view-creation.util.ts
@@ -18414,9 +18235,9 @@ msgctxt "fieldMetadata.label"
 msgid "WorkflowRun"
 msgstr "WorkflowRun"
 
-#. js-lingui-id: RWPUPQ
-#: src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant.ts
-msgctxt "commandMenuItem.shortLabel"
+#. js-lingui-id: zSsbOe
+#: src/engine/workspace-manager/twenty-standard-application/constants/standard-navigation-menu-item.constant.ts
+msgctxt "navigationMenuItem.name"
 msgid "Workflows"
 msgstr "Arbetsflöden"
 
@@ -18600,7 +18421,7 @@ msgstr "Metadata för relationsfältet för arbetsytemedlem hittades inte"
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-row-level-permission-predicate-validator.service.ts
 msgid "Workspace member relation filter field metadata not found"
-msgstr "Metadata för arbetsytemedlemmens relationsfilterfält hittades inte"
+msgstr ""
 
 #. js-lingui-id: 62xYnj
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-agent-chat-thread-standard-flat-field-metadata.util.ts

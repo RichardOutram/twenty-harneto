@@ -12,7 +12,6 @@ export const getJobs = async (jobIds: string[]): Promise<JobStatusResult[]> => {
       attemptsMade: true,
       failedReason: true,
       enqueuedAt: true,
-      scheduledAt: true,
       startedAt: true,
       finishedAt: true,
     },

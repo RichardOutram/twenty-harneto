@@ -10,6 +10,7 @@ import {
   type ViewPresetFilter,
   type ViewSortDirection,
   type ViewType,
+  type ViewVisibility,
 } from '@/types';
 
 export type ViewManifestFilterValue =
@@ -85,6 +86,7 @@ export type ViewManifest = SyncableEntityOptions & {
   icon?: string;
   position?: number;
   isCompact?: boolean;
+  visibility?: ViewVisibility;
   openRecordIn?: ViewOpenRecordIn;
   mainGroupByFieldMetadataUniversalIdentifier?: string;
   shouldHideEmptyGroups?: boolean;
@@ -98,7 +100,6 @@ export type ViewManifest = SyncableEntityOptions & {
   calendarLayout?: ViewCalendarLayout;
   calendarFieldMetadataUniversalIdentifier?: string;
   calendarEndFieldMetadataUniversalIdentifier?: string;
-  listPinnedFieldMetadataUniversalIdentifier?: string;
   fields?: ViewFieldManifest[];
   filters?: ViewFilterManifest[];
   filterGroups?: ViewFilterGroupManifest[];

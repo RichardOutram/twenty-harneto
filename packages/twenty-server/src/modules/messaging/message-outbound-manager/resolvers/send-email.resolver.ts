@@ -10,7 +10,6 @@ import { Args, Context, Mutation } from '@nestjs/graphql';
 
 import { PermissionFlagType } from 'twenty-shared/constants';
 
-import { buildActorMetadataFromAuthContext } from 'src/engine/core-modules/actor/utils/build-actor-metadata-from-auth-context.util';
 import { getWorkspaceAuthContext } from 'src/engine/core-modules/auth/storage/workspace-auth-context.storage';
 import { MetadataResolver } from 'src/engine/api/graphql/graphql-config/decorators/metadata-resolver.decorator';
 import { AuthGraphqlApiExceptionFilter } from 'src/engine/core-modules/auth/filters/auth-graphql-api-exception.filter';
@@ -122,9 +121,6 @@ export class SendEmailResolver {
               sendResult,
               data,
               workspaceId: workspace.id,
-              createdBy: buildActorMetadataFromAuthContext(
-                getWorkspaceAuthContext(),
-              ),
             })
           : undefined;
 

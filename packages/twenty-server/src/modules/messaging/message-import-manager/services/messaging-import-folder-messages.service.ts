@@ -23,7 +23,9 @@ export class MessagingImportFolderMessagesService {
       case ConnectedAccountProvider.GOOGLE: {
         const foldersScopedToImportedFolder = messageChannel.messageFolders.map(
           (folder) => ({
+            name: folder.name,
             externalId: folder.externalId,
+            parentFolderId: folder.parentFolderId,
             isSynced: folder.id === messageFolder.id,
           }),
         );

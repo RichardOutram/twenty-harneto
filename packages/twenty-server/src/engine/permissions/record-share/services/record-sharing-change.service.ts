@@ -3,7 +3,6 @@
 import { Injectable } from '@nestjs/common';
 
 import { RecordShareAccessLevel } from 'twenty-shared/types';
-import { isDefined } from 'twenty-shared/utils';
 
 import { NotFoundError } from 'src/engine/core-modules/graphql/utils/graphql-errors.util';
 import { PrincipalPermissionsReadService } from 'src/engine/permissions/principal-permissions-read.service';
@@ -37,7 +36,7 @@ export class RecordSharingChangeService {
   }: {
     args: RecordSharingArgs;
     write: (change: RecordSharingChange) => Promise<void>;
-    isChangeEnabled?: (
+    isChangeEnabled: (
       flags: Pick<RecordSharingChange, 'featureFlagsMap'>,
     ) => boolean;
   }): Promise<RecordSharingDTO> {
@@ -52,7 +51,7 @@ export class RecordSharingChangeService {
     });
     const workspaceId = args.authContext.workspace.id;
 
-    if (isDefined(isChangeEnabled) && !isChangeEnabled({ featureFlagsMap })) {
+    if (!isChangeEnabled({ featureFlagsMap })) {
       throw new NotFoundError('Record not found');
     }
 

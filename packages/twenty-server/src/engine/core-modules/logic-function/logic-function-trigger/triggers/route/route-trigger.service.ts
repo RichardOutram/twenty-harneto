@@ -14,10 +14,6 @@ import { isUsageRefusedError } from 'src/engine/core-modules/billing/utils/is-us
 import { AccessTokenService } from 'src/engine/core-modules/auth/token/services/access-token.service';
 import { type RawAuthContext } from 'src/engine/core-modules/auth/types/raw-auth-context.type';
 import { WorkspaceDomainsService } from 'src/engine/core-modules/domain/workspace-domains/services/workspace-domains.service';
-import {
-  getHostnameFromUrlOrUndefined,
-  isHostUnderPublicFunctionDomain,
-} from 'src/engine/core-modules/domain/domain-server-config/utils/public-function-domain.util';
 import { type WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 import {
@@ -261,11 +257,7 @@ export class RouteTriggerService {
   }: {
     request: Request;
     httpMethod: HTTPMethod;
-  }): Promise<{
-    response: RouteTriggerResponse;
-    isPublicDomain: boolean;
-    sandboxDocument: boolean;
-  }> {
+  }): Promise<{ response: RouteTriggerResponse; isPublicDomain: boolean }> {
     const { workspace, applicationId, isPublicDomain, authenticationContext } =
       await this.resolveRouteTriggerRequestContextOrFail(request);
 
@@ -373,17 +365,6 @@ export class RouteTriggerService {
       );
     }
 
-    const isSharedPublicDomain = isHostUnderPublicFunctionDomain({
-      host: request.get('host'),
-      publicDomainBaseHostname: getHostnameFromUrlOrUndefined(
-        this.twentyConfigService.get('PUBLIC_DOMAIN_URL'),
-      ),
-    });
-
-    return {
-      response: outcome.response,
-      isPublicDomain,
-      sandboxDocument: !isPublicDomain || isSharedPublicDomain,
-    };
+    return { response: outcome.response, isPublicDomain };
   }
 }

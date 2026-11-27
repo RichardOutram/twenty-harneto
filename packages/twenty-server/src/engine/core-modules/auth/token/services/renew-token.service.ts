@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { isDefined } from 'twenty-shared/utils';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 
 import { AppTokenEntity } from 'src/engine/core-modules/app-token/app-token.entity';
 import {
@@ -29,6 +29,7 @@ export class RenewTokenService {
 
   async generateTokensFromRefreshToken(token: string): Promise<{
     accessOrWorkspaceAgnosticToken: AuthToken;
+    refreshToken: AuthToken;
   }> {
     if (!token) {
       throw new AuthException(
@@ -65,25 +66,58 @@ export class RenewTokenService {
       );
     }
 
-    await this.appTokenRepository.manager.transaction(async (entityManager) => {
-      await acquireUserAuthenticationLock({
-        entityManager,
-        userId: user.id,
-        mode: 'shared',
-      });
+    const refreshToken = await this.appTokenRepository.manager.transaction(
+      async (entityManager) => {
+        await acquireUserAuthenticationLock({
+          entityManager,
+          userId: user.id,
+          mode: 'shared',
+        });
 
-      // A security revocation committed after the first read must still stop this renewal
-      const lockedToken = await entityManager
-        .getRepository(AppTokenEntity)
-        .findOneBy({ id });
+        const appTokenRepository = entityManager.getRepository(AppTokenEntity);
 
-      if (!isDefined(lockedToken) || isDefined(lockedToken.revokedAt)) {
-        throw new AuthException(
-          'This refresh token has been revoked.',
-          AuthExceptionCode.FORBIDDEN_EXCEPTION,
+        // A security revocation committed after the first read must still stop this renewal
+        const lockedToken = await appTokenRepository.findOneBy({ id });
+
+        if (
+          !isDefined(lockedToken) ||
+          isDefined(lockedToken.context?.revokedReason)
+        ) {
+          throw new AuthException(
+            'This refresh token has been revoked.',
+            AuthExceptionCode.FORBIDDEN_EXCEPTION,
+          );
+        }
+
+        // Revoke old refresh token only if not already revoked.
+        // If it was already revoked (concurrent race condition within grace
+        // period), we preserve the original revokedAt timestamp so the grace
+        // window stays anchored and cannot be extended by repeated reuse.
+        await appTokenRepository.update(
+          {
+            id,
+            revokedAt: IsNull(),
+          },
+          {
+            revokedAt: new Date(),
+          },
         );
-      }
-    });
+
+        return await this.refreshTokenService.generateRefreshToken(
+          {
+            userId: user.id,
+            workspaceId,
+            authProvider: resolvedAuthProvider,
+            targetedTokenType,
+            isImpersonating,
+            impersonatorUserWorkspaceId,
+            impersonatedUserWorkspaceId,
+          },
+          false,
+          entityManager,
+        );
+      },
+    );
 
     const accessToken = isDefined(workspaceId)
       ? await this.accessTokenService.generateAccessToken({
@@ -103,6 +137,7 @@ export class RenewTokenService {
 
     return {
       accessOrWorkspaceAgnosticToken: accessToken,
+      refreshToken,
     };
   }
 }

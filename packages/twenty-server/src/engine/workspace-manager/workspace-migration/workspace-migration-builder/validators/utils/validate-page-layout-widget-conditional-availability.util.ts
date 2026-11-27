@@ -1,9 +1,9 @@
 import { type MessageDescriptor } from '@lingui/core';
 import { msg, t } from '@lingui/core/macro';
 import {
-  type ConditionalEvaluationValidationResult,
-  validateConditionalEvaluationNode,
-} from 'twenty-shared/conditional-evaluation';
+  type ConditionalAvailabilityValidationResult,
+  validateConditionalAvailabilityNode,
+} from 'twenty-shared/conditional-availability';
 import { doNotTranslate } from 'twenty-shared/i18n';
 import { assertUnreachable } from 'twenty-shared/utils';
 
@@ -12,7 +12,7 @@ import { type FlatEntityValidationError } from 'src/engine/workspace-manager/wor
 
 const getConditionalAvailabilityUserFriendlyMessage = (
   failedValidationResult: Extract<
-    ConditionalEvaluationValidationResult,
+    ConditionalAvailabilityValidationResult,
     { isValid: false }
   >,
 ): MessageDescriptor => {
@@ -36,7 +36,7 @@ export const validatePageLayoutWidgetConditionalAvailability = ({
 }: {
   conditionalAvailability: unknown;
 }): FlatEntityValidationError<PageLayoutWidgetExceptionCode>[] => {
-  const validationResult = validateConditionalEvaluationNode({
+  const validationResult = validateConditionalAvailabilityNode({
     node: conditionalAvailability,
     metadataName: 'pageLayoutWidget',
   });

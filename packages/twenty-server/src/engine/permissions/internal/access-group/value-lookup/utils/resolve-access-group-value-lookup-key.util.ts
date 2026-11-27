@@ -18,6 +18,7 @@ import { type AccessGroupValueLookupKey } from 'src/engine/permissions/internal/
 import { buildMemberFieldKey } from 'src/engine/permissions/internal/rls/utils/build-member-field-key.util';
 import { findRelationJoinColumnsOrThrow } from 'src/engine/permissions/internal/rls/utils/find-relation-join-columns-or-throw.util';
 import { isManyToOneFlatFieldMetadata } from 'src/engine/twenty-orm/utils/is-many-to-one-flat-field-metadata.util';
+import { isRlsRelationHopEnabled } from 'src/engine/permissions/internal/rls/utils/is-rls-relation-hop-enabled.util';
 
 const SINGLE_VALUE_FIELD_TYPES: FieldMetadataType[] = [
   FieldMetadataType.UUID,
@@ -127,6 +128,7 @@ export const resolveAccessGroupValueLookupKey = ({
   });
 
   if (
+    !isRlsRelationHopEnabled(metadataMaps.featureFlagsMap) ||
     !isDefined(relationFieldMetadata) ||
     relationFieldMetadata.type !== FieldMetadataType.RELATION ||
     !isMorphOrRelationFlatFieldMetadata(relationFieldMetadata) ||

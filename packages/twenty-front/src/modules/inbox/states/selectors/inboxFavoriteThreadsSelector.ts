@@ -1,8 +1,10 @@
-import { NavigationMenuItemType } from 'twenty-shared/types';
+import {
+  StandardObjectNameSingular,
+  NavigationMenuItemType,
+} from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
 import { aiChatThreadRecordFamilySelector } from '@/ai-chat/threads/states/selectors/aiChatThreadRecordFamilySelector';
-import { inboxNamesByLegacyNameSelector } from '@/ai-chat/states/selectors/inboxNamesByLegacyNameSelector';
 import { type InboxThreadListItemData } from '@/inbox/types/InboxThreadListItemData';
 import { navigationMenuItemsSelector } from '@/navigation-menu-item/common/states/navigationMenuItemsSelector';
 import { objectMetadataItemFamilySelector } from '@/object-metadata/states/objectMetadataItemFamilySelector';
@@ -14,7 +16,7 @@ export const inboxFavoriteThreadsSelector = createAtomSelector<
   key: 'inboxFavoriteThreadsSelector',
   get: ({ get }) => {
     const chatObjectMetadataItem = get(objectMetadataItemFamilySelector, {
-      objectName: get(inboxNamesByLegacyNameSelector).agentChatThread,
+      objectName: StandardObjectNameSingular.AgentChatThread,
       objectNameType: 'singular',
     });
 

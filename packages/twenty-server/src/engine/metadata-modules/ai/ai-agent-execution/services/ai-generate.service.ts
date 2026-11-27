@@ -140,7 +140,7 @@ export class AiGenerateService {
         turnId: requestedRunId ?? randomUUID(),
         prompt: {
           messages,
-          senderWorkspaceMemberId: requestWorkspaceMemberId,
+          senderUserWorkspaceId: requestUserWorkspaceId,
           senderApplicationId: callerApplication?.id ?? null,
         },
         streamChannelId,

@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { turnViewPresetFilterIntoRecordGqlOperationFilter } from 'twenty-shared/ai';
 import {
   RecordFilterGroupLogicalOperator,
   type RecordGqlOperationFilter,
@@ -8,7 +7,6 @@ import {
   ViewType,
 } from 'twenty-shared/types';
 import {
-  combineFilters,
   convertViewFilterValueToString,
   isDefined,
   type RecordFilter,
@@ -110,19 +108,13 @@ export class ViewQueryParamsService {
           : RecordFilterGroupLogicalOperator.AND,
     }));
 
-    const filter = combineFilters([
-      computeRecordGqlOperationFilterFromFlatMaps({
-        flatFieldMetadataMaps,
-        flatObjectMetadataMaps,
-        recordFilters,
-        recordFilterGroups,
-        filterValueDependencies: { currentWorkspaceMemberId, timeZone },
-      }),
-      turnViewPresetFilterIntoRecordGqlOperationFilter({
-        presetFilter: view.presetFilter,
-        currentWorkspaceMemberId,
-      }),
-    ]);
+    const filter = computeRecordGqlOperationFilterFromFlatMaps({
+      flatFieldMetadataMaps,
+      flatObjectMetadataMaps,
+      recordFilters,
+      recordFilterGroups,
+      filterValueDependencies: { currentWorkspaceMemberId, timeZone },
+    });
 
     const orderBy = computeViewSortsOrderBy({
       viewSorts: view.viewSorts ?? [],

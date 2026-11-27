@@ -20,7 +20,6 @@ import { throwAgentChatChannelsUnavailable } from 'src/engine/metadata-modules/a
 import { AgentChatThreadRecordEventService } from 'src/engine/metadata-modules/ai/ai-chat/services/agent-chat-thread-record-event.service';
 import { AgentHistoryRepository } from 'src/engine/metadata-modules/ai/ai-history/repositories/agent-history-repository';
 import { InjectAgentHistoryRepository } from 'src/engine/metadata-modules/ai/ai-history/repositories/inject-agent-history-repository.decorator';
-import { InboxObjectNamesResolverService } from 'src/engine/metadata-modules/ai/ai-history/services/inbox-object-names-resolver.service';
 import { AgentChatThreadWorkspaceEntity } from 'src/engine/metadata-modules/ai/ai-history/standard-objects/agent-chat-thread.workspace-entity';
 import {
   AiException,
@@ -57,7 +56,6 @@ export class AgentChatChannelService {
     private readonly workspaceOrmManager: WorkspaceOrmManager,
     @InjectWorkspaceScopedRepository(AgentChatChannelEntity)
     private readonly channelRepository: WorkspaceScopedRepository<AgentChatChannelEntity>,
-    private readonly inboxObjectNamesResolverService: InboxObjectNamesResolverService,
   ) {}
 
   async findChannels({
@@ -265,9 +263,6 @@ export class AgentChatChannelService {
       );
     }
 
-    const { agentChatThread: threadObjectName } =
-      await this.inboxObjectNamesResolverService.resolve(workspaceId);
-
     const { threadsBefore, threadsAfter } =
       await this.workspaceOrmManager.executeTransactionInWorkspaceContext(
         async (transactionScope) => {
@@ -280,7 +275,7 @@ export class AgentChatChannelService {
 
           const threadRepository =
             transactionScope.getRepositoryWithoutPermissionChecks<AgentChatThreadWorkspaceEntity>(
-              threadObjectName,
+              'agentChatThread',
               { shouldSkipEventEmission: true },
             );
           const threadsBefore = await threadRepository.find({

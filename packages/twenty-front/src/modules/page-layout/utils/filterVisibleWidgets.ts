@@ -1,7 +1,7 @@
 import { type PageLayoutTab } from '@/page-layout/types/PageLayoutTab';
 import { type WidgetVisibilityContext } from '@/page-layout/types/WidgetVisibilityContext';
 import { evaluateWidgetVisibility } from '@/page-layout/utils/evaluateWidgetVisibility';
-import { evaluateConditionalEvaluationNode } from 'twenty-shared/conditional-evaluation';
+import { evaluateConditionalAvailabilityNode } from 'twenty-shared/conditional-availability';
 import { FeatureFlagKey } from '~/generated-metadata/graphql';
 
 type FilterVisibleWidgetsParams = {
@@ -32,7 +32,7 @@ export const filterVisibleWidgets = ({
   }
 
   return widgets.filter((widget) =>
-    evaluateConditionalEvaluationNode({
+    evaluateConditionalAvailabilityNode({
       node: widget.conditionalAvailability,
       context,
     }),

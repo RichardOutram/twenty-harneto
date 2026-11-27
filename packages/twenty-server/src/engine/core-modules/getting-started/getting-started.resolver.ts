@@ -1,6 +1,8 @@
 import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
 import { Args, Context, Mutation, Query } from '@nestjs/graphql';
 
+import { FeatureFlagKey } from 'twenty-shared/types';
+
 import { MetadataResolver } from 'src/engine/api/graphql/graphql-config/decorators/metadata-resolver.decorator';
 import { type AuthContextUser } from 'src/engine/core-modules/auth/types/auth-context.type';
 import { GettingStartedProgressDTO } from 'src/engine/core-modules/getting-started/dtos/getting-started-progress.dto';
@@ -34,7 +36,7 @@ import { AccessPolicyGuard } from 'src/engine/guards/access-policy.guard';
       application: false,
     },
     requiredPermissionFlags: [],
-    requiredFeatureFlags: [],
+    requiredFeatureFlags: [FeatureFlagKey.IS_GETTING_STARTED_ENABLED],
   }),
   BillingEnabledGuard,
 )

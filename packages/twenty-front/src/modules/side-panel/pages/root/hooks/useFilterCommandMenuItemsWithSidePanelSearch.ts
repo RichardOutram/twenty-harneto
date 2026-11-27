@@ -2,9 +2,7 @@ import { isNonEmptyString } from '@sniptt/guards';
 import { useCallback } from 'react';
 import { interpolateMessagePlaceholders } from 'twenty-shared/i18n';
 import { type CommandMenuContextApi } from 'twenty-shared/types';
-import { isDefined } from 'twenty-shared/utils';
 import { getCommandMenuItemPlaceholderValues } from '@/command-menu-item/utils/getCommandMenuItemPlaceholderValues';
-import { getCommandMenuItemSubtitle } from '@/command-menu-item/utils/getCommandMenuItemSubtitle';
 import { type CommandMenuItemFieldsFragment } from '~/generated-metadata/graphql';
 import { normalizeSearchText } from 'twenty-ui/utilities';
 
@@ -27,16 +25,11 @@ const checkInLabels = (
     getCommandMenuItemPlaceholderValues(commandMenuContextApi),
   );
 
-  if (!isNonEmptyString(label)) {
-    return false;
+  if (isNonEmptyString(label)) {
+    const searchNormalized = normalizeSearchText(search);
+    return normalizeSearchText(label).includes(searchNormalized);
   }
-
-  const subtitle = getCommandMenuItemSubtitle(commandMenuItem);
-  const searchableText = isDefined(subtitle) ? `${label} ${subtitle}` : label;
-
-  return normalizeSearchText(searchableText).includes(
-    normalizeSearchText(search),
-  );
+  return false;
 };
 
 type UseFilterCommandMenuItemsWithSidePanelSearchProps = {
@@ -49,9 +42,7 @@ export const useFilterCommandMenuItemsWithSidePanelSearch = ({
   commandMenuContextApi,
 }: UseFilterCommandMenuItemsWithSidePanelSearchProps) => {
   const filterCommandMenuItemsWithSidePanelSearch = useCallback(
-    <TCommandMenuItem extends CommandMenuItemFieldsFragment>(
-      commandMenuItems: TCommandMenuItem[],
-    ) => {
+    (commandMenuItems: CommandMenuItemFieldsFragment[]) => {
       return commandMenuItems.filter((commandMenuItem) =>
         sidePanelSearch.length > 0
           ? checkInShortcuts(commandMenuItem, sidePanelSearch) ||

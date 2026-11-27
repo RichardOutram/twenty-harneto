@@ -71,6 +71,7 @@ const updateAsWorkspace = (
       WORKSPACE_CUSTOM_APPLICATION_UNIVERSAL_IDENTIFIER,
     workspaceCustomApplicationUniversalIdentifier:
       WORKSPACE_CUSTOM_APPLICATION_UNIVERSAL_IDENTIFIER,
+    userWorkspaceId: undefined,
   });
 
 describe('fromUpdateAgentInputToFlatAgentToUpdate', () => {
@@ -100,11 +101,7 @@ describe('fromUpdateAgentInputToFlatAgentToUpdate', () => {
       },
     });
     expect(
-      fromFlatAgentWithRoleIdToAgentDto({
-        flatAgentWithRoleId: { ...flatAgentToUpdate, roleId: null },
-        flatObjectMetadataMaps: createEmptyFlatEntityMaps(),
-        flatFieldMetadataMaps: createEmptyFlatEntityMaps(),
-      }),
+      fromFlatAgentWithRoleIdToAgentDto({ ...flatAgentToUpdate, roleId: null }),
     ).toMatchObject({
       name: 'researcher',
       label: 'Market researcher',
@@ -139,6 +136,7 @@ describe('fromUpdateAgentInputToFlatAgentToUpdate', () => {
         WORKSPACE_CUSTOM_APPLICATION_UNIVERSAL_IDENTIFIER,
       workspaceCustomApplicationUniversalIdentifier:
         WORKSPACE_CUSTOM_APPLICATION_UNIVERSAL_IDENTIFIER,
+      userWorkspaceId: undefined,
     });
 
     expect(flatAgentToUpdate.overrides).toBeNull();

@@ -22,7 +22,6 @@ export const exportLogicFunctionSources = async ({
   workspaceId,
   applicationUniversalIdentifier,
   applicationAllFlatEntityMaps,
-  allFlatEntityMaps,
   shouldIncludeLogicFunctionSources,
   fileBudget,
   exportedFiles,
@@ -31,10 +30,6 @@ export const exportLogicFunctionSources = async ({
   workspaceId: string;
   applicationUniversalIdentifier: string;
   applicationAllFlatEntityMaps: AllFlatEntityMaps;
-  allFlatEntityMaps: Pick<
-    AllFlatEntityMaps,
-    'flatObjectMetadataMaps' | 'flatFieldMetadataMaps'
-  >;
   shouldIncludeLogicFunctionSources: boolean;
   fileBudget: ApplicationExportFileBudget;
   exportedFiles: ApplicationExportFile[];
@@ -69,11 +64,8 @@ export const exportLogicFunctionSources = async ({
       });
       continue;
     }
-    const manifest = fromFlatLogicFunctionToLogicFunctionManifest({
-      logicFunction,
-      flatObjectMetadataMaps: allFlatEntityMaps.flatObjectMetadataMaps,
-      flatFieldMetadataMaps: allFlatEntityMaps.flatFieldMetadataMaps,
-    });
+    const manifest =
+      fromFlatLogicFunctionToLogicFunctionManifest(logicFunction);
     if (!isDefined(manifest)) {
       coverage.push({
         ...unsupportedCoverage,

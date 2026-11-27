@@ -40,7 +40,6 @@ export const MultiSelectControl = ({
   selectSizeVariant,
   textAccent = 'default',
   hasRightElement,
-  variant = 'default',
 }: MultiSelectControlProps) => {
   const theme = useTheme();
   const firstSelectedOption = selectedOptions?.[0];
@@ -51,7 +50,6 @@ export const MultiSelectControl = ({
       selectSizeVariant={selectSizeVariant}
       textAccent={textAccent}
       hasRightElement={hasRightElement}
-      $variant={variant}
     >
       {isDefined(fixedIcon) ? (
         React.createElement(fixedIcon, {

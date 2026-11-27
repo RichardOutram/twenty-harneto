@@ -70,7 +70,7 @@ export class GetViewsTool extends BaseTool<typeof getViewsInputSchema> {
           objectMetadataId: view.objectMetadataId,
           type: view.type,
           icon: view.icon,
-          isPrivate: view.isPrivate,
+          visibility: view.visibility,
           position: view.position,
         })),
       },

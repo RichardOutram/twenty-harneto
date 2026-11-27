@@ -35,8 +35,6 @@ const buildManifest = (
           label: 'Second Agent Role',
           description: 'Another agent-assignable role',
           canBeAssignedToAgents: true,
-          canBeAssignedToUsers: false,
-          canBeAssignedToApiKeys: false,
         },
       ],
       ...overrides,

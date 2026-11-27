@@ -1,5 +1,6 @@
 import { useStore } from 'jotai';
 import { useCallback, useMemo } from 'react';
+import { StandardObjectNameSingular } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
 import { aiChatThreadParticipantsState } from '@/ai-chat/threads/states/aiChatThreadParticipantsState';
@@ -8,7 +9,6 @@ import { mergeAiChatThreadParticipants } from '@/ai-chat/threads/utils/mergeAiCh
 import { currentWorkspaceMemberState } from '@/auth/states/currentWorkspaceMemberState';
 import { useListenToObjectRecordOperationBrowserEvent } from '@/browser-event/hooks/useListenToObjectRecordOperationBrowserEvent';
 import { type ObjectRecordOperationBrowserEventDetail } from '@/browser-event/types/ObjectRecordOperationBrowserEventDetail';
-import { inboxNamesByLegacyNameSelector } from '@/ai-chat/states/selectors/inboxNamesByLegacyNameSelector';
 import { objectMetadataItemFamilySelector } from '@/object-metadata/states/objectMetadataItemFamilySelector';
 import { useListenToEventsForQuery } from '@/sse-db-event/hooks/useListenToEventsForQuery';
 import { useAtomFamilySelectorValue } from '@/ui/utilities/state/jotai/hooks/useAtomFamilySelectorValue';
@@ -17,13 +17,10 @@ import { type AgentChatThreadParticipantFieldsFragment } from '~/generated-metad
 
 export const AiChatThreadParticipantsSyncEffect = () => {
   const store = useStore();
-  const inboxNamesByLegacyName = useAtomStateValue(
-    inboxNamesByLegacyNameSelector,
-  );
   const participantObjectMetadataItem = useAtomFamilySelectorValue(
     objectMetadataItemFamilySelector,
     {
-      objectName: inboxNamesByLegacyName.agentChatThreadParticipant,
+      objectName: StandardObjectNameSingular.AgentChatThreadParticipant,
       objectNameType: 'singular',
     },
   );
@@ -36,15 +33,12 @@ export const AiChatThreadParticipantsSyncEffect = () => {
 
   const ownParticipantOperationSignature = useMemo(
     () => ({
-      objectNameSingular: inboxNamesByLegacyName.agentChatThreadParticipant,
+      objectNameSingular: StandardObjectNameSingular.AgentChatThreadParticipant,
       variables: {
         filter: { workspaceMemberId: { eq: currentWorkspaceMemberId } },
       },
     }),
-    [
-      currentWorkspaceMemberId,
-      inboxNamesByLegacyName.agentChatThreadParticipant,
-    ],
+    [currentWorkspaceMemberId],
   );
 
   useListenToEventsForQuery({

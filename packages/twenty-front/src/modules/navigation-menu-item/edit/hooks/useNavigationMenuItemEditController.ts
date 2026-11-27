@@ -33,7 +33,6 @@ export type NewNavigationMenuItemInput = {
   link?: string | null;
   nativePageKey?: NativePageKey | null;
   builtInSectionKey?: BuiltInSectionKey | null;
-  visibleItemLimit?: number | null;
   color?: string | null;
 };
 
@@ -104,7 +103,6 @@ export const useNavigationMenuItemEditController = (
       link: input.link ?? undefined,
       nativePageKey: input.nativePageKey ?? undefined,
       builtInSectionKey: input.builtInSectionKey ?? undefined,
-      visibleItemLimit: input.visibleItemLimit ?? undefined,
       color: input.color ?? undefined,
       applicationId: undefined,
       isActive: true,

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { AgentChatThreadConversationType } from 'twenty-shared/ai';
 import { isDefined } from 'twenty-shared/utils';
+import { type EntityManager } from 'typeorm';
 
 import { IS_PRIVATE_COLUMN_NAME } from 'src/engine/permissions/private-record/constants/is-private-column-name.constant';
 import { InjectMessageQueue } from 'src/engine/core-modules/message-queue/decorators/message-queue.decorator';
@@ -28,14 +29,11 @@ import { type AgentChatThreadActivity } from 'src/engine/metadata-modules/ai/ai-
 import { buildAgentChatThreadParticipantOwnerShareInsert } from 'src/engine/metadata-modules/ai/ai-chat/utils/build-agent-chat-thread-participant-owner-share-insert.util';
 import { buildAgentChatThreadActivitySetClause } from 'src/engine/metadata-modules/ai/ai-chat/utils/build-agent-chat-thread-activity-set-clause.util';
 import { buildAgentChatThreadParticipantLockKey } from 'src/engine/metadata-modules/ai/ai-chat/utils/build-agent-chat-thread-participant-lock-key.util';
+import { getAgentChatThreadParticipantTable } from 'src/engine/metadata-modules/ai/ai-chat/utils/get-agent-chat-thread-participant-table.util';
 import { throwAgentChatThreadNotFound } from 'src/engine/metadata-modules/ai/ai-chat/utils/throw-agent-chat-thread-not-found.util';
 import { findAgentChatSnoozeRemainingDelay } from 'src/engine/metadata-modules/ai/ai-chat/utils/find-agent-chat-snooze-remaining-delay.util';
 import { AgentHistoryRepository } from 'src/engine/metadata-modules/ai/ai-history/repositories/agent-history-repository';
 import { InjectAgentHistoryRepository } from 'src/engine/metadata-modules/ai/ai-history/repositories/inject-agent-history-repository.decorator';
-import {
-  type AgentHistoryStorageContext,
-  AgentHistoryWorkspaceStorageService,
-} from 'src/engine/metadata-modules/ai/ai-history/services/agent-history-workspace-storage.service';
 import { AgentChatThreadWorkspaceEntity } from 'src/engine/metadata-modules/ai/ai-history/standard-objects/agent-chat-thread.workspace-entity';
 import {
   AiException,
@@ -189,7 +187,6 @@ export class AgentChatThreadParticipantService {
     @InjectMessageQueue(MessageQueue.delayedJobsQueue)
     private readonly delayedJobsQueueService: MessageQueueService,
     private readonly workspaceOrmManager: WorkspaceOrmManager,
-    private readonly storageService: AgentHistoryWorkspaceStorageService,
   ) {}
 
   async updateInboxState({
@@ -294,14 +291,12 @@ export class AgentChatThreadParticipantService {
       args.workspaceId,
     );
     // Taken by the writes on the other pool too, so before and after stay this write's
-    const { table } = await this.storageService.getContext(args.workspaceId);
-
     await scope.executeRawQuery(PARTICIPANT_LOCK_QUERY, [
       buildAgentChatThreadParticipantLockKey(args),
     ]);
     await scope.executeRawQuery(
       buildMentionResolutionQuery({
-        participantTable: table('agentChatThreadParticipant'),
+        participantTable: getAgentChatThreadParticipantTable(args.workspaceId),
       }),
       [args.threadId, args.workspaceMemberId],
     );
@@ -398,7 +393,7 @@ export class AgentChatThreadParticipantService {
 
     const participant = await this.threadRepository.query(
       args.workspaceId,
-      ({ manager, table }) => this.findOne({ manager, table, ...args }),
+      ({ manager }) => this.findOne({ manager, ...args }),
     );
 
     return participant?.isSubscribed ?? false;
@@ -412,7 +407,7 @@ export class AgentChatThreadParticipantService {
 
     const participant = await this.threadRepository.query(
       args.workspaceId,
-      ({ manager, table }) => this.findOne({ manager, table, ...args }),
+      ({ manager }) => this.findOne({ manager, ...args }),
     );
 
     if (!isDefined(participant)) {
@@ -436,6 +431,7 @@ export class AgentChatThreadParticipantService {
   }: AgentChatThreadAccessArgs & {
     text: string;
   }): Promise<AgentChatThreadActivity> {
+    const participantTable = getAgentChatThreadParticipantTable(workspaceId);
     const participantObjectMetadataId =
       await this.sharingService.getParticipantObjectMetadataId(workspaceId);
 
@@ -444,7 +440,6 @@ export class AgentChatThreadParticipantService {
       async ({ manager, table }) => {
         const before = await this.findOne({
           manager,
-          table,
           workspaceId,
           workspaceMemberId,
           threadId,
@@ -463,7 +458,7 @@ export class AgentChatThreadParticipantService {
              WHERE id = $1
              RETURNING id, ${AGENT_CHAT_THREAD_ACTIVITY_COLUMNS}
            ), participant AS (
-             INSERT INTO ${table('agentChatThreadParticipant')} AS participant ("threadId", "workspaceMemberId", "${IS_PRIVATE_COLUMN_NAME}", "lastReadAt")
+             INSERT INTO ${participantTable} AS participant ("threadId", "workspaceMemberId", "${IS_PRIVATE_COLUMN_NAME}", "lastReadAt")
              SELECT thread.id, $2, true, thread."lastActivityAt" FROM thread
              ON CONFLICT ("threadId", "workspaceMemberId") DO UPDATE SET
                "lastReadAt" = GREATEST(participant."lastReadAt", EXCLUDED."lastReadAt"),
@@ -481,7 +476,6 @@ export class AgentChatThreadParticipantService {
 
         const after = await this.findOne({
           manager,
-          table,
           workspaceId,
           workspaceMemberId,
           threadId,
@@ -517,11 +511,11 @@ export class AgentChatThreadParticipantService {
   }): Promise<number> {
     const [{ memberCount }] = await this.threadRepository.query(
       workspaceId,
-      ({ manager, table }) =>
+      ({ manager }) =>
         manager.query<{ memberCount: number }[]>(
           `SELECT COUNT(DISTINCT member)::int AS "memberCount" FROM (
              SELECT "workspaceMemberId" AS member
-             FROM ${table('agentChatThreadParticipant')}
+             FROM ${getAgentChatThreadParticipantTable(workspaceId)}
              WHERE "threadId" = $1
              UNION SELECT unnest($2::uuid[])
            ) members`,
@@ -548,15 +542,10 @@ export class AgentChatThreadParticipantService {
       workspaceMemberId,
     });
 
-    const {
-      table,
-      inboxObjectNamesByLegacyName: { agentChatThread: threadObjectName },
-    } = await this.storageService.getContext(workspaceId);
-
     const [summary] = await this.workspaceOrmManager
       .executeInWorkspaceContext(async () => {
         const repository =
-          this.workspaceOrmManager.getRepository(threadObjectName);
+          this.workspaceOrmManager.getRepository('agentChatThread');
         const readableThreads = await repository
           .createQueryBuilder('thread')
           .select([])
@@ -581,7 +570,7 @@ export class AgentChatThreadParticipantService {
                thread."lastActivityAt" IS NOT NULL
                  AND (participant."lastReadAt" IS NULL OR thread."lastActivityAt" > participant."lastReadAt") AS "isUnread"
              FROM (${readableThreads.getQuery()}) thread
-             JOIN ${table('agentChatThreadParticipant')} participant
+             JOIN ${getAgentChatThreadParticipantTable(workspaceId)} participant
                ON participant."threadId" = thread.id AND participant."workspaceMemberId" = :summaryWorkspaceMemberId
              WHERE ${IS_IN_INBOX}
            ),
@@ -640,15 +629,14 @@ export class AgentChatThreadParticipantService {
 
   private async findOne({
     manager,
-    table,
     workspaceId,
     workspaceMemberId,
     threadId,
     lock = false,
-  }: AgentChatThreadAccessArgs &
-    Pick<AgentHistoryStorageContext, 'manager' | 'table'> & {
-      lock?: boolean;
-    }): Promise<AgentChatThreadParticipantRow | null> {
+  }: AgentChatThreadAccessArgs & {
+    manager: EntityManager;
+    lock?: boolean;
+  }): Promise<AgentChatThreadParticipantRow | null> {
     // Also taken when the row does not exist yet, so two first writes cannot
     // both send it as created
     if (lock) {
@@ -663,7 +651,7 @@ export class AgentChatThreadParticipantService {
 
     const [participant] = await manager.query<AgentChatThreadParticipantRow[]>(
       `SELECT ${PARTICIPANT_COLUMNS}
-       FROM ${table('agentChatThreadParticipant')}
+       FROM ${getAgentChatThreadParticipantTable(workspaceId)}
        WHERE "threadId" = $1 AND "workspaceMemberId" = $2`,
       [threadId, workspaceMemberId],
     );
@@ -729,7 +717,8 @@ export class AgentChatThreadParticipantService {
         const parameterCount = extraParameters.length + 3;
         const query = `WITH written_participant AS (
              ${buildQuery({
-               participantTable: table('agentChatThreadParticipant'),
+               participantTable:
+                 getAgentChatThreadParticipantTable(workspaceId),
                threadTable: table('agentChatThread'),
              })}
            ), owner_share AS (
@@ -745,7 +734,6 @@ export class AgentChatThreadParticipantService {
         for (const threadId of threadIds) {
           const before = await this.findOne({
             manager,
-            table,
             workspaceId,
             workspaceMemberId,
             threadId,

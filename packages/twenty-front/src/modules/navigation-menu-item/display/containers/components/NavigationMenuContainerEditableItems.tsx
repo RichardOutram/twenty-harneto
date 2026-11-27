@@ -1,4 +1,4 @@
-import { lazy, type ReactNode, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 
 import { selectedNavigationMenuItemIdInEditModeState } from '@/navigation-menu-item/common/states/selectedNavigationMenuItemIdInEditModeState';
 import { WorkspaceSectionListReadOnly } from '@/navigation-menu-item/display/sections/workspace/components/WorkspaceSectionListReadOnly';
@@ -13,19 +13,15 @@ const LazyWorkspaceSectionListDndKit = lazy(() =>
 );
 
 type NavigationMenuContainerEditableItemsProps = {
-  containerId: string | null;
+  containerId: string;
   topLevelItems: NavigationMenuItem[];
   folderChildrenById: Map<string, NavigationMenuItem[]>;
-  renderSection?: (section: NavigationMenuItem) => ReactNode;
-  hasAddItemRow?: boolean;
 };
 
 export const NavigationMenuContainerEditableItems = ({
   containerId,
   topLevelItems,
   folderChildrenById,
-  renderSection,
-  hasAddItemRow,
 }: NavigationMenuContainerEditableItemsProps) => {
   const selectedNavigationMenuItemIdInEditMode = useAtomStateValue(
     selectedNavigationMenuItemIdInEditModeState,
@@ -38,12 +34,11 @@ export const NavigationMenuContainerEditableItems = ({
         <WorkspaceSectionListReadOnly
           filteredItems={topLevelItems}
           folderChildrenById={folderChildrenById}
-          renderSection={renderSection}
         />
       }
     >
       <LazyWorkspaceSectionListDndKit
-        containerId={containerId ?? undefined}
+        containerId={containerId}
         filteredItems={topLevelItems}
         folderChildrenById={folderChildrenById}
         getEditModeProps={(item) => ({
@@ -52,8 +47,6 @@ export const NavigationMenuContainerEditableItems = ({
           onEditModeClick: () => handleNavigationMenuItemClick({ item }),
         })}
         onNavigationMenuItemClick={handleNavigationMenuItemClick}
-        renderSection={renderSection}
-        hasAddItemRow={hasAddItemRow}
       />
     </Suspense>
   );

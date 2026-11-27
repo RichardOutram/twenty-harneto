@@ -15,6 +15,7 @@ import { isPermissionMainPrincipalWorkspaceMember } from 'src/engine/permissions
 import { AccessGroupReadRepository } from 'src/engine/permissions/internal/record-permission-repository/repositories/access-group-read.repository';
 import { attachRlsRelationValues } from 'src/engine/permissions/internal/rls/utils/attach-rls-relation-values.util';
 import { findWorkspaceMemberRelationPredicates } from 'src/engine/permissions/internal/rls/utils/find-workspace-member-relation-predicates.util';
+import { isRlsRelationHopEnabled } from 'src/engine/permissions/internal/rls/utils/is-rls-relation-hop-enabled.util';
 import { type PermissionsPrincipalsWithRolesContext } from 'src/engine/permissions/principal/types/permissions-principals-with-roles-context.type';
 import { WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';
 
@@ -38,8 +39,9 @@ export class AccessGroupReadService {
     operationType: ObjectRecordsOperationType;
   }): Promise<number[]> {
     const { workspaceId } = principals;
-    const { rolesPermissions, flatFieldMetadataMaps } =
+    const { featureFlagsMap, rolesPermissions, flatFieldMetadataMaps } =
       await this.workspaceCacheService.getOrRecompute(workspaceId, [
+        'featureFlagsMap',
         'rolesPermissions',
         'flatFieldMetadataMaps',
       ]);
@@ -57,6 +59,7 @@ export class AccessGroupReadService {
           operationTypes: [operationType],
           workspaceMembers,
           flatFieldMetadataMaps,
+          isRelationHopEnabled: isRlsRelationHopEnabled(featureFlagsMap),
         }),
       ),
     });

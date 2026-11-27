@@ -73,12 +73,11 @@ export interface MessageQueueDriver {
 export type QueueJobToAdd<T extends MessageQueueJobData> = {
   data: T;
   jobId?: string;
-  isJobIdGenerated?: boolean;
   groupKey?: string;
 } & QueueJobScope;
 
 export type BulkAddResult = {
-  jobs: { jobId: string; sizeBytes: number; scheduledAt: number }[];
+  jobs: { jobId: string; sizeBytes: number }[];
   availableBytes: number | null;
 };
 
@@ -90,7 +89,6 @@ export type QueueJobDetails<T extends MessageQueueJobData> = {
   failedReason?: string;
   progress?: unknown;
   timestamp: number;
-  scheduledAt: number;
   processedOn?: number;
   finishedOn?: number;
   broadcastTo?: QueueJobRecipient;

@@ -229,7 +229,7 @@ export class CalendarChannelMetadataService {
     const entity = this.repository.create(data);
     const savedEntity = await this.repository.save(entity);
 
-    await this.channelVisibilityRuleSyncSchedulerService.scheduleSync(
+    await this.channelVisibilityRuleSyncSchedulerService.scheduleSyncIfEnabled(
       data.workspaceId,
     );
 
@@ -251,7 +251,7 @@ export class CalendarChannelMetadataService {
     );
 
     if ('visibility' in data) {
-      await this.channelVisibilityRuleSyncSchedulerService.scheduleSync(
+      await this.channelVisibilityRuleSyncSchedulerService.scheduleSyncIfEnabled(
         workspaceId,
       );
     }
@@ -272,7 +272,7 @@ export class CalendarChannelMetadataService {
 
     await this.repository.delete({ id, workspaceId });
 
-    await this.channelVisibilityRuleSyncSchedulerService.scheduleSync(
+    await this.channelVisibilityRuleSyncSchedulerService.scheduleSyncIfEnabled(
       workspaceId,
     );
 

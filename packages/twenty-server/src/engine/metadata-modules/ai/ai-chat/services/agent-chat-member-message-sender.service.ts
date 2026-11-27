@@ -148,9 +148,9 @@ export class AgentChatMemberMessageSenderService {
         return throwAgentChatThreadNotFound();
       }
 
-      if (isDefined(target.channelId)) {
+      if (isNonEmptyArray(message.attachments) || isDefined(target.channelId)) {
         throw new AiException(
-          doNotTranslate('Direct messages do not support channels'),
+          doNotTranslate('Direct messages do not support files or channels'),
           AiExceptionCode.INVALID_AGENT_INPUT,
         );
       }

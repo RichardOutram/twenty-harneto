@@ -9,6 +9,7 @@ import { RecordBoardContext } from '@/object-record/record-board/contexts/Record
 import { RecordBoardCard } from '@/object-record/record-board/record-board-card/components/RecordBoardCard';
 import { isRecordBoardCardFocusedComponentFamilyState } from '@/object-record/record-board/states/isRecordBoardCardFocusedComponentFamilyState';
 import { isRecordBoardCellsNonEditableComponentState } from '@/object-record/record-board/states/isRecordBoardCellsNonEditableComponentState';
+import { isRecordBoardDropProcessingComponentState } from '@/object-record/record-board/states/isRecordBoardDropProcessingComponentState';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
 import { RecordBoardCardContext } from '@/object-record/record-board/record-board-card/contexts/RecordBoardCardContext';
 import { useAtomComponentFamilyStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentFamilyStateValue';
@@ -60,6 +61,10 @@ export const RecordBoardCardContextProvider = ({
     },
   );
 
+  const isRecordBoardDropProcessing = useAtomComponentStateValue(
+    isRecordBoardDropProcessingComponentState,
+  );
+
   const isGroupByFieldReadOnly = useIsRecordFieldReadOnly({
     recordId,
     objectMetadataId: objectMetadataItem.id,
@@ -67,7 +72,9 @@ export const RecordBoardCardContextProvider = ({
   });
 
   const isDragDisabled =
-    isRecordBoardCellsNonEditable || isGroupByFieldReadOnly;
+    isRecordBoardDropProcessing ||
+    isRecordBoardCellsNonEditable ||
+    isGroupByFieldReadOnly;
 
   return (
     <RecordBoardCardContext.Provider

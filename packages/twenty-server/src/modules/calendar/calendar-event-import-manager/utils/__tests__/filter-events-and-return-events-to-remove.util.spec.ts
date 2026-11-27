@@ -14,12 +14,14 @@ const filterEvents = ({
   events,
   blocklist = [],
   excludePrivateEvents = false,
+  isInternalEventsFilterEnabled = true,
   isInternalMessagesImportEnabled = false,
 }: {
   primaryHandle?: string;
   events: FetchedCalendarEvent[];
   blocklist?: string[];
   excludePrivateEvents?: boolean;
+  isInternalEventsFilterEnabled?: boolean;
   isInternalMessagesImportEnabled?: boolean;
 }) =>
   filterEventsAndReturnEventsToRemove({
@@ -28,6 +30,7 @@ const filterEvents = ({
     events,
     blocklist,
     excludePrivateEvents,
+    isInternalEventsFilterEnabled,
     isInternalMessagesImportEnabled,
   });
 
@@ -95,6 +98,16 @@ describe('filterEventsAndReturnEventsToRemove', () => {
     const { filteredEvents, eventsToRemove } = filterEvents({
       events: [regularEvent, internalEvent, soloEvent],
       isInternalMessagesImportEnabled: true,
+    });
+
+    expect(filteredEvents).toEqual([regularEvent, internalEvent, soloEvent]);
+    expect(eventsToRemove).toEqual([]);
+  });
+
+  it('should keep internal and solo events when the internal events filter feature flag is off', () => {
+    const { filteredEvents, eventsToRemove } = filterEvents({
+      events: [regularEvent, internalEvent, soloEvent],
+      isInternalEventsFilterEnabled: false,
     });
 
     expect(filteredEvents).toEqual([regularEvent, internalEvent, soloEvent]);

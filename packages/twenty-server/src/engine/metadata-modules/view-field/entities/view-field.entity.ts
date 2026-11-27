@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   Index,
   JoinColumn,
@@ -9,7 +10,6 @@ import {
   type Relation,
   UpdateDateColumn,
 } from 'typeorm';
-import { type WasRemovedInUpgrade } from 'src/engine/core-modules/upgrade/decorators/was-removed-in-upgrade.decorator';
 import {
   AggregateOperations,
   type SerializedRelation,
@@ -54,7 +54,7 @@ export type ViewFieldOverrides = {
   ['fieldMetadataId', 'viewId'],
   {
     unique: true,
-    where: '"isCanonical" = true',
+    where: '"deletedAt" IS NULL AND "isCanonical" = true',
   },
 )
 export class ViewFieldEntity
@@ -141,14 +141,8 @@ export class ViewFieldEntity
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
 
-  @Column({
-    nullable: true,
-    type: 'timestamptz',
-    select: false,
-    insert: false,
-    update: false,
-  })
-  deletedAt: WasRemovedInUpgrade<Date> | null;
+  @DeleteDateColumn({ type: 'timestamptz' })
+  deletedAt: Date | null;
 
   @ManyToOne(() => ViewEntity, (view) => view.viewFields, {
     onDelete: 'CASCADE',

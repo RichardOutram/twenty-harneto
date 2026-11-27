@@ -69,18 +69,11 @@ export class FlatObjectPermissionValidatorService {
         ...validateRoleBelongsToCallerApplication({
           referencedRole,
           buildOptions,
-          // TODO(@charlesBochet): temporary Admin record permissions exception, remove once the workspace owns Admin's record permissions
-          isRecordPermissionsChange: true,
         }),
       );
 
       validationResult.errors.push(
-        ...getRoleNotEditableErrors({
-          flatRole: referencedRole,
-          buildOptions,
-          // TODO(@charlesBochet): temporary Admin record permissions exception, remove once the workspace owns Admin's record permissions
-          isRecordPermissionsChange: true,
-        }),
+        ...getRoleNotEditableErrors({ flatRole: referencedRole, buildOptions }),
       );
     }
 
@@ -190,18 +183,11 @@ export class FlatObjectPermissionValidatorService {
         ...validateRoleBelongsToCallerApplication({
           referencedRole,
           buildOptions,
-          // TODO(@charlesBochet): temporary Admin record permissions exception, remove once the workspace owns Admin's record permissions
-          isRecordPermissionsChange: true,
         }),
       );
 
       validationResult.errors.push(
-        ...getRoleNotEditableErrors({
-          flatRole: referencedRole,
-          buildOptions,
-          // TODO(@charlesBochet): temporary Admin record permissions exception, remove once the workspace owns Admin's record permissions
-          isRecordPermissionsChange: true,
-        }),
+        ...getRoleNotEditableErrors({ flatRole: referencedRole, buildOptions }),
       );
     }
 
@@ -301,8 +287,6 @@ export class FlatObjectPermissionValidatorService {
           ...getRoleNotEditableErrors({
             flatRole: referencedRole,
             buildOptions,
-            // TODO(@charlesBochet): temporary Admin record permissions exception, remove once the workspace owns Admin's record permissions
-            isRecordPermissionsChange: true,
           }),
         );
       }

@@ -7,16 +7,13 @@ import {
 } from 'twenty-sdk/logic-function';
 import { isDefined } from 'twenty-sdk/utils';
 
-import { WHATSAPP_HISTORY_IMPORT_DEBOUNCE_MILLISECONDS } from 'src/constants/whatsapp-history-import-debounce-milliseconds.constant';
 import { WHATSAPP_SETTINGS_ROUTE_PATHS } from 'src/constants/whatsapp-settings-route-paths.constant';
 import { WHATSAPP_UPDATE_SETTINGS_UNIVERSAL_IDENTIFIER } from 'src/constants/universal-identifiers';
 import { buildWhatsappSettingsView } from 'src/logic-functions/utils/build-whatsapp-settings-view.util';
 import { findOwnWhatsappConnection } from 'src/logic-functions/utils/find-own-whatsapp-connection.util';
 import { getWhatsappConnectionKvKey } from 'src/logic-functions/utils/get-whatsapp-connection-kv-key.util';
 import { getWhatsappSettings } from 'src/logic-functions/utils/get-whatsapp-settings.util';
-import { hasWhatsappImportSettingChanged } from 'src/logic-functions/utils/has-whatsapp-import-setting-changed.util';
 import { parseWhatsappSettingsUpdate } from 'src/logic-functions/utils/parse-whatsapp-settings-update.util';
-import { restartWhatsappHistoryImport } from 'src/logic-functions/utils/restart-whatsapp-history-import.util';
 import { type WhatsappSettingsView } from 'src/types/whatsapp-settings-view.type';
 
 export const whatsappUpdateSettingsHandler = async (
@@ -32,8 +29,10 @@ export const whatsappUpdateSettingsHandler = async (
   const { visibility, ...settingsUpdate } = parseWhatsappSettingsUpdate(
     routePayload.body,
   );
-  const previousSettings = await getWhatsappSettings(connection.id);
-  const settings = { ...previousSettings, ...settingsUpdate };
+  const settings = {
+    ...(await getWhatsappSettings(connection.id)),
+    ...settingsUpdate,
+  };
 
   await kv.set(
     getWhatsappConnectionKvKey({
@@ -51,19 +50,6 @@ export const whatsappUpdateSettingsHandler = async (
     if (isDefined(channel)) {
       await updateMessageChannel({ id: channel.id, visibility });
     }
-  }
-
-  if (
-    hasWhatsappImportSettingChanged({
-      previous: previousSettings,
-      next: settings,
-    })
-  ) {
-    await restartWhatsappHistoryImport({
-      connectedAccountId: connection.id,
-      settings,
-      delayMs: WHATSAPP_HISTORY_IMPORT_DEBOUNCE_MILLISECONDS,
-    });
   }
 
   return buildWhatsappSettingsView(connection);

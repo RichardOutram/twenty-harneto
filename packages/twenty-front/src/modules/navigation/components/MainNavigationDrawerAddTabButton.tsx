@@ -14,13 +14,11 @@ import { MainNavigationDrawerTab } from '@/navigation/components/MainNavigationD
 type MainNavigationDrawerAddTabButtonProps = {
   isExpanded: boolean;
   shouldShowTooltip: boolean;
-  isLabelHidden: boolean;
 };
 
 export const MainNavigationDrawerAddTabButton = ({
   isExpanded,
   shouldShowTooltip,
-  isLabelHidden,
 }: MainNavigationDrawerAddTabButtonProps) => {
   const { t } = useLingui();
   const isCustomizableSidebarEnabled = useIsFeatureEnabled(
@@ -57,7 +55,6 @@ export const MainNavigationDrawerAddTabButton = ({
       isDisabled={false}
       tooltip={t`Add tab`}
       shouldShowTooltip={shouldShowTooltip}
-      isLabelHidden={isLabelHidden}
       onClick={handleClick}
     />
   );

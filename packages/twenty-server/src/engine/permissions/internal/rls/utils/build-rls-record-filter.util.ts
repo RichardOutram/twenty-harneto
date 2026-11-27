@@ -56,6 +56,7 @@ type BuildRecordFilterForRuleArgs = {
   flatFieldMetadataMaps: FlatEntityMaps<OrmFlatFieldMetadata>;
   flatFieldMetadataOptionMaps: FlatFieldMetadataOptionMapsForOptions;
   flatObjectMetadataMaps: FlatEntityMaps<FlatObjectMetadata>;
+  isRelationHopEnabled: boolean;
 };
 
 const ENUM_FIELD_TYPES: FieldMetadataType[] = [
@@ -131,6 +132,7 @@ const buildPredicateRecordFilter = ({
   flatFieldMetadataMaps,
   flatFieldMetadataOptionMaps,
   flatObjectMetadataMaps,
+  isRelationHopEnabled,
 }: Omit<BuildRecordFilterForRuleArgs, 'rowLevelPermissionRule'> & {
   predicate: RowLevelPermissionPredicate;
 }): RecordGqlOperationFilter | undefined => {
@@ -157,6 +159,14 @@ const buildPredicateRecordFilter = ({
     );
   }
 
+  if (
+    (isDefined(predicate.relationFieldMetadataId) ||
+      isDefined(predicate.workspaceMemberRelationFieldMetadataId)) &&
+    !isRelationHopEnabled
+  ) {
+    return UNSATISFIABLE_RECORD_FILTER;
+  }
+
   // as a view filter, emptiness on a morph target would require every target empty
   if (
     fieldMetadata.type === FieldMetadataType.MORPH_RELATION &&
@@ -175,6 +185,10 @@ const buildPredicateRecordFilter = ({
   }
 
   if (isRlsOneToManyEmptinessPredicate({ predicate, fieldMetadata })) {
+    if (!isRelationHopEnabled) {
+      return UNSATISFIABLE_RECORD_FILTER;
+    }
+
     const hasRelatedRecordFilter: RecordGqlOperationFilter = {
       [fieldMetadata.name]: { id: { is: 'NOT_NULL' } },
     };

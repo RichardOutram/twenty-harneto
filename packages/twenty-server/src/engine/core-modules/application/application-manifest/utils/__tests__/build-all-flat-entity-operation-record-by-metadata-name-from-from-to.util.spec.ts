@@ -124,7 +124,6 @@ const NAVIGATION_MENU_ITEM: FlatNavigationMenuItem = {
   link: 'https://example.com',
   nativePageKey: null,
   builtInSectionKey: null,
-  visibleItemLimit: null,
   icon: null,
   color: null,
   parentId: null,

@@ -32,15 +32,10 @@ import { useIsMobile } from 'twenty-ui/utilities';
 const MAX_DISPLAYED_UNREAD_COUNT = 99;
 
 // Expanded, the row matches the page card header so their borders read as one line.
-const StyledSwitcher = styled.div<{
-  isExpanded: boolean;
-  isPinnedToBottom: boolean;
-}>`
+const StyledSwitcher = styled.div<{ isExpanded: boolean }>`
   align-items: ${({ isExpanded }) => (isExpanded ? 'center' : 'flex-start')};
-  border-bottom: ${({ isExpanded, isPinnedToBottom }) =>
-    isExpanded && !isPinnedToBottom
-      ? `1px solid ${themeCssVariables.border.color.light}`
-      : 'none'};
+  border-bottom: ${({ isExpanded }) =>
+    isExpanded ? `1px solid ${themeCssVariables.border.color.light}` : 'none'};
   box-sizing: border-box;
   display: flex;
   flex-direction: ${({ isExpanded }) => (isExpanded ? 'row' : 'column')};
@@ -48,8 +43,8 @@ const StyledSwitcher = styled.div<{
     isExpanded
       ? themeCssVariables.spacing['0.5']
       : themeCssVariables.betweenSiblingsGap};
-  height: ${({ isExpanded, isPinnedToBottom }) =>
-    isExpanded && !isPinnedToBottom ? themeCssVariables.spacing[10] : 'auto'};
+  height: ${({ isExpanded }) =>
+    isExpanded ? themeCssVariables.spacing[10] : 'auto'};
   min-width: 0;
 `;
 
@@ -60,13 +55,7 @@ const StyledUnreadBadge = styled.span`
   top: calc(-1 * ${themeCssVariables.spacing['1.5']});
 `;
 
-type MainNavigationDrawerTabSwitcherProps = {
-  isPinnedToBottom?: boolean;
-};
-
-export const MainNavigationDrawerTabSwitcher = ({
-  isPinnedToBottom = false,
-}: MainNavigationDrawerTabSwitcherProps) => {
+export const MainNavigationDrawerTabSwitcher = () => {
   const { t } = useLingui();
 
   const isLayoutCustomizationModeEnabled = useAtomStateValue(
@@ -103,25 +92,15 @@ export const MainNavigationDrawerTabSwitcher = ({
       : t`Finish editing the layout to open AI`;
   };
 
-  const isOnlyOneTabVisible =
-    drawerTabs.length + navigationMenuTabs.length <= 1;
-
-  if (
-    drawerTabs.length === 0 ||
-    (isPinnedToBottom &&
-      !isLayoutCustomizationModeEnabled &&
-      isOnlyOneTabVisible)
-  ) {
+  if (drawerTabs.length === 0) {
     return null;
   }
 
-  const shouldShowTooltips = (!isExpanded && !isMobile) || isPinnedToBottom;
-  const isTabContentShown = (isActive: boolean) => isActive && isExpanded;
+  const shouldShowTooltips = !isExpanded && !isMobile;
 
   return (
     <StyledSwitcher
       isExpanded={isExpanded}
-      isPinnedToBottom={isPinnedToBottom}
       role="group"
       aria-label={t`Navigation modes`}
     >
@@ -142,8 +121,7 @@ export const MainNavigationDrawerTabSwitcher = ({
           drawerTab !== NAVIGATION_DRAWER_TABS.NAVIGATION_MENU &&
           isLayoutCustomizationModeEnabled;
         const homeChatAttention =
-          drawerTab === NAVIGATION_DRAWER_TABS.NAVIGATION_MENU &&
-          !isTabContentShown(isActive)
+          drawerTab === NAVIGATION_DRAWER_TABS.NAVIGATION_MENU
             ? getTabChatAttention(null)
             : null;
 
@@ -159,7 +137,6 @@ export const MainNavigationDrawerTabSwitcher = ({
               isDisabled ? getDisabledDrawerTabTooltip(drawerTab) : label
             }
             shouldShowTooltip={shouldShowTooltips}
-            isLabelHidden={isPinnedToBottom}
             ariaLabel={
               isUnread
                 ? t`${label}, ${unreadOpenThreadCount} unread`
@@ -203,26 +180,17 @@ export const MainNavigationDrawerTabSwitcher = ({
           <MainNavigationDrawerTabDropTarget key={drawerTab} tabId={null}>
             {drawerTabButton}
           </MainNavigationDrawerTabDropTarget>,
-          ...navigationMenuTabs.map((tab) => {
-            const isTabActive = activeNavigationMenuTab?.id === tab.id;
-
-            return (
-              <MainNavigationDrawerTabDropTarget key={tab.id} tabId={tab.id}>
-                <MainNavigationDrawerSidebarTab
-                  tab={tab}
-                  isActive={isTabActive}
-                  isExpanded={isExpanded}
-                  shouldShowTooltip={shouldShowTooltips}
-                  isLabelHidden={isPinnedToBottom}
-                  attention={
-                    isTabContentShown(isTabActive)
-                      ? null
-                      : getTabChatAttention(tab.id)
-                  }
-                />
-              </MainNavigationDrawerTabDropTarget>
-            );
-          }),
+          ...navigationMenuTabs.map((tab) => (
+            <MainNavigationDrawerTabDropTarget key={tab.id} tabId={tab.id}>
+              <MainNavigationDrawerSidebarTab
+                tab={tab}
+                isActive={activeNavigationMenuTab?.id === tab.id}
+                isExpanded={isExpanded}
+                shouldShowTooltip={shouldShowTooltips}
+                attention={getTabChatAttention(tab.id)}
+              />
+            </MainNavigationDrawerTabDropTarget>
+          )),
           ...(isLayoutCustomizationModeEnabled &&
           tabCountIncludingHome < NAVIGATION_MENU_TAB_MAX_COUNT
             ? [
@@ -230,7 +198,6 @@ export const MainNavigationDrawerTabSwitcher = ({
                   key="add-tab"
                   isExpanded={isExpanded}
                   shouldShowTooltip={shouldShowTooltips}
-                  isLabelHidden={isPinnedToBottom}
                 />,
               ]
             : []),

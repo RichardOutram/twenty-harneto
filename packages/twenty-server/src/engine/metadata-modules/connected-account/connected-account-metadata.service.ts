@@ -528,7 +528,7 @@ export class ConnectedAccountMetadataService {
     });
 
     this.emitConnectionChanged({ connectedAccounts, workspaceId });
-    await this.channelVisibilityRuleSyncSchedulerService.scheduleSync(
+    await this.channelVisibilityRuleSyncSchedulerService.scheduleSyncIfEnabled(
       workspaceId,
     );
 
@@ -726,7 +726,7 @@ export class ConnectedAccountMetadataService {
 
     await this.repository.delete({ id: In(connectedAccountIds), workspaceId });
 
-    await this.channelVisibilityRuleSyncSchedulerService.scheduleSync(
+    await this.channelVisibilityRuleSyncSchedulerService.scheduleSyncIfEnabled(
       workspaceId,
     );
 

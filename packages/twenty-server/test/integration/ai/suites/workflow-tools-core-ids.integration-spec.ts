@@ -97,13 +97,14 @@ const readCoreWorkflowRow = async (coreWorkflowId: string) => {
 
 const readCoreVersionRow = async (coreWorkflowVersionId: string) => {
   const rows = await global.testDataSource.query(
-    `SELECT id, steps, triggers, status
+    `SELECT id, "workspaceWorkflowVersionId", steps, triggers, status
      FROM core."workflowVersion" WHERE id = $1`,
     [coreWorkflowVersionId],
   );
 
   return rows[0] as {
     id: string;
+    workspaceWorkflowVersionId: string | null;
     steps: unknown[] | null;
     triggers: unknown[] | null;
     status: string;
@@ -168,8 +169,10 @@ describe('workflow MCP tools on core identities (integration)', () => {
 
     it('should create the workflow without workspace rows', async () => {
       const coreWorkflow = await readCoreWorkflowRow(coreWorkflowId);
+      const coreVersion = await readCoreVersionRow(coreWorkflowVersionId);
 
       expect(coreWorkflow.workspaceWorkflowId).toBeNull();
+      expect(coreVersion.workspaceWorkflowVersionId).toBeNull();
     });
 
     it('should preserve the iterator loop connection and the step after the loop', async () => {

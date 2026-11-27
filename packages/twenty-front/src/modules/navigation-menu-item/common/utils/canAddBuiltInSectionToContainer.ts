@@ -8,9 +8,15 @@ export const canAddBuiltInSectionToContainer = ({
   builtInSectionKey: string;
   containerId: string | null;
   items: Pick<NavigationMenuItem, 'builtInSectionKey' | 'parentId'>[];
-}) =>
-  !items.some(
+}) => {
+  const isAlreadyShownOnHome =
+    builtInSectionKey === 'favorites' && containerId === null;
+
+  const isAlreadyInContainer = items.some(
     (item) =>
       item.builtInSectionKey === builtInSectionKey &&
       (item.parentId ?? null) === containerId,
   );
+
+  return !isAlreadyShownOnHome && !isAlreadyInContainer;
+};

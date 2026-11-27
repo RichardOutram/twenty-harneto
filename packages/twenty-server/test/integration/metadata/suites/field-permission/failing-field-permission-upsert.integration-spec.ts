@@ -16,7 +16,6 @@ import { isDefined } from 'twenty-shared/utils';
 import { v4 } from 'uuid';
 
 import { type UpsertFieldPermissionsInput } from 'src/engine/metadata-modules/object-permission/dtos/upsert-field-permissions.input';
-import { WORKSPACE_CUSTOM_APPLICATION_ROLE_LABEL } from 'src/engine/core-modules/application/constants/workspace-custom-application-role.constant';
 
 type GlobalTestContext = {
   editableRoleId: string;
@@ -201,13 +200,12 @@ describe('Field permission upsert should fail', () => {
     });
 
     jestExpectToBeDefined(rolesData?.getRoles);
-    const nonEditableRole = rolesData.getRoles.find(
+    const adminRole = rolesData.getRoles.find(
       (role: { label: string; isEditable: boolean }) =>
-        role.label === WORKSPACE_CUSTOM_APPLICATION_ROLE_LABEL &&
-        role.isEditable === false,
+        role.label === 'Admin' && role.isEditable === false,
     );
-    jestExpectToBeDefined(nonEditableRole);
-    nonEditableRoleId = nonEditableRole.id;
+    jestExpectToBeDefined(adminRole);
+    nonEditableRoleId = adminRole.id;
 
     const getObjectMetadataOperation = {
       query: gql`

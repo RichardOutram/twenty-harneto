@@ -1,19 +1,10 @@
 import { type AgentDTO } from 'src/engine/metadata-modules/ai/ai-agent/dtos/agent.dto';
-import { printAgentTriggers } from 'src/engine/metadata-modules/ai/ai-agent-trigger/utils/print-agent-triggers.util';
 import { type FlatAgentWithRoleId } from 'src/engine/metadata-modules/flat-agent/types/flat-agent.type';
 import { resolveEffectiveAgent } from 'src/engine/metadata-modules/flat-agent/utils/resolve-effective-agent.util';
-import { type AllFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/all-flat-entity-maps.type';
 
-export const fromFlatAgentWithRoleIdToAgentDto = ({
-  flatAgentWithRoleId,
-  flatObjectMetadataMaps,
-  flatFieldMetadataMaps,
-}: {
-  flatAgentWithRoleId: FlatAgentWithRoleId;
-} & Pick<
-  AllFlatEntityMaps,
-  'flatObjectMetadataMaps' | 'flatFieldMetadataMaps'
->): AgentDTO => {
+export const fromFlatAgentWithRoleIdToAgentDto = (
+  flatAgentWithRoleId: FlatAgentWithRoleId,
+): AgentDTO => {
   const {
     applicationId,
     createdAt,
@@ -33,7 +24,6 @@ export const fromFlatAgentWithRoleIdToAgentDto = ({
     prompt,
     responseFormat,
     triggers,
-    universalIdentifier,
     updatedAt,
     workspaceId,
     roleId,
@@ -53,12 +43,7 @@ export const fromFlatAgentWithRoleIdToAgentDto = ({
     name,
     prompt,
     responseFormat,
-    triggers: printAgentTriggers({
-      triggers,
-      flatObjectMetadataMaps,
-      flatFieldMetadataMaps,
-    }),
-    universalIdentifier,
+    triggers,
     updatedAt: new Date(updatedAt),
     workspaceId,
     applicationId: applicationId ?? undefined,

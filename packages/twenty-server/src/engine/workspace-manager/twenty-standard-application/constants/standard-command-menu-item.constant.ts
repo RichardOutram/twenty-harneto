@@ -1298,44 +1298,6 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     engineComponentKey: EngineComponentKey.EMAIL_PAGE_STYLE,
     hotKeys: null,
   },
-  goToWorkflows: {
-    universalIdentifier: 'e04acd97-dc5a-42d4-98b9-615cd7289488',
-    label: i18nLabel(
-      msg({ message: `Go to Workflows`, context: 'commandMenuItem.label' }),
-    ),
-    icon: 'IconSettingsAutomation',
-    isPinned: false,
-    position: 46.25,
-    shortLabel: i18nLabel(
-      msg({ message: `Workflows`, context: 'commandMenuItem.shortLabel' }),
-    ),
-    availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.WORKFLOWS',
-    availabilityObjectMetadataUniversalIdentifier: null,
-    frontComponentUniversalIdentifier: null,
-    engineComponentKey: EngineComponentKey.NAVIGATION,
-    hotKeys: ['G', 'W'],
-    payload: { path: '/workflows' },
-  },
-  goToAgents: {
-    universalIdentifier: 'd4e9a36b-00df-46e0-ac40-e10ee08975da',
-    label: i18nLabel(
-      msg({ message: `Go to Agents`, context: 'commandMenuItem.label' }),
-    ),
-    icon: 'IconLego',
-    isPinned: false,
-    position: 46.5,
-    shortLabel: i18nLabel(
-      msg({ message: `Agents`, context: 'commandMenuItem.shortLabel' }),
-    ),
-    availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.AI',
-    availabilityObjectMetadataUniversalIdentifier: null,
-    frontComponentUniversalIdentifier: null,
-    engineComponentKey: EngineComponentKey.NAVIGATION,
-    hotKeys: ['G', 'A'],
-    payload: { path: '/agents' },
-  },
   goToSettings: {
     universalIdentifier: 'ef9aba44-0068-453e-930a-f8c182af18ee',
     label: i18nLabel(
@@ -1359,7 +1321,7 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     universalIdentifier: 'bceb0328-c018-48ba-80d8-a1a97dc0a8ba',
     label: i18nLabel(
       msg({
-        message: `Go to Experience`,
+        message: `Go to Experience Settings`,
         context: 'commandMenuItem.label',
       }),
     ),
@@ -1406,7 +1368,7 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     universalIdentifier: 'ad68e516-96ea-455a-a838-c59788e88c23',
     label: i18nLabel(
       msg({
-        message: `Go to General`,
+        message: `Go to General Settings`,
         context: 'commandMenuItem.label',
       }),
     ),
@@ -1428,7 +1390,7 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     universalIdentifier: '9302bfeb-f6cd-4858-ab5b-5f70f4d358c4',
     label: i18nLabel(
       msg({
-        message: `Go to Data Model`,
+        message: `Go to Data Model Settings`,
         context: 'commandMenuItem.label',
       }),
     ),
@@ -1450,7 +1412,7 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     universalIdentifier: 'fb4d9f1b-5b13-49d9-8353-80041719d411',
     label: i18nLabel(
       msg({
-        message: `Go to Members`,
+        message: `Go to Members Settings`,
         context: 'commandMenuItem.label',
       }),
     ),
@@ -1472,7 +1434,7 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     universalIdentifier: '4050f307-c592-4c9f-ad91-89cde330fbf7',
     label: i18nLabel(
       msg({
-        message: `Go to Roles`,
+        message: `Go to Roles Settings`,
         context: 'commandMenuItem.label',
       }),
     ),
@@ -1494,7 +1456,7 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     universalIdentifier: '2d071684-fb5e-4222-b560-4c7ab2597fb4',
     label: i18nLabel(
       msg({
-        message: `Go to Domains`,
+        message: `Go to Domains Settings`,
         context: 'commandMenuItem.label',
       }),
     ),
@@ -1516,7 +1478,7 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     universalIdentifier: 'f46a0fb9-14e9-4d48-801d-c33bdd543f74',
     label: i18nLabel(
       msg({
-        message: `Go to Billing`,
+        message: `Go to Billing Settings`,
         context: 'commandMenuItem.label',
       }),
     ),
@@ -1538,7 +1500,7 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     universalIdentifier: 'ed2c2fde-1e7a-4a42-ba63-221eaa7c9759',
     label: i18nLabel(
       msg({
-        message: `Go to Developers`,
+        message: `Go to Developers Settings`,
         context: 'commandMenuItem.label',
       }),
     ),
@@ -1559,7 +1521,7 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
   goToSettingsApplications: {
     universalIdentifier: '44db6d7a-79ac-485e-b3da-da8776bd7777',
     label: i18nLabel(
-      msg({ message: `Go to Apps`, context: 'commandMenuItem.label' }),
+      msg({ message: `Go to Apps Settings`, context: 'commandMenuItem.label' }),
     ),
     icon: 'IconApps',
     isPinned: false,
@@ -1578,7 +1540,7 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
   goToSettingsAI: {
     universalIdentifier: '3eaec228-809d-452d-b5ef-7b777398c538',
     label: i18nLabel(
-      msg({ message: `Go to AI`, context: 'commandMenuItem.label' }),
+      msg({ message: `Go to AI Settings`, context: 'commandMenuItem.label' }),
     ),
     icon: 'IconSparkles',
     isPinned: false,
@@ -1598,7 +1560,7 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     universalIdentifier: '358e69b2-0789-44e2-add7-bdef68413be8',
     label: i18nLabel(
       msg({
-        message: `Go to Security`,
+        message: `Go to Security Settings`,
         context: 'commandMenuItem.label',
       }),
     ),
@@ -1620,7 +1582,7 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     universalIdentifier: 'dd22798b-fca6-42af-ba3b-0d48f263afbd',
     label: i18nLabel(
       msg({
-        message: `Go to Admin Panel`,
+        message: `Go to Admin Panel Settings`,
         context: 'commandMenuItem.label',
       }),
     ),
@@ -1643,7 +1605,7 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     universalIdentifier: '5d1ba354-0090-4a42-9a43-601461b26068',
     label: i18nLabel(
       msg({
-        message: `Go to Community`,
+        message: `Go to Community Settings`,
         context: 'commandMenuItem.label',
       }),
     ),

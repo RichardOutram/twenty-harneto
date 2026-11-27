@@ -3,7 +3,6 @@ import { HorizontalScrollBoxShadowCSS } from '@/object-record/record-table/compo
 import { VerticalScrollBoxShadowCSS } from '@/object-record/record-table/components/VerticalScrollBoxShadowCSS';
 import { RECORD_TABLE_CELL_CONTENT_CLASS_NAME } from '@/object-record/record-table/constants/RecordTableCellContentClassName';
 import { RECORD_TABLE_CELL_DISPLAY_CLASS_NAME } from '@/object-record/record-table/constants/RecordTableCellDisplayClassName';
-import { RECORD_TABLE_CELL_PORTAL_CLASS_NAME } from '@/object-record/record-table/constants/RecordTableCellPortalClassName';
 import { RECORD_TABLE_LABEL_IDENTIFIER_COLUMN_PINNED_WIDTH_ON_MOBILE } from '@/object-record/record-table/constants/RecordTableLabelIdentifierColumnPinnedWidthOnMobile';
 import { RECORD_TABLE_COLUMN_ADD_COLUMN_BUTTON_WIDTH } from '@/object-record/record-table/constants/RecordTableColumnAddColumnButtonWidth';
 import { RECORD_TABLE_COLUMN_ADD_COLUMN_BUTTON_WIDTH_CLASS_NAME } from '@/object-record/record-table/constants/RecordTableColumnAddColumnButtonWidthClassName';
@@ -147,13 +146,6 @@ const StyledTable = styled.div<{
     z-index: ${TABLE_Z_INDEX.cell.sticky};
 
     ${HorizontalScrollBoxShadowCSS}
-  }
-
-  div.table-cell.${getRecordTableColumnFieldWidthClassName(0)}:has(
-  > .${RECORD_TABLE_CELL_CONTENT_CLASS_NAME}
-  > .${RECORD_TABLE_CELL_PORTAL_CLASS_NAME}
-  ) {
-    z-index: ${TABLE_Z_INDEX.cell.stickyWithPortal};
   }
 
   div.${RECORD_TABLE_COLUMN_DRAG_AND_DROP_WIDTH_CLASS_NAME} {

@@ -147,6 +147,14 @@ export const ingestWhatsappMessages = async ({
     return { ...emptyResult, skippedReason: 'NOT_SELECTED' };
   }
 
+  if (
+    isGroupChat &&
+    settings.importPolicy !== 'SELECTED' &&
+    !settings.areGroupChatsImported
+  ) {
+    return { ...emptyResult, skippedReason: 'GROUP_CHATS_OFF' };
+  }
+
   const counterparts = toWhatsappCounterparts(counterpartUsers);
 
   if (counterparts.length < counterpartUsers.length) {

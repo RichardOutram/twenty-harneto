@@ -14,7 +14,6 @@ export const classifyAgentChatTurnOutcome = ({
   isAborted,
   isAwaitingUserAnswer,
   isSilent,
-  isToolsOnly = false,
   stopReason,
   isTextReplyRequired = true,
 }: {
@@ -22,7 +21,6 @@ export const classifyAgentChatTurnOutcome = ({
   isAborted: boolean;
   isAwaitingUserAnswer: boolean;
   isSilent: boolean;
-  isToolsOnly?: boolean;
   stopReason: StepDebitResult['stopReason'];
   isTextReplyRequired?: boolean;
 }): AgentChatTurnOutcome => {
@@ -56,15 +54,12 @@ export const classifyAgentChatTurnOutcome = ({
     return { kind: 'completed', outcome: 'answered' };
   }
 
-  if (isDefined(stopReason)) {
-    return { kind: 'failed', failurePhase: CREDITS_FAILURE_PHASE[stopReason] };
-  }
-
-  if (isToolsOnly) {
-    return { kind: 'completed', outcome: 'tools_only' };
-  }
-
-  return { kind: 'failed', failurePhase: 'no_text' };
+  return {
+    kind: 'failed',
+    failurePhase: isDefined(stopReason)
+      ? CREDITS_FAILURE_PHASE[stopReason]
+      : 'no_text',
+  };
 };
 
 // a lost stream claim overrides completion, but failures keep their phase so an out-of-credits turn

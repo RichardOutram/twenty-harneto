@@ -27,7 +27,6 @@ export const useFieldMetadataItem = () => {
       | 'isUnique'
     > & {
       objectMetadataId: string;
-      formula?: string;
       relationCreationPayload?: RelationCreationPayload;
       morphRelationsCreationPayload?: RelationCreationPayload[];
     },

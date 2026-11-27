@@ -3,8 +3,6 @@ import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { ComponentDecorator } from 'twenty-ui/testing';
 
 import { ChatThreadComposer } from '@/activities/emails/components/ChatThreadComposer';
-import { KeyboardShortcutMenu } from '@/keyboard-shortcut-menu/components/KeyboardShortcutMenu';
-import { MemoryRouterDecorator } from '~/testing/decorators/MemoryRouterDecorator';
 import { ObjectMetadataItemsDecorator } from '~/testing/decorators/ObjectMetadataItemsDecorator';
 import { ToastDecorator } from '~/testing/decorators/ToastDecorator';
 
@@ -43,10 +41,14 @@ export const Default: Story = {
     await expect(
       await canvas.findByRole('button', { name: 'Send' }),
     ).toBeDisabled();
+    await expect(
+      canvas.queryByRole('button', { name: 'Attach files' }),
+    ).not.toBeInTheDocument();
   },
 };
 
 export const Attachments: Story = {
+  args: { canAttachFiles: true },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
@@ -102,7 +104,7 @@ export const SendingFailed: Story = {
 };
 
 export const Disconnected: Story = {
-  args: { isDisconnected: true },
+  args: { isDisconnected: true, canAttachFiles: true },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
@@ -130,37 +132,5 @@ export const DisconnectedKeepsDraft: Story = {
     await expect(textbox).toBeDisabled();
     await expect(textbox).toHaveValue('Signed copy attached, sending now.');
     await expect(canvas.getByRole('button', { name: 'Send' })).toBeDisabled();
-  },
-};
-
-export const TypingQuestionMark: Story = {
-  decorators: [
-    (Story) => (
-      <>
-        <KeyboardShortcutMenu />
-        <Story />
-      </>
-    ),
-    MemoryRouterDecorator,
-  ],
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const body = within(canvasElement.ownerDocument.body);
-    const textbox = await canvas.findByRole('textbox');
-
-    await userEvent.click(textbox);
-    await userEvent.keyboard('Is it signed{Shift>}?{/Shift}');
-
-    await expect(textbox).toHaveValue('Is it signed?');
-    await expect(
-      body.queryByRole('dialog', { name: 'Keyboard shortcuts' }),
-    ).not.toBeInTheDocument();
-
-    await userEvent.click(canvasElement);
-    await userEvent.keyboard('{Shift>}?{/Shift}');
-
-    await expect(
-      await body.findByRole('dialog', { name: 'Keyboard shortcuts' }),
-    ).toBeVisible();
   },
 };

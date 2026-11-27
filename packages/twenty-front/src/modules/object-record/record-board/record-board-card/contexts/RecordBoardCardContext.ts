@@ -6,7 +6,6 @@ type RecordBoardCardContextProps = {
   rowIndex: number;
   columnIndex: number;
   isDragOverlay?: boolean;
-  isMultiDragOverlay?: boolean;
 };
 
 export const RecordBoardCardContext =

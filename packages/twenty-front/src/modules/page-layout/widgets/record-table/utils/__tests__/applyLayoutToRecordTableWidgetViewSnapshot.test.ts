@@ -54,7 +54,7 @@ describe('applyLayoutToRecordTableWidgetViewSnapshot', () => {
     });
   });
 
-  it('should switch a list to compact and leave the rest untouched', () => {
+  it('should only switch the view type for a list', () => {
     expect(
       applyLayoutToRecordTableWidgetViewSnapshot({
         widgetViewSnapshot,
@@ -63,45 +63,7 @@ describe('applyLayoutToRecordTableWidgetViewSnapshot', () => {
       }),
     ).toEqual({
       ...widgetViewSnapshot,
-      view: {
-        ...widgetViewSnapshot.view,
-        type: ViewType.LIST_WIDGET,
-        isCompact: true,
-      },
+      view: { ...widgetViewSnapshot.view, type: ViewType.LIST_WIDGET },
     });
-  });
-
-  it('should turn Compact view off when a list becomes another layout', () => {
-    const listSnapshot = applyLayoutToRecordTableWidgetViewSnapshot({
-      widgetViewSnapshot,
-      targetViewType: ViewType.LIST_WIDGET,
-      defaultGroupByFieldMetadataItem: null,
-    });
-
-    expect(
-      applyLayoutToRecordTableWidgetViewSnapshot({
-        widgetViewSnapshot: listSnapshot,
-        targetViewType: ViewType.TABLE_WIDGET,
-        defaultGroupByFieldMetadataItem: null,
-      }).view,
-    ).toMatchObject({ type: ViewType.TABLE_WIDGET, isCompact: false });
-  });
-
-  it('should keep Compact view between layouts that are not lists', () => {
-    expect(
-      applyLayoutToRecordTableWidgetViewSnapshot({
-        widgetViewSnapshot: {
-          ...widgetViewSnapshot,
-          view: {
-            ...widgetViewSnapshot.view,
-            type: ViewType.KANBAN_WIDGET,
-            isCompact: true,
-          },
-        },
-        targetViewType: ViewType.CALENDAR_WIDGET,
-        defaultGroupByFieldMetadataItem: null,
-        defaultCalendarFieldMetadataItem,
-      }).view,
-    ).toMatchObject({ type: ViewType.CALENDAR_WIDGET, isCompact: true });
   });
 });

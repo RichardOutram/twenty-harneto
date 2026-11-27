@@ -24,10 +24,6 @@ import { updateMessageChannel } from 'test/integration/utils/query-messaging.uti
 import { runMessageChannelSync } from 'test/integration/utils/run-message-channel-sync.util';
 import { sendEmail } from 'test/integration/utils/send-email.util';
 import { serializeEmailBody } from 'test/integration/utils/serialize-email-body.util';
-import {
-  grantRoleWideAccessToChannelObjects,
-  revokeRoleWideAccessToChannelObjects,
-} from 'test/integration/utils/role-wide-access-to-channel-objects.util';
 
 const HANDLE = 'gmail-outbound@apple.dev';
 const ALIAS = 'gmail-outbound-alias@apple.dev';
@@ -78,7 +74,6 @@ describe('Gmail outbound messaging and calendar creation (integration)', () => {
   let channel: Awaited<ReturnType<typeof connectMessagingAccount>>;
 
   beforeAll(async () => {
-    await grantRoleWideAccessToChannelObjects();
     channel = await connectMessagingAccount({
       provider: ConnectedAccountProvider.GOOGLE,
       handle: HANDLE,
@@ -88,7 +83,6 @@ describe('Gmail outbound messaging and calendar creation (integration)', () => {
 
   afterAll(async () => {
     await channel?.cleanup().catch(() => undefined);
-    await revokeRoleWideAccessToChannelObjects();
   });
 
   it('sends a reply with recipients and RFC 5322 threading headers', async () => {

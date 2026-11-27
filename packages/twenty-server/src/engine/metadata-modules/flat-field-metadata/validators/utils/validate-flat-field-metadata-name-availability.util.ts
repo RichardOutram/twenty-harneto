@@ -1,7 +1,10 @@
 import { msg } from '@lingui/core/macro';
+import { compositeTypeDefinitions } from 'twenty-shared/types';
+import { isDefined } from 'twenty-shared/utils';
 
 import { FieldMetadataExceptionCode } from 'src/engine/metadata-modules/field-metadata/field-metadata.exception';
-import { computeCompositeFieldColumnNames } from 'src/engine/metadata-modules/field-metadata/utils/compute-composite-field-column-names.util';
+import { computeCompositeColumnName } from 'src/engine/metadata-modules/field-metadata/utils/compute-column-name.util';
+import { isCompositeFieldMetadataType } from 'src/engine/metadata-modules/field-metadata/utils/is-composite-field-metadata-type.util';
 import { findManyFlatEntityByUniversalIdentifierInUniversalFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/utils/find-many-flat-entity-by-universal-identifier-in-universal-flat-entity-maps.util';
 import { type FlatFieldMetadataValidationError } from 'src/engine/metadata-modules/flat-field-metadata/types/flat-field-metadata-validation-error.type';
 import { getObjectFieldNamesAndJoinColumnNames } from 'src/engine/metadata-modules/flat-field-metadata/utils/get-object-field-names-and-join-column-names.util';
@@ -10,6 +13,31 @@ import { type UniversalFlatEntityMaps } from 'src/engine/workspace-manager/works
 import { type UniversalFlatFieldMetadata } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/types/universal-flat-field-metadata.type';
 import { type UniversalFlatObjectMetadata } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/types/universal-flat-object-metadata.type';
 import { type WorkspaceMigrationBuilderOptions } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/types/workspace-migration-builder-options.type';
+
+const getReservedCompositeFieldNames = (
+  objectUniversalFlatFieldMetadatas: UniversalFlatFieldMetadata[],
+): string[] => {
+  return objectUniversalFlatFieldMetadatas.flatMap(
+    (universalFlatFieldMetadata) => {
+      if (isCompositeFieldMetadataType(universalFlatFieldMetadata.type)) {
+        const base = universalFlatFieldMetadata.name;
+        const compositeType = compositeTypeDefinitions.get(
+          universalFlatFieldMetadata.type,
+        );
+
+        if (!isDefined(compositeType)) {
+          return [];
+        }
+
+        return compositeType.properties.map((property) =>
+          computeCompositeColumnName(base, property),
+        );
+      }
+
+      return [];
+    },
+  );
+};
 
 export const validateFlatFieldMetadataNameAvailability = ({
   name,
@@ -29,10 +57,9 @@ export const validateFlatFieldMetadataNameAvailability = ({
       universalIdentifiers:
         universalFlatObjectMetadata.fieldUniversalIdentifiers,
     });
-  const reservedCompositeFieldsNames =
-    objectUniversalFlatFieldMetadatas.flatMap(({ name, type }) =>
-      computeCompositeFieldColumnNames({ name, type }),
-    );
+  const reservedCompositeFieldsNames = getReservedCompositeFieldNames(
+    objectUniversalFlatFieldMetadatas,
+  );
 
   if (
     !isCallerTwentyStandardApp(buildOptions) &&

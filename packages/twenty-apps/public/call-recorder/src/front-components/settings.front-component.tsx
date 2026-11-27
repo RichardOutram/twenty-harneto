@@ -1,9 +1,9 @@
-import { defineFrontComponent } from 'twenty-sdk/define';
+import { defineSettingsFrontComponent } from 'twenty-sdk/define';
 
 import { CALL_RECORDER_SETTINGS_FRONT_COMPONENT_UNIVERSAL_IDENTIFIER } from 'src/constants/call-recorder-settings-front-component-universal-identifier';
 import { CallRecorderSettings } from 'src/front-components/components/CallRecorderSettings';
 
-export default defineFrontComponent({
+export default defineSettingsFrontComponent({
   universalIdentifier:
     CALL_RECORDER_SETTINGS_FRONT_COMPONENT_UNIVERSAL_IDENTIFIER,
   name: 'call-recorder-settings',

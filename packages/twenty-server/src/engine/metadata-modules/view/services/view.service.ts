@@ -3,8 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { ViewType } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
-import { type WorkspaceAuthContext } from 'src/engine/core-modules/auth/types/workspace-auth-context.type';
-import { getUserWorkspaceIdFromAuthContext } from 'src/engine/core-modules/auth/utils/get-user-workspace-id-from-auth-context.util';
 import { ApplicationService } from 'src/engine/core-modules/application/application.service';
 import { WorkspaceManyOrAllFlatEntityMapsCacheService } from 'src/engine/metadata-modules/flat-entity/services/workspace-many-or-all-flat-entity-maps-cache.service';
 import { findFlatEntityByIdInFlatEntityMapsOrThrow } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-id-in-flat-entity-maps-or-throw.util';
@@ -59,11 +57,11 @@ export class ViewService {
   async createOne({
     createViewInput,
     workspaceId,
-    authContext,
+    createdByUserWorkspaceId,
   }: {
     createViewInput: CreateViewInput;
     workspaceId: string;
-    authContext: WorkspaceAuthContext | undefined;
+    createdByUserWorkspaceId?: string;
   }): Promise<ViewDTO> {
     const { workspaceCustomFlatApplication } =
       await this.applicationService.findWorkspaceTwentyStandardAndCustomApplicationOrThrow(
@@ -90,8 +88,7 @@ export class ViewService {
     const { flatViewToCreate, flatViewGroupsToCreate } =
       fromCreateViewInputToFlatViewToCreate({
         createViewInput,
-        createdByUserWorkspaceId:
-          getUserWorkspaceIdFromAuthContext(authContext),
+        createdByUserWorkspaceId,
         flatApplication: workspaceCustomFlatApplication,
         flatFieldMetadataMaps: existingFlatFieldMetadataMaps,
         flatFieldMetadataOptionMaps: existingFlatFieldMetadataOptionMaps,
@@ -116,7 +113,6 @@ export class ViewService {
           },
           workspaceId,
           isSystemBuild: false,
-          authContext,
           applicationUniversalIdentifier:
             workspaceCustomFlatApplication.universalIdentifier,
         },
@@ -148,11 +144,11 @@ export class ViewService {
   async updateOne({
     updateViewInput,
     workspaceId,
-    authContext,
+    userWorkspaceId,
   }: {
     updateViewInput: UpdateViewInput;
     workspaceId: string;
-    authContext: WorkspaceAuthContext | undefined;
+    userWorkspaceId?: string;
   }): Promise<ViewDTO> {
     const { workspaceCustomFlatApplication } =
       await this.applicationService.findWorkspaceTwentyStandardAndCustomApplicationOrThrow(
@@ -185,6 +181,7 @@ export class ViewService {
         flatViewGroupMaps: existingFlatViewGroupMaps,
         flatFieldMetadataMaps: existingFlatFieldMetadataMaps,
         flatFieldMetadataOptionMaps: existingFlatFieldMetadataOptionMaps,
+        userWorkspaceId,
         callerApplicationUniversalIdentifier:
           workspaceCustomFlatApplication.universalIdentifier,
         workspaceCustomApplicationUniversalIdentifier:
@@ -208,7 +205,6 @@ export class ViewService {
           },
           workspaceId,
           isSystemBuild: false,
-          authContext,
           applicationUniversalIdentifier:
             workspaceCustomFlatApplication.universalIdentifier,
         },
@@ -336,7 +332,10 @@ export class ViewService {
       return fromFlatViewToViewDto(deactivatedFlatView);
     }
 
-    return fromFlatViewToViewDto(existingFlatView);
+    return fromFlatViewToViewDto({
+      ...existingFlatView,
+      deletedAt: now,
+    });
   }
 
   private async getFilteredFlatViews({
@@ -413,7 +412,7 @@ export class ViewService {
       flatEntityMaps: flatViewMaps,
     });
 
-    if (!isDefined(flatView)) {
+    if (!isDefined(flatView) || flatView.deletedAt !== null) {
       return null;
     }
 
@@ -452,32 +451,44 @@ export class ViewService {
       viewDto.viewFields = findManyFlatEntityByIdInFlatEntityMaps({
         flatEntityIds: flatView.viewFieldIds,
         flatEntityMaps: flatViewFieldMaps,
-      }).map(fromFlatViewFieldToViewFieldDto);
+      })
+        .filter((flatEntity) => flatEntity.deletedAt === null)
+        .map(fromFlatViewFieldToViewFieldDto);
 
       viewDto.viewFieldGroups = findManyFlatEntityByIdInFlatEntityMaps({
         flatEntityIds: flatView.viewFieldGroupIds,
         flatEntityMaps: flatViewFieldGroupMaps,
-      }).map(fromFlatViewFieldGroupToViewFieldGroupDto);
+      })
+        .filter((flatEntity) => flatEntity.deletedAt === null)
+        .map(fromFlatViewFieldGroupToViewFieldGroupDto);
 
       viewDto.viewFilters = findManyFlatEntityByIdInFlatEntityMaps({
         flatEntityIds: flatView.viewFilterIds,
         flatEntityMaps: flatViewFilterMaps,
-      }).map(fromFlatViewFilterToViewFilterDto);
+      })
+        .filter((flatEntity) => flatEntity.deletedAt === null)
+        .map(fromFlatViewFilterToViewFilterDto);
 
       viewDto.viewFilterGroups = findManyFlatEntityByIdInFlatEntityMaps({
         flatEntityIds: flatView.viewFilterGroupIds,
         flatEntityMaps: flatViewFilterGroupMaps,
-      }).map(fromFlatViewFilterGroupToViewFilterGroupDto);
+      })
+        .filter((flatEntity) => flatEntity.deletedAt === null)
+        .map(fromFlatViewFilterGroupToViewFilterGroupDto);
 
       viewDto.viewSorts = findManyFlatEntityByIdInFlatEntityMaps({
         flatEntityIds: flatView.viewSortIds,
         flatEntityMaps: flatViewSortMaps,
-      }).map(fromFlatViewSortToViewSortDto);
+      })
+        .filter((flatEntity) => flatEntity.deletedAt === null)
+        .map(fromFlatViewSortToViewSortDto);
 
       viewDto.viewGroups = findManyFlatEntityByIdInFlatEntityMaps({
         flatEntityIds: flatView.viewGroupIds,
         flatEntityMaps: flatViewGroupMaps,
-      }).map(fromFlatViewGroupToViewGroupDto);
+      })
+        .filter((flatEntity) => flatEntity.deletedAt === null)
+        .map(fromFlatViewGroupToViewGroupDto);
 
       return viewDto;
     });
@@ -551,7 +562,7 @@ export class ViewService {
       flatEntityMaps: flatViewMaps,
     });
 
-    if (!isDefined(flatView)) {
+    if (!isDefined(flatView) || flatView.deletedAt !== null) {
       return null;
     }
 
@@ -630,6 +641,7 @@ export class ViewService {
         'viewGroups',
         'viewFilterGroups',
       ],
+      withDeleted: true,
     });
 
     return view || null;

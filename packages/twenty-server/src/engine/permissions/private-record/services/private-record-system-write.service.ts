@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { isDefined } from 'twenty-shared/utils';
 
 import { RecordAccessGroupPropagationService } from 'src/engine/permissions/internal/access-group/services/record-access-group-propagation.service';
+import { isAccessGroupsEnabled } from 'src/engine/permissions/internal/access-group/utils/is-access-groups-enabled.util';
 import { PrivateRecordRepository } from 'src/engine/permissions/internal/private-record/repositories/private-record.repository';
 import { findFlatEntityByIdInFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-id-in-flat-entity-maps.util';
 import {
@@ -36,9 +37,10 @@ export class PrivateRecordSystemWriteService {
     isPrivate: boolean;
     transactionScope: RecordPermissionTransactionScope;
   }): Promise<void> {
-    const { flatObjectMetadataMaps } =
+    const { flatObjectMetadataMaps, featureFlagsMap } =
       await this.workspaceCacheService.getOrRecompute(workspaceId, [
         'flatObjectMetadataMaps',
+        'featureFlagsMap',
       ]);
     const flatObjectMetadata = findFlatEntityByIdInFlatEntityMaps({
       flatEntityId: objectMetadataId,
@@ -60,8 +62,10 @@ export class PrivateRecordSystemWriteService {
       transactionScope,
     });
 
-    await this.recordAccessGroupPropagationService.recomputeRecordsFollowingRelatedRecordPathsInWrite(
-      { workspaceId, objectMetadataId, recordIds, transactionScope },
-    );
+    if (isAccessGroupsEnabled({ featureFlagsMap })) {
+      await this.recordAccessGroupPropagationService.recomputeRecordsFollowingRelatedRecordPathsInWrite(
+        { workspaceId, objectMetadataId, recordIds, transactionScope },
+      );
+    }
   }
 }

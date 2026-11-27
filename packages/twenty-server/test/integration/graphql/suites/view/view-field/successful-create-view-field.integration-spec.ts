@@ -43,7 +43,7 @@ describe('View Field Resolver - Successful Create Operations', () => {
         },
       });
 
-      expect(deleteViewField.id).toBe(createdViewFieldId);
+      expect(deleteViewField.deletedAt).not.toBeNull();
       createdViewFieldId = undefined;
     }
   });

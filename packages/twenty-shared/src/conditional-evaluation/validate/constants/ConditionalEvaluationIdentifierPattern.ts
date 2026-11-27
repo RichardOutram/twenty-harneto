@@ -1,1 +1,0 @@
-export const CONDITIONAL_EVALUATION_IDENTIFIER_PATTERN = /^[A-Za-z_$][\w$]*$/;

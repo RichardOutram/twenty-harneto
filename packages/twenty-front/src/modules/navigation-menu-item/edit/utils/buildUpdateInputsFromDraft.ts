@@ -1,4 +1,3 @@
-import { NavigationMenuItemType } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import {
   type NavigationMenuItem,
@@ -48,10 +47,6 @@ export const buildUpdateInputsFromDraft = ({
     const colorChanged =
       isNavigationMenuItemFolder(draftItem) &&
       (original.color ?? null) !== (draftItem.color ?? null);
-    const visibleItemLimitChanged =
-      draftItem.type === NavigationMenuItemType.SECTION &&
-      (original.visibleItemLimit ?? null) !==
-        (draftItem.visibleItemLimit ?? null);
     const isActiveChanged =
       (original.isActive !== false) !== (draftItem.isActive !== false);
 
@@ -62,7 +57,6 @@ export const buildUpdateInputsFromDraft = ({
       !linkChanged &&
       !iconChanged &&
       !colorChanged &&
-      !visibleItemLimitChanged &&
       !isActiveChanged
     ) {
       continue;
@@ -92,9 +86,6 @@ export const buildUpdateInputsFromDraft = ({
     }
     if (colorChanged) {
       updatePayload.color = draftItem.color ?? null;
-    }
-    if (visibleItemLimitChanged) {
-      updatePayload.visibleItemLimit = draftItem.visibleItemLimit ?? null;
     }
     if (isActiveChanged) {
       updatePayload.isActive = draftItem.isActive !== false;

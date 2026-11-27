@@ -106,7 +106,6 @@ type ChatExecutionProfile = {
   >;
   isWorkspaceSetupKickoffTurn: boolean;
   canAttachConversationToRecords: boolean;
-  hasFileTools: boolean;
 };
 
 @Injectable()
@@ -216,7 +215,6 @@ export class ChatExecutionService {
             browsingContext: executionProfile.browsingContext,
             workspaceMemberId: authContext.workspaceMemberId,
             timezone: userContext.timezone,
-            hasFileTools: executionProfile.hasFileTools,
           },
         );
         const { contexts, conversation } = splitContextInstructions(
@@ -254,12 +252,10 @@ export class ChatExecutionService {
             toolCatalog: toolset.toolCatalog,
             ...skillContext,
             preloadedTools: toolset.directToolNames,
-            uploadedFilesContext: executionProfile.hasFileTools
-              ? {
-                  uploadedFiles: collectUploadedFileReferences(messages),
-                  codeInterpreterFiles,
-                }
-              : undefined,
+            uploadedFilesContext: {
+              uploadedFiles: collectUploadedFileReferences(messages),
+              codeInterpreterFiles,
+            },
             workspaceInstructions:
               workspace.aiAdditionalInstructions ?? undefined,
             userContext,
@@ -350,7 +346,6 @@ export class ChatExecutionService {
           Promise.resolve({ skillCatalog: [], referencedSkills: [] }),
         isWorkspaceSetupKickoffTurn: false,
         canAttachConversationToRecords: false,
-        hasFileTools: false,
       };
     }
 
@@ -416,7 +411,6 @@ export class ChatExecutionService {
       }),
       isWorkspaceSetupKickoffTurn,
       canAttachConversationToRecords,
-      hasFileTools: true,
     };
   }
 
@@ -427,7 +421,6 @@ export class ChatExecutionService {
     browsingContext,
     workspaceMemberId,
     timezone,
-    hasFileTools,
   }: {
     workspace: WorkspaceEntity;
     messages: ExtendedUIMessage[];
@@ -435,13 +428,11 @@ export class ChatExecutionService {
     browsingContext: BrowsingContextType | null;
     workspaceMemberId: string;
     timezone: string | null;
-    hasFileTools: boolean;
   }): {
     preparedMessages: ExtendedUIMessage[];
     codeInterpreterFiles: UploadedFileReference[];
   } {
-    const isCodeInterpreterEnabled =
-      hasFileTools && this.codeInterpreterService.isEnabled();
+    const isCodeInterpreterEnabled = this.codeInterpreterService.isEnabled();
 
     let processedMessages = replaceUnsupportedFileParts(
       messages,
@@ -493,7 +484,7 @@ export class ChatExecutionService {
     const lastUserMessage = messages[lastUserIndex];
     const browsingContextPart = {
       type: 'text' as const,
-      text: `<browsing_context note="What the user has open. Use it only when the user refers to it (for example 'this account' or 'here'), and then use its IDs in tool calls as needed. Do not act on it otherwise.">\n${contextString}\n</browsing_context>`,
+      text: `<browsing_context note="Only use this if the user explicitly asks about the current page, record, or view. Do not call any tools based on this context.">\n${contextString}\n</browsing_context>`,
     };
 
     return [

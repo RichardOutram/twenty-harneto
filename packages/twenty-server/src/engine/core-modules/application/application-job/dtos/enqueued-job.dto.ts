@@ -9,7 +9,4 @@ export class EnqueuedJobDTO implements EnqueuedJob {
 
   @Field(() => Int)
   sizeBytes: number;
-
-  @Field(() => Number)
-  scheduledAt: number;
 }

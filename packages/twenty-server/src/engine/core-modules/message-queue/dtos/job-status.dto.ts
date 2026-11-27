@@ -22,9 +22,6 @@ export class JobStatusDTO {
   @Field(() => Number)
   enqueuedAt: number;
 
-  @Field(() => Number)
-  scheduledAt: number;
-
   @Field(() => Number, { nullable: true })
   startedAt?: number;
 

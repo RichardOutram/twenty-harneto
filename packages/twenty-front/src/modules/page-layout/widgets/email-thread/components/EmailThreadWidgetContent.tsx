@@ -5,7 +5,6 @@ import { EmailThreadMessage } from '@/activities/emails/components/EmailThreadMe
 import { useComposerDraft } from '@/activities/emails/hooks/useComposerDraft';
 import { useReplyContext } from '@/activities/emails/hooks/useReplyContext';
 import { type EmailDraftPrefill } from '@/activities/emails/types/EmailDraftPrefill';
-import { type EmailReplyMode } from '@/activities/emails/types/EmailReplyMode';
 import { type EmailThreadMessageWithSender } from '@/activities/emails/types/EmailThreadMessageWithSender';
 import { emailComposerDraftFamilyState } from '@/activities/emails/states/emailComposerDraftFamilyState';
 import { getEmailDraftPrefillFromMessage } from '@/activities/emails/utils/getEmailDraftPrefillFromMessage';
@@ -48,7 +47,6 @@ export const EmailThreadWidgetContent = ({
   >(null);
   const [clickedDraftPrefill, setClickedDraftPrefill] =
     useState<EmailDraftPrefill | null>(null);
-  const [replyMode, setReplyMode] = useState<EmailReplyMode>('reply');
   const [previousTargetRecordId, setPreviousTargetRecordId] = useState(
     targetRecord.id,
   );
@@ -57,7 +55,6 @@ export const EmailThreadWidgetContent = ({
     setPreviousTargetRecordId(targetRecord.id);
     setComposerIntent(null);
     setClickedDraftPrefill(null);
-    setReplyMode('reply');
   }
 
   const currentWorkspaceMember = useAtomStateValue(currentWorkspaceMemberState);
@@ -71,15 +68,12 @@ export const EmailThreadWidgetContent = ({
     defaultDraft: null,
   });
 
-  const handleComposerOpen = useCallback((nextReplyMode: EmailReplyMode) => {
-    setComposerIntent('opened');
-    setReplyMode(nextReplyMode);
-  }, []);
+  const handleComposerOpenChange = useCallback((open: boolean) => {
+    setComposerIntent(open ? 'opened' : 'closed');
 
-  const handleComposerClose = useCallback(() => {
-    setComposerIntent('closed');
-    setReplyMode('reply');
-    setClickedDraftPrefill(null);
+    if (!open) {
+      setClickedDraftPrefill(null);
+    }
   }, []);
 
   const handleDraftClick = useCallback(
@@ -148,13 +142,11 @@ export const EmailThreadWidgetContent = ({
       </StyledWidgetScrollContainer>
       {canReply && (
         <EmailThreadComposer
-          key={`${draftPrefill?.messageId ?? targetRecord.id}-${replyMode}`}
+          key={draftPrefill?.messageId ?? targetRecord.id}
           replyContext={replyContext}
           isInSidePanel={isInSidePanel}
           isComposerOpen={isComposerOpen}
-          onComposerOpen={handleComposerOpen}
-          onComposerClose={handleComposerClose}
-          replyMode={replyMode}
+          setIsComposerOpen={handleComposerOpenChange}
           draftPrefill={draftPrefill}
           draftKey={isDefined(draftPrefill) ? undefined : emailComposerDraftKey}
           appReplyTarget={appReplyTarget}

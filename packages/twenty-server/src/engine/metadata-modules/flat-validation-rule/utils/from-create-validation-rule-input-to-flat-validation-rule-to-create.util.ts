@@ -1,5 +1,6 @@
 /* @license Enterprise */
 
+import { type ValidationRuleBindings } from 'twenty-shared/types';
 import { v4 } from 'uuid';
 
 import { type FlatApplication } from 'src/engine/core-modules/application/types/flat-application.type';
@@ -10,14 +11,14 @@ import { type CreateValidationRuleInput } from 'src/engine/metadata-modules/vali
 
 export const fromCreateValidationRuleInputToFlatValidationRuleToCreate = ({
   createValidationRuleInput,
-  tree,
+  bindings,
   workspaceId,
   flatApplication,
   flatObjectMetadataMaps,
   flatFieldMetadataMaps,
 }: {
   createValidationRuleInput: CreateValidationRuleInput;
-  tree: FlatValidationRule['tree'];
+  bindings: ValidationRuleBindings;
   workspaceId: string;
   flatApplication: FlatApplication;
 } & Pick<
@@ -54,7 +55,8 @@ export const fromCreateValidationRuleInputToFlatValidationRuleToCreate = ({
     name: createValidationRuleInput.name.trim(),
     description: createValidationRuleInput.description ?? null,
     icon: createValidationRuleInput.icon ?? null,
-    tree,
+    expression: createValidationRuleInput.expression,
+    bindings,
     message: createValidationRuleInput.message.trim(),
     isActive: createValidationRuleInput.isActive ?? true,
     createdAt: now,

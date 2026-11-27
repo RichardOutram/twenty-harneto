@@ -6,7 +6,6 @@ import { type NamedNavigationMenuItem } from '@/navigation-menu-item/common/type
 import { useWorkspaceNavigationMenuContainers } from '@/navigation-menu-item/display/hooks/useWorkspaceNavigationMenuContainers';
 import { useMobileNavigationBarItems } from '@/navigation/hooks/useMobileNavigationBarItems';
 import { useHasPermissionFlag } from '@/settings/roles/hooks/useHasPermissionFlag';
-import { useIsFeatureEnabled } from '@/workspace/hooks/useIsFeatureEnabled';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { act, renderHook } from '@testing-library/react';
@@ -14,25 +13,19 @@ import { createStore, Provider } from 'jotai';
 import { type ReactNode } from 'react';
 import { MemoryRouter, useLocation, useNavigate } from 'react-router-dom';
 import { NavigationMenuItemType } from 'twenty-shared/types';
-import { isDefined } from 'twenty-shared/utils';
-import { FeatureFlagKey } from '~/generated-metadata/graphql';
 
 jest.mock('@/ai-chat/composer/hooks/useSwitchToNewAiChat');
 jest.mock('@/settings/roles/hooks/useHasPermissionFlag');
-jest.mock('@/workspace/hooks/useIsFeatureEnabled');
 jest.mock(
   '@/navigation-menu-item/display/hooks/useWorkspaceNavigationMenuContainers',
 );
-
-let mockUnreadOpenThreadCount = 0;
 
 jest.mock(
   '@/navigation-menu-item/display/hooks/useNavigationMenuChatAttention',
   () => ({
     useNavigationMenuChatAttention: () => ({
       getTabChatAttention: (tabId: string | null) =>
-        tabId === null || tabId === 'sales-tab' ? 'needs-input' : null,
-      unreadOpenThreadCount: mockUnreadOpenThreadCount,
+        tabId === 'sales-tab' ? 'needs-input' : null,
     }),
   }),
 );
@@ -94,14 +87,6 @@ const renderMobileNavigationBarItems = (
   return { result, store };
 };
 
-const enableFeatureFlags = (enabledFeatureFlags: FeatureFlagKey[]) =>
-  jest
-    .mocked(useIsFeatureEnabled)
-    .mockImplementation(
-      (featureFlag) =>
-        isDefined(featureFlag) && enabledFeatureFlags.includes(featureFlag),
-    );
-
 const tapItem = (
   result: { current: { items: { name: string; onClick: () => void }[] } },
   name: string,
@@ -112,9 +97,7 @@ describe('useMobileNavigationBarItems', () => {
     jest.clearAllMocks();
     localStorage.clear();
 
-    mockUnreadOpenThreadCount = 0;
     jest.mocked(useHasPermissionFlag).mockReturnValue(true);
-    jest.mocked(useIsFeatureEnabled).mockReturnValue(false);
     jest.mocked(useWorkspaceNavigationMenuContainers).mockReturnValue([]);
     jest.mocked(useSwitchToNewAiChat).mockReturnValue({
       switchToNewAiChat: mockSwitchToNewChat,
@@ -156,108 +139,6 @@ describe('useMobileNavigationBarItems', () => {
 
     expect(result.current.location.pathname).toBe('/home');
     expect(result.current.activeItemName).toBe('tab-sales-tab');
-  });
-
-  it('drops the attention from Home on the home page only', () => {
-    const getHomeItem = (pathname: string) =>
-      renderMobileNavigationBarItems(pathname).result.current.items.find(
-        ({ name }) => name === 'home',
-      );
-
-    expect(getHomeItem('/home')).toMatchObject({
-      label: 'Home',
-      attention: null,
-    });
-    expect(getHomeItem('/objects/people')).toMatchObject({
-      label: 'Home, needs your input',
-      attention: 'needs-input',
-    });
-  });
-
-  it('drops the attention from the sidebar tab that is open', () => {
-    jest
-      .mocked(useWorkspaceNavigationMenuContainers)
-      .mockReturnValue([SALES_TAB]);
-
-    const { result } = renderMobileNavigationBarItems('/objects/people');
-
-    act(() => tapItem(result, 'tab-sales-tab'));
-
-    expect(
-      result.current.items.find(({ name }) => name === 'tab-sales-tab'),
-    ).toMatchObject({ label: 'Sales', attention: null });
-  });
-
-  it('labels an unnamed sidebar tab "Tab"', () => {
-    jest
-      .mocked(useWorkspaceNavigationMenuContainers)
-      .mockReturnValue([{ ...SALES_TAB, id: 'unnamed-tab', name: '' }]);
-
-    const { result } = renderMobileNavigationBarItems('/objects/people');
-
-    expect(
-      result.current.items.find(({ name }) => name === 'tab-unnamed-tab'),
-    ).toMatchObject({ label: 'Tab' });
-  });
-
-  it('swaps the new chat for the inbox when the inbox is enabled', () => {
-    enableFeatureFlags([FeatureFlagKey.IS_AI_CHAT_INBOX_ENABLED]);
-
-    const { result } = renderMobileNavigationBarItems('/objects/people');
-
-    expect(result.current.items.map(({ name }) => name)).toEqual([
-      'home',
-      'inbox',
-      'search',
-    ]);
-
-    act(() => tapItem(result, 'inbox'));
-
-    expect(result.current.location.pathname).toBe('/inbox');
-    expect(result.current.activeItemName).toBe('inbox');
-  });
-
-  it('drops the inbox when the customizable sidebar is enabled', () => {
-    enableFeatureFlags([
-      FeatureFlagKey.IS_AI_CHAT_INBOX_ENABLED,
-      FeatureFlagKey.IS_CUSTOMIZABLE_SIDEBAR_ENABLED,
-    ]);
-
-    const { result } = renderMobileNavigationBarItems('/objects/people');
-
-    expect(result.current.items.map(({ name }) => name)).toEqual([
-      'home',
-      'search',
-    ]);
-  });
-
-  it('keeps the inbox active while a thread is open', () => {
-    enableFeatureFlags([FeatureFlagKey.IS_AI_CHAT_INBOX_ENABLED]);
-
-    const { result } = renderMobileNavigationBarItems(
-      '/inbox/7d2f4a6e-3c1b-4e8a-9f0d-2b5c6a7e8f91',
-    );
-
-    expect(result.current.activeItemName).toBe('inbox');
-  });
-
-  it('marks the inbox unread outside the inbox only', () => {
-    enableFeatureFlags([FeatureFlagKey.IS_AI_CHAT_INBOX_ENABLED]);
-    mockUnreadOpenThreadCount = 2;
-
-    const getInboxItem = (pathname: string) =>
-      renderMobileNavigationBarItems(pathname).result.current.items.find(
-        ({ name }) => name === 'inbox',
-      );
-
-    expect(getInboxItem('/objects/people')).toMatchObject({
-      label: 'Inbox, unread',
-      attention: 'unread',
-    });
-    expect(getInboxItem('/inbox')).toMatchObject({
-      label: 'Inbox',
-      attention: null,
-    });
   });
 
   it('drops the new chat when the workspace has no AI permission', () => {
@@ -316,7 +197,6 @@ describe('useMobileNavigationBarItems', () => {
   });
 
   it('keeps each tab on the folder it had open', () => {
-    jest.mocked(useIsFeatureEnabled).mockReturnValue(true);
     jest
       .mocked(useWorkspaceNavigationMenuContainers)
       .mockReturnValue([SALES_TAB]);
@@ -341,7 +221,6 @@ describe('useMobileNavigationBarItems', () => {
   });
 
   it('keeps each open folder on its own tab when leaving the AI drawer', () => {
-    jest.mocked(useIsFeatureEnabled).mockReturnValue(true);
     jest
       .mocked(useWorkspaceNavigationMenuContainers)
       .mockReturnValue([SALES_TAB]);
@@ -368,19 +247,5 @@ describe('useMobileNavigationBarItems', () => {
 
     act(() => tapItem(result, 'tab-sales-tab'));
     expect(store.get(salesFolderIdAtom)).toBe('deals');
-  });
-
-  it('closes the open Home folder on every Home tap while the customizable sidebar is off', () => {
-    const { result, store } = renderMobileNavigationBarItems('/objects/people');
-    const homeFolderIdAtom =
-      currentNavigationMenuItemFolderIdFamilyState.atomFamily('home');
-
-    act(() => tapItem(result, 'home'));
-    act(() => store.set(homeFolderIdAtom, 'home-folder'));
-    act(() => result.current.navigate('/objects/people'));
-
-    act(() => tapItem(result, 'home'));
-
-    expect(store.get(homeFolderIdAtom)).toBeNull();
   });
 });

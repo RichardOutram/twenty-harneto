@@ -85,7 +85,7 @@ export const mapAgentStepsToToolCallLogs = (
           input: truncateUnknownForLog(part.input, MAX_TOOL_INPUT_BYTES),
           state: 'started',
           providerExecuted:
-            'providerExecuted' in part && (part.providerExecuted ?? false),
+            'providerExecuted' in part && part.providerExecuted === true,
         };
         openByCallId.set(part.toolCallId, entry);
         ordered.push(entry);

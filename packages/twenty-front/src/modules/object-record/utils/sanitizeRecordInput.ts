@@ -10,7 +10,6 @@ import {
   computeMorphRelationGqlFieldName,
   computeRelationGqlFieldJoinColumnName,
   isDefined,
-  isFormulaFieldMetadata,
 } from 'twenty-shared/utils';
 import { doNotTranslate } from 'twenty-shared/i18n';
 import { FieldMetadataType, RelationType } from '~/generated-metadata/graphql';
@@ -69,13 +68,6 @@ export const sanitizeRecordInput = ({
         }
 
         if (fieldMetadataItem?.isNullable === false && fieldValue == null) {
-          return undefined;
-        }
-
-        if (
-          isDefined(fieldMetadataItem) &&
-          isFormulaFieldMetadata(fieldMetadataItem)
-        ) {
           return undefined;
         }
 

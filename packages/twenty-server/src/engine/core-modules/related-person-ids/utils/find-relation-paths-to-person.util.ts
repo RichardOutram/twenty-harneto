@@ -17,7 +17,7 @@ const PERSON_OBJECT_NAME_SINGULAR = 'person';
 const DEFAULT_MAX_RELATION_DEPTH_TO_PERSON = 3;
 
 const isSystemObjectMetadata = (objectMetadata: { isSystem?: boolean }) =>
-  objectMetadata.isSystem ?? false;
+  objectMetadata.isSystem === true;
 
 export type RelationHopToPerson = {
   direction: RelationType;

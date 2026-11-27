@@ -16,21 +16,13 @@ type SettingsTextLinkCommonProps = {
 type SettingsTextLinkProps =
   | (SettingsTextLinkCommonProps & {
       disabled?: boolean;
-      href?: undefined;
       onClick?: MouseEventHandler<HTMLButtonElement>;
       to?: undefined;
     })
   | (SettingsTextLinkCommonProps & {
       disabled?: never;
-      href?: undefined;
       onClick?: MouseEventHandler<HTMLAnchorElement>;
       to: LinkProps['to'];
-    })
-  | (SettingsTextLinkCommonProps & {
-      disabled?: never;
-      href: string;
-      onClick?: MouseEventHandler<HTMLAnchorElement>;
-      to?: undefined;
     });
 
 const settingsTextLinkBaseClassName = css`
@@ -97,21 +89,6 @@ export const SettingsTextLink = ({
       >
         {children}
       </Link>
-    );
-  }
-
-  if (props.href !== undefined) {
-    return (
-      <a
-        className={textLinkClassName}
-        href={props.href}
-        onClick={props.onClick}
-        rel="noopener noreferrer"
-        target="_blank"
-        title={title}
-      >
-        {children}
-      </a>
     );
   }
 

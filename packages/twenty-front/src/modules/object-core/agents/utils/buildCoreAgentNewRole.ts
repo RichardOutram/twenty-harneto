@@ -28,7 +28,6 @@ export const buildCoreAgentNewRole = ({
   canBeAssignedToApiKeys: false,
   applicationId: '',
   isEditable: true,
-  areRecordPermissionsEditable: true,
   workspaceMembers: [],
   apiKeys: [],
   agents: [agent],

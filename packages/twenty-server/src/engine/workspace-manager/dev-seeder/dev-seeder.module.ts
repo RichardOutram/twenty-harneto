@@ -1,4 +1,3 @@
-import { AgentChatChannelModule } from 'src/engine/metadata-modules/agent-chat-channel/agent-chat-channel.module';
 import { AiAgentExecutionModule } from 'src/engine/metadata-modules/ai/ai-agent-execution/ai-agent-execution.module';
 import { AiAgentModule } from 'src/engine/metadata-modules/ai/ai-agent/ai-agent.module';
 import { AgentChatThreadModule } from 'src/engine/metadata-modules/ai/ai-chat/agent-chat-thread.module';
@@ -12,7 +11,6 @@ import { ApplicationModule } from 'src/engine/core-modules/application/applicati
 import { SdkClientModule } from 'src/engine/core-modules/sdk-client/sdk-client.module';
 import { SecretEncryptionModule } from 'src/engine/core-modules/secret-encryption/secret-encryption.module';
 import { UserWorkspaceModule } from 'src/engine/core-modules/user-workspace/user-workspace.module';
-import { ChannelVisibilityModule } from 'src/engine/permissions/channel-visibility/channel-visibility.module';
 import { RecordShareModule } from 'src/engine/permissions/record-share/record-share.module';
 import { WorkflowVersionEntity } from 'src/engine/core-modules/workflow/entities/workflow-version.entity';
 import { WorkflowEntity } from 'src/engine/core-modules/workflow/entities/workflow.entity';
@@ -49,7 +47,6 @@ import { WorkflowRunModule } from 'src/modules/workflow/workflow-runner/workflow
 
 @Module({
   imports: [
-    AgentChatChannelModule,
     AgentChatThreadModule,
     AgentHistoryModule,
     AiAgentExecutionModule,
@@ -60,7 +57,6 @@ import { WorkflowRunModule } from 'src/modules/workflow/workflow-runner/workflow
     WorkspaceDataSourceModule,
     WorkspaceCacheStorageModule,
     RoleModule,
-    ChannelVisibilityModule,
     RolePermissionFlagModule,
     RoleTargetModule,
     RoleAssignmentModule,

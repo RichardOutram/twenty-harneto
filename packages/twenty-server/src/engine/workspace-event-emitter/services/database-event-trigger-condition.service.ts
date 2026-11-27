@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { isNonEmptyString } from '@sniptt/guards';
 import {
   compositeTypeDefinitions,
-  type StoredExpressionTree,
+  type ValidationRuleBindings,
 } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import { In } from 'typeorm';
@@ -83,7 +83,7 @@ export class DatabaseEventTriggerConditionService {
     eventName,
     watchedFields,
     condition,
-    conditionTree,
+    conditionBindings,
     application,
     agentId,
   }: {
@@ -93,11 +93,11 @@ export class DatabaseEventTriggerConditionService {
     eventName: string;
     watchedFields?: string[];
     condition?: string;
-    conditionTree?: StoredExpressionTree;
+    conditionBindings?: ValidationRuleBindings;
     application: FlatApplication;
     agentId?: string;
   }) {
-    if (!isDefined(conditionTree) && !isNonEmptyString(condition)) {
+    if (!isNonEmptyString(condition)) {
       return filterEventsMatchingDatabaseEventTrigger({
         events,
         eventName,
@@ -202,7 +202,7 @@ export class DatabaseEventTriggerConditionService {
       eventName,
       watchedFields,
       condition,
-      conditionTree,
+      conditionBindings,
       fields: buildValidationRuleFieldDescriptors({
         objectMetadataId: objectMetadata.id,
         flatObjectMetadataMaps,

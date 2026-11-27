@@ -32,6 +32,10 @@ jest.mock('@/activities/emails/hooks/useReplyConnectedAccount', () => ({
   }),
 }));
 
+jest.mock('@/workspace/hooks/useIsFeatureEnabled', () => ({
+  useIsFeatureEnabled: () => false,
+}));
+
 jest.mock('@/ui/utilities/state/jotai/hooks/useAtomFamilyStateValue', () => ({
   useAtomFamilyStateValue: () => mockUseAtomFamilyStateValue(),
 }));

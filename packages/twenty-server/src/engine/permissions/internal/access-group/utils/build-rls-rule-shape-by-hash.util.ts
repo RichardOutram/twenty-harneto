@@ -9,9 +9,11 @@ import { type RoleRecordsPermissions } from 'src/engine/permissions/types/role-r
 export const buildRlsRuleShapeByHash = ({
   objectMetadataId,
   rolesPermissions,
+  isRelationHopEnabled,
 }: {
   objectMetadataId: string;
   rolesPermissions: Record<string, RoleRecordsPermissions>;
+  isRelationHopEnabled: boolean;
 }): Map<string, RlsRuleShape> => {
   const ruleShapeByHash = new Map<string, RlsRuleShape>();
 
@@ -28,6 +30,7 @@ export const buildRlsRuleShapeByHash = ({
         objectMetadataId,
         objectUnreadableFieldIds: objectRecordsPermissions.unreadableFields,
         rowLevelPermissionRule,
+        isRelationHopEnabled,
       });
 
       ruleShapeByHash.set(ruleShapeHash, {

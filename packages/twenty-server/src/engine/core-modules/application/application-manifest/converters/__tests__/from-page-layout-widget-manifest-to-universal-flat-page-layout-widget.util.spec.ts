@@ -1,4 +1,4 @@
-import { printConditionalEvaluationNode } from 'twenty-shared/conditional-evaluation';
+import { printConditionalAvailabilityNode } from 'twenty-shared/conditional-availability';
 import { DEFAULT_WIDGET_SIZE } from 'twenty-shared/constants';
 import { PageLayoutTabLayoutMode, WidgetType } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
@@ -150,7 +150,7 @@ describe('fromPageLayoutWidgetManifestToUniversalFlatPageLayoutWidget', () => {
     expect(result.conditionalDisplay).toEqual(conditionalDisplay);
     expect(
       isDefined(result.conditionalAvailability)
-        ? printConditionalEvaluationNode({
+        ? printConditionalAvailabilityNode({
             node: result.conditionalAvailability,
           })
         : null,

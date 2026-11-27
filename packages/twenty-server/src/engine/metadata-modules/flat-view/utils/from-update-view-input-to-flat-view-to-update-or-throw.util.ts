@@ -4,7 +4,6 @@ import {
   extractAndSanitizeObjectStringFields,
   isDefined,
   isNonEmptyArray,
-  isViewCompactByDefault,
   trimAndRemoveDuplicatedWhitespacesFromObjectStringProperties,
 } from 'twenty-shared/utils';
 
@@ -25,6 +24,7 @@ import { mergeTranslationsIntoOverrides } from 'src/engine/metadata-modules/over
 import { sanitizeOverridableEntityInput } from 'src/engine/metadata-modules/overrides/utils/sanitize-overridable-entity-input.util';
 import { type UpdateViewInput } from 'src/engine/metadata-modules/view/dtos/inputs/update-view.input';
 import { type ViewOverrides } from 'src/engine/metadata-modules/view/entities/view.entity';
+import { resolveViewIsPrivateFromInput } from 'src/engine/metadata-modules/view/utils/resolve-view-is-private-from-input.util';
 import {
   ViewException,
   ViewExceptionCode,
@@ -40,6 +40,7 @@ export const fromUpdateViewInputToFlatViewToUpdateOrThrow = ({
   flatViewGroupMaps,
   flatFieldMetadataMaps,
   flatFieldMetadataOptionMaps,
+  userWorkspaceId,
   callerApplicationUniversalIdentifier,
   workspaceCustomApplicationUniversalIdentifier,
 }: {
@@ -48,6 +49,7 @@ export const fromUpdateViewInputToFlatViewToUpdateOrThrow = ({
   flatViewGroupMaps: FlatViewGroupMaps;
   flatFieldMetadataMaps: FlatEntityMaps<FlatFieldMetadata>;
   flatFieldMetadataOptionMaps: FlatFieldMetadataOptionMaps;
+  userWorkspaceId?: string;
   callerApplicationUniversalIdentifier: string;
   workspaceCustomApplicationUniversalIdentifier: string;
 }): {
@@ -77,10 +79,15 @@ export const fromUpdateViewInputToFlatViewToUpdateOrThrow = ({
 
   const {
     translations: rawTranslations,
-    isPrivate,
+    isPrivate: rawIsPrivate,
+    visibility,
     ...updateViewInputWithoutTranslationsAndPrivacy
   } = rawUpdateViewInput;
   const translations = rawTranslations ?? [];
+  const isPrivate = resolveViewIsPrivateFromInput({
+    isPrivate: rawIsPrivate,
+    visibility,
+  });
   const updateViewInputWithoutTranslations = {
     ...updateViewInputWithoutTranslationsAndPrivacy,
     ...(isDefined(isPrivate) && { isPrivate }),
@@ -102,26 +109,9 @@ export const fromUpdateViewInputToFlatViewToUpdateOrThrow = ({
   const { groupLoadLimit, ...updateViewInputWithoutGroupLoadLimit } =
     updateViewInputWithoutTranslations;
 
-  const effectiveExistingFlatView = resolveEffectiveFlatEntity({
-    metadataName: 'view',
-    flatEntity: existingFlatViewToUpdate,
-  });
-
-  const { type: updatedViewType, isCompact: updatedIsCompact } =
-    updateViewInputWithoutGroupLoadLimit;
-
-  const isViewCompactDefaultChanging =
-    isDefined(updatedViewType) &&
-    isViewCompactByDefault(updatedViewType) !==
-      isViewCompactByDefault(effectiveExistingFlatView.type);
-
   const editableProperties = extractAndSanitizeObjectStringFields(
     {
       ...updateViewInputWithoutGroupLoadLimit,
-      ...(isViewCompactDefaultChanging &&
-        !isDefined(updatedIsCompact) && {
-          isCompact: isViewCompactByDefault(updatedViewType),
-        }),
       ...(groupLoadLimit !== undefined && {
         groupLoadLimit: groupLoadLimit ?? DEFAULT_VIEW_GROUP_LOAD_LIMIT,
       }),
@@ -216,20 +206,6 @@ export const fromUpdateViewInputToFlatViewToUpdateOrThrow = ({
       calendarEndFieldMetadataUniversalIdentifier;
   }
 
-  if (updatedEditableProperties.listPinnedFieldMetadataId !== undefined) {
-    const { listPinnedFieldMetadataUniversalIdentifier } =
-      resolveEntityRelationUniversalIdentifiers({
-        metadataName: 'view',
-        foreignKeyValues: {
-          listPinnedFieldMetadataId: mergedRecord.listPinnedFieldMetadataId,
-        },
-        flatEntityMaps: { flatFieldMetadataMaps },
-      });
-
-    flatViewToUpdate.listPinnedFieldMetadataUniversalIdentifier =
-      listPinnedFieldMetadataUniversalIdentifier;
-  }
-
   if (updatedEditableProperties.mainGroupByFieldMetadataId !== undefined) {
     const { mainGroupByFieldMetadataUniversalIdentifier } =
       resolveEntityRelationUniversalIdentifiers({
@@ -255,6 +231,19 @@ export const fromUpdateViewInputToFlatViewToUpdateOrThrow = ({
   } else {
     flatViewToUpdate.universalOverrides = null;
   }
+
+  if (
+    isPrivate &&
+    !existingFlatViewToUpdate.isPrivate &&
+    isDefined(userWorkspaceId)
+  ) {
+    flatViewToUpdate.createdByUserWorkspaceId = userWorkspaceId;
+  }
+
+  const effectiveExistingFlatView = resolveEffectiveFlatEntity({
+    metadataName: 'view',
+    flatEntity: existingFlatViewToUpdate,
+  });
 
   const effectiveFlatViewToUpdate = resolveEffectiveFlatEntity({
     metadataName: 'view',

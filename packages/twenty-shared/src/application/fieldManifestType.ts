@@ -3,7 +3,6 @@ import { type FieldPermissionAction } from '@/application/fieldPermissionActionT
 import { type SyncableEntityOptions } from '@/application/syncableEntityOptionsType';
 import {
   type FieldMetadataDefaultValue,
-  type FieldMetadataFormula,
   type FieldMetadataType,
   type FieldMetadataUniversalSettings,
   type RelationAndMorphRelationFieldMetadataType,
@@ -22,10 +21,6 @@ type BaseRegularFieldManifest<
   icon?: string;
   options?: FieldManifestOptions<T>;
   universalSettings?: FieldMetadataUniversalSettings<T>;
-  formula?: Pick<
-    FieldMetadataFormula,
-    'expression' | 'currencyCodeExpression'
-  > | null;
   isUIEditable?: boolean;
   disabledFieldPermissionActions?: FieldPermissionAction[];
   isUnique?: boolean;
@@ -55,10 +50,7 @@ export type RegularFieldManifest<
 export type RelationFieldManifest<
   T extends RelationAndMorphRelationFieldMetadataType =
     RelationAndMorphRelationFieldMetadataType,
-> = Omit<
-  BaseRegularFieldManifest<T>,
-  'universalSettings' | 'formula' | 'type'
-> & {
+> = Omit<BaseRegularFieldManifest<T>, 'universalSettings' | 'type'> & {
   type: T;
   isNullable?: boolean;
   defaultValue?: FieldMetadataDefaultValue<T>;

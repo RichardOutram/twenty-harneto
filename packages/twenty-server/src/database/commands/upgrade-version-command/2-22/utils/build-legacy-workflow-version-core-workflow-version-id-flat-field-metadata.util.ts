@@ -94,5 +94,4 @@ export const buildLegacyWorkflowVersionCoreWorkflowVersionIdFlatFieldMetadata =
     searchFieldMetadataIds: [],
     searchFieldMetadataUniversalIdentifiers: [],
     universalSettings: null,
-    formula: null,
   });

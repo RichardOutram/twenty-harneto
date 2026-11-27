@@ -30,6 +30,7 @@ export const createValidateWorkflowTool = (
       try {
         await deps.coreWorkflowLifecycleService.validateCoreWorkflowVersion({
           workspaceId: context.workspaceId,
+          userWorkspaceId: context.userWorkspaceId,
           coreWorkflowVersionId: parameters.coreWorkflowVersionId,
         });
 

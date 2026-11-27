@@ -123,29 +123,7 @@ export type SelectStatementState = {
   limitValue?: number;
   offsetValue?: number;
   isLockedForUpdate?: boolean;
-  tableSourceByObjectMetadataId?: TableSourceByObjectMetadataId;
 };
-
-export type TableSourceByObjectMetadataId = Partial<Record<string, string>>;
-
-export const quoteTable = ({
-  schemaName,
-  tableName,
-}: Pick<WorkspaceTableShape, 'schemaName' | 'tableName'>): string =>
-  `${escapeIdentifier(schemaName)}.${escapeIdentifier(tableName)}`;
-
-const renderTableSource = ({
-  tableShape,
-  tableSourceByObjectMetadataId,
-}: {
-  tableShape: Pick<
-    WorkspaceTableShape,
-    'objectMetadataId' | 'schemaName' | 'tableName'
-  >;
-  tableSourceByObjectMetadataId?: TableSourceByObjectMetadataId;
-}): string =>
-  tableSourceByObjectMetadataId?.[tableShape.objectMetadataId] ??
-  quoteTable(tableShape);
 
 export const quoteColumn = (alias: string, columnName: string): string =>
   `${escapeIdentifier(alias)}.${escapeIdentifier(columnName)}`;
@@ -594,7 +572,6 @@ const renderExistsFilter = ({
   unreadableColumnConditions,
   unreadableColumnReplacements,
   unreadableRelationConditions,
-  tableSourceByObjectMetadataId,
 }: {
   existsFilterClause: Pick<
     ExistsFilterClause,
@@ -611,7 +588,6 @@ const renderExistsFilter = ({
   unreadableColumnConditions: UnreadableColumnConditions;
   unreadableColumnReplacements: UnreadableColumnReplacements | undefined;
   unreadableRelationConditions: UnreadableRelationConditions;
-  tableSourceByObjectMetadataId?: TableSourceByObjectMetadataId;
 }): string => {
   const conditions = [
     existsFilterClause.correlationCondition,
@@ -656,10 +632,9 @@ const renderExistsFilter = ({
     );
   }
 
-  const tableExpression = renderTableSource({
-    tableShape: existsFilterClause.targetTableShape,
-    tableSourceByObjectMetadataId,
-  });
+  const tableExpression = `${escapeIdentifier(
+    existsFilterClause.targetTableShape.schemaName,
+  )}.${escapeIdentifier(existsFilterClause.targetTableShape.tableName)}`;
 
   return `EXISTS (SELECT 1 FROM ${tableExpression} AS ${escapeIdentifier(
     existsFilterClause.alias,
@@ -672,14 +647,12 @@ export const substituteExistsFilterTokens = ({
   includeDeleted,
   unreadableColumnConditions = {},
   unreadableRelationConditions = {},
-  tableSourceByObjectMetadataId,
 }: {
   expression: string;
   existsFilterClauses: ExistsFilterClause[];
   includeDeleted: boolean;
   unreadableColumnConditions?: UnreadableColumnConditions;
   unreadableRelationConditions?: UnreadableRelationConditions;
-  tableSourceByObjectMetadataId?: TableSourceByObjectMetadataId;
 }): string => {
   const unreadableColumnReplacements = buildUnreadableColumnReplacements(
     unreadableColumnConditions,
@@ -695,7 +668,6 @@ export const substituteExistsFilterTokens = ({
           unreadableColumnConditions,
           unreadableColumnReplacements,
           unreadableRelationConditions,
-          tableSourceByObjectMetadataId,
         }),
       ),
     expression,
@@ -752,7 +724,6 @@ export const buildWhereExpression = (
         includeDeleted: state.includeDeleted,
         unreadableColumnConditions: state.unreadableColumnConditions,
         unreadableRelationConditions: state.unreadableRelationConditions,
-        tableSourceByObjectMetadataId: state.tableSourceByObjectMetadataId,
       })
     : renderedWhereExpression;
 
@@ -775,7 +746,9 @@ export const buildWhereExpression = (
 };
 
 export const buildFromClause = (state: SelectStatementState): string =>
-  `FROM ${renderTableSource(state)} AS ${escapeIdentifier(state.alias)}`;
+  `FROM ${escapeIdentifier(state.tableShape.schemaName)}.${escapeIdentifier(
+    state.tableShape.tableName,
+  )} AS ${escapeIdentifier(state.alias)}`;
 
 const buildToManyDedupedJoinSource = ({
   tableExpression,
@@ -804,7 +777,7 @@ const buildToManyDedupedJoinSource = ({
     escapeIdentifier('id'),
   ];
 
-  return `(SELECT DISTINCT ON (${foreignKey}) * FROM ${tableExpression} AS "source"${whereClause} ORDER BY ${orderExpressions.join(', ')})`;
+  return `(SELECT DISTINCT ON (${foreignKey}) * FROM ${tableExpression}${whereClause} ORDER BY ${orderExpressions.join(', ')})`;
 };
 
 export const buildJoinClause = (state: SelectStatementState): string =>
@@ -852,10 +825,9 @@ export const buildJoinClause = (state: SelectStatementState): string =>
         );
       }
 
-      const tableExpression = renderTableSource({
-        tableShape: joinClause.targetTableShape,
-        tableSourceByObjectMetadataId: state.tableSourceByObjectMetadataId,
-      });
+      const tableExpression = `${escapeIdentifier(
+        joinClause.targetTableShape.schemaName,
+      )}.${escapeIdentifier(joinClause.targetTableShape.tableName)}`;
 
       const joinSource = isDefined(toManyForeignKeyColumnName)
         ? buildToManyDedupedJoinSource({

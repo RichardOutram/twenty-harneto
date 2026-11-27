@@ -66,24 +66,6 @@ describe('generateRecordPropertiesJsonSchema', () => {
     ).not.toHaveProperty('name');
   });
 
-  it('should skip formula fields, which are computed', () => {
-    expect(
-      generateRecordPropertiesJsonSchema({
-        objectMetadata: {
-          fields: [
-            ...FIELDS,
-            getToolSchemaFieldMock({
-              name: 'taskCount',
-              type: FieldMetadataType.NUMBER,
-              formula: { expression: 'count(tasks)' },
-            }),
-          ],
-        },
-        definitions: {},
-      }).properties,
-    ).not.toHaveProperty('taskCount');
-  });
-
   it('should not require non-nullable fields that have a default value', () => {
     expect(
       generateRecordPropertiesJsonSchema({

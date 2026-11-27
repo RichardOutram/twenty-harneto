@@ -154,7 +154,10 @@ export class FieldIndexViewFieldOnCreateSideEffectHandlerService extends Metadat
         indexViewUniversalIdentifier
       ];
 
-    if (!isDefined(existingIndexFlatView)) {
+    if (
+      !isDefined(existingIndexFlatView) ||
+      isDefined(existingIndexFlatView.deletedAt)
+    ) {
       return undefined;
     }
 
@@ -167,12 +170,13 @@ export class FieldIndexViewFieldOnCreateSideEffectHandlerService extends Metadat
             ],
         )
         .filter(isDefined)
-        .filter((existingFlatViewField) =>
-          resolveEffectiveUniversalFlatEntityProperty({
-            metadataName: 'viewField',
-            universalFlatEntity: existingFlatViewField,
-            property: 'isActive',
-          }),
+        .filter(
+          (existingFlatViewField) =>
+            resolveEffectiveUniversalFlatEntityProperty({
+              metadataName: 'viewField',
+              universalFlatEntity: existingFlatViewField,
+              property: 'isActive',
+            }) && !isDefined(existingFlatViewField.deletedAt),
         )
         .map((existingFlatViewField) => existingFlatViewField.position);
 

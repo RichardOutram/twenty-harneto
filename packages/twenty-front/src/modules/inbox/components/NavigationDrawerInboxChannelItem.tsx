@@ -10,7 +10,6 @@ import { AiChatChannelIcon } from '@/ai-chat/threads/components/AiChatChannelIco
 import { NavigationDrawerInboxChannelActionsDropdown } from '@/inbox/components/NavigationDrawerInboxChannelActionsDropdown';
 import { NavigationDrawerInboxChannelNavigation } from '@/inbox/components/NavigationDrawerInboxChannelNavigation';
 import { useAiChatChannelIcon } from '@/ai-chat/threads/hooks/useAiChatChannelIcon';
-import { getAiChatChannelColor } from '@/ai-chat/threads/utils/getAiChatChannelColor';
 import { useDeleteInboxChannel } from '@/inbox/hooks/useDeleteInboxChannel';
 import { useIsInboxShowingDirectMessage } from '@/inbox/hooks/useIsInboxShowingDirectMessage';
 import { useUpdateInboxChannel } from '@/inbox/hooks/useUpdateInboxChannel';
@@ -40,6 +39,7 @@ type NavigationDrawerInboxChannelItemProps = {
   summary: InboxChannelSummary | undefined;
   destinationChannels: AiChatChannel[];
   canManage: boolean;
+  isExpandable?: boolean;
 };
 
 export const NavigationDrawerInboxChannelItem = ({
@@ -47,6 +47,7 @@ export const NavigationDrawerInboxChannelItem = ({
   summary,
   destinationChannels,
   canManage,
+  isExpandable = true,
 }: NavigationDrawerInboxChannelItemProps) => {
   const { t } = useLingui();
   const location = useLocation();
@@ -120,7 +121,7 @@ export const NavigationDrawerInboxChannelItem = ({
           })
         }
         iconColorPicker={{
-          selectedColor: parseThemeColor(getAiChatChannelColor(channel)),
+          selectedColor: parseThemeColor(channel.color),
           onColorChange: (color) =>
             void updateInboxChannel({
               channelId: channel.id,
@@ -150,13 +151,15 @@ export const NavigationDrawerInboxChannelItem = ({
           !isInboxShowingDirectMessage &&
           inboxSelectedChannelView?.channelId === channel.id
         }
+        isExpandable={isExpandable}
         isRightOptionsDropdownOpen={isDropdownOpen}
         rightOptions={
-          canManage ? (
+          canManage || channel.isAccessible ? (
             <NavigationDrawerInboxChannelActionsDropdown
               channel={channel}
               destinationChannels={destinationChannels}
               dropdownId={dropdownId}
+              canManage={canManage}
               onRename={() => setDraftName(channel.name)}
               onChangeAppearance={() =>
                 openDropdown({

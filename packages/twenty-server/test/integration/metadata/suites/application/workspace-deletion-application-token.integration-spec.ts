@@ -3,7 +3,6 @@ import { randomUUID } from 'crypto';
 import gql from 'graphql-tag';
 import { activateWorkspace } from 'test/integration/graphql/utils/activate-workspace.util';
 import { deleteUser } from 'test/integration/graphql/utils/delete-user.util';
-import { findWorkspaceCustomApplicationId } from 'test/integration/metadata/suites/application-default-role/utils/find-application-default-role.util';
 import { findManyApplications } from 'test/integration/graphql/utils/find-many-applications.util';
 import { getAuthTokensFromLoginToken } from 'test/integration/graphql/utils/get-auth-tokens-from-login-token.util';
 import { signUpInNewWorkspace } from 'test/integration/graphql/utils/sign-up-in-new-workspace.util';
@@ -52,7 +51,6 @@ describe('Workspace deletion application token', () => {
   let userAccessToken: string | undefined;
   let workspaceId: string | undefined;
   let workspaceService: WorkspaceService;
-  let workspaceCustomApplicationId: string;
 
   const queryApplicationStoppedState = (token: string) =>
     makeMetadataApiRequest(
@@ -92,11 +90,7 @@ describe('Workspace deletion application token', () => {
     }
   };
 
-  const softDeleteWorkspaceAndGenerateDeletionToken = async ({
-    tokenApplicationId = applicationId,
-  }: {
-    tokenApplicationId?: string;
-  } = {}) => {
+  const softDeleteWorkspaceAndGenerateDeletionToken = async () => {
     if (!isDefined(workspaceId)) {
       throw new Error('Expected the test workspace to exist');
     }
@@ -113,7 +107,7 @@ describe('Workspace deletion application token', () => {
     const deletionToken =
       await applicationTokenService.generateWorkspaceDeletionApplicationAccessToken(
         {
-          applicationId: tokenApplicationId,
+          applicationId,
           workspaceId,
           workspaceDeletionRequestTimestamp,
         },
@@ -189,8 +183,6 @@ describe('Workspace deletion application token', () => {
     }
 
     applicationId = standardApplication.id;
-    workspaceCustomApplicationId =
-      await findWorkspaceCustomApplicationId(workspaceAccessToken);
 
     const applicationTokenPair = await generateApplicationTokenPair({
       workspaceId,
@@ -262,9 +254,8 @@ describe('Workspace deletion application token', () => {
   }, 120000);
 
   it('reads records with a token scoped to the current deletion request', async () => {
-    const { deletionToken } = await softDeleteWorkspaceAndGenerateDeletionToken(
-      { tokenApplicationId: workspaceCustomApplicationId },
-    );
+    const { deletionToken } =
+      await softDeleteWorkspaceAndGenerateDeletionToken();
 
     const response = await makeGraphqlApiRequest(
       { query: FIND_ONE_COMPANY },

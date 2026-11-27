@@ -20,7 +20,7 @@ type SeedInputFlatObjectMetadata = Pick<
 
 type SeedInputFlatView = Pick<
   UniversalFlatView,
-  'key' | 'viewFieldUniversalIdentifiers'
+  'key' | 'deletedAt' | 'viewFieldUniversalIdentifiers'
 >;
 
 type SeedInputFlatViewField = Pick<
@@ -80,7 +80,10 @@ export const computeMissingInitialObjectViewOperations = ({
           flatViewMaps.byUniversalIdentifier[viewUniversalIdentifier],
       )
       .find(
-        (flatView) => isDefined(flatView) && flatView.key === ViewKey.INDEX,
+        (flatView) =>
+          isDefined(flatView) &&
+          flatView.key === ViewKey.INDEX &&
+          !isDefined(flatView.deletedAt),
       );
 
     if (!isDefined(flatIndexView)) {

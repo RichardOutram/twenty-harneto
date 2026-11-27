@@ -143,11 +143,6 @@ export const DefaultWithoutSearch: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    expect(canvas.queryByText('Go to People')).not.toBeInTheDocument();
-    await userEvent.click(
-      await canvas.findByRole('button', { name: 'Expand Go to' }),
-    );
-
     expect(await canvas.findByText('Go to People')).toBeVisible();
     expect(await canvas.findByText('Go to Opportunities')).toBeVisible();
     expect(await canvas.findByText('Go to Settings')).toBeVisible();
@@ -162,9 +157,6 @@ export const LimitedPermissions: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.click(
-      await canvas.findByRole('button', { name: 'Expand Go to' }),
-    );
     expect(await canvas.findByText('Go to People')).toBeVisible();
     await waitFor(() => {
       expect(canvas.queryByText('Go to Opportunities')).not.toBeInTheDocument();
@@ -202,9 +194,8 @@ export const NoResultsSearchFallback: Story = {
     await waitFor(() => expect(searchInput).toHaveFocus());
     await userEvent.type(searchInput, 'input without results');
     expect(
-      await canvas.findByRole('button', { name: /^Search/ }),
+      await canvas.findByText('Use ‘input without results’ with...'),
     ).toBeVisible();
-    expect(canvas.queryByText('No records found')).not.toBeInTheDocument();
     await waitFor(() => {
       expect(canvas.queryByText('No results found')).not.toBeInTheDocument();
     });

@@ -1,9 +1,8 @@
 import { useState } from 'react';
+import { StandardObjectNameSingular } from 'twenty-shared/types';
 import { useToast } from 'twenty-ui/components/feedback';
 
 import { getToastOptionsFromError } from '@/error-handler/utils/getToastOptionsFromError';
-import { inboxNamesByLegacyNameSelector } from '@/ai-chat/states/selectors/inboxNamesByLegacyNameSelector';
-import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import { useUpdateOneRecord } from '@/object-record/hooks/useUpdateOneRecord';
 
 export const useAiChatThreadRename = (thread: {
@@ -12,9 +11,6 @@ export const useAiChatThreadRename = (thread: {
 }) => {
   const { updateOneRecord } = useUpdateOneRecord();
   const { enqueueToast } = useToast();
-  const inboxNamesByLegacyName = useAtomStateValue(
-    inboxNamesByLegacyNameSelector,
-  );
 
   const [isRenaming, setIsRenaming] = useState(false);
   const [draftTitle, setDraftTitle] = useState(thread.title ?? '');
@@ -39,7 +35,7 @@ export const useAiChatThreadRename = (thread: {
 
     try {
       await updateOneRecord({
-        objectNameSingular: inboxNamesByLegacyName.agentChatThread,
+        objectNameSingular: StandardObjectNameSingular.AgentChatThread,
         idToUpdate: thread.id,
         updateOneRecordInput: { title: trimmed },
       });

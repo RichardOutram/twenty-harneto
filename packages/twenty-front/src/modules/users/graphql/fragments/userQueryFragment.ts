@@ -28,10 +28,6 @@ export const USER_QUERY_FRAGMENT = gql`
     isWorkspaceCreator
     workspaceMember {
       ...WorkspaceMemberQueryFragment
-      roles {
-        id
-        universalIdentifier
-      }
     }
     workspaceMembers {
       ...PartialWorkspaceMemberQueryFragment
@@ -129,7 +125,6 @@ export const USER_QUERY_FRAGMENT = gql`
       }
       billingCustomer {
         id
-        stripeCustomerEmail
         hasPaymentMethod
         userCreditsFallback
       }

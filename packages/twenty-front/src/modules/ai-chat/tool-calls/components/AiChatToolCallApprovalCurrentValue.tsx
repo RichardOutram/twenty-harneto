@@ -44,7 +44,7 @@ export const AiChatToolCallApprovalCurrentValue = ({
 
   return (
     <StyledCurrentValue>
-      <span>{t`Currently:`}</span>
+      {t`Currently:`}
       {isFieldValueEmpty({ fieldDefinition, fieldValue }) ? (
         t`Empty`
       ) : (

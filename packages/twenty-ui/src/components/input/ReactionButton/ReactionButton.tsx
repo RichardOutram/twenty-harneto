@@ -23,7 +23,6 @@ export const ReactionButton = ({
     color="neutral"
     aria-pressed={pressed}
     className={clsx(styles.button, className)}
-    startIcon={<span className={styles.emoji}>{emoji}</span>}
     onClick={(event) => {
       onClick?.(event);
 
@@ -34,6 +33,9 @@ export const ReactionButton = ({
       onPressedChange(!pressed);
     }}
   >
-    <span aria-hidden>{count}</span>
+    <span className={styles.content} aria-hidden>
+      <span className={styles.emoji}>{emoji}</span>
+      <span>{count}</span>
+    </span>
   </Button>
 );

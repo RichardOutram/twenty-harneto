@@ -1,5 +1,4 @@
 import { type CalendarEventAttendeeToCreate } from 'src/modules/calendar/calendar-event-creation-manager/types/calendar-event-attendee-to-create.type';
-import { type CalendarEventRecurrence } from 'src/modules/calendar/calendar-event-creation-manager/types/calendar-event-recurrence.type';
 
 export type CalendarEventToCreate = {
   title: string;
@@ -12,5 +11,4 @@ export type CalendarEventToCreate = {
   attendees: CalendarEventAttendeeToCreate[];
   sendInvitations: boolean;
   addConferencing: boolean;
-  recurrence?: CalendarEventRecurrence;
 };

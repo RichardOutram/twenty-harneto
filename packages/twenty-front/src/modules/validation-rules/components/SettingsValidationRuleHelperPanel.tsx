@@ -41,7 +41,6 @@ type SettingsValidationRuleHelperPanelProps = {
   highlightedIndex: number;
   isFocused: boolean;
   editorFields: ValidationRuleEditorField[];
-  shouldShowValidationRuleGuidance: boolean;
   onHighlight: (index: number) => void;
   onSelect: (item: ValidationRuleHelperItem) => void;
 };
@@ -51,7 +50,6 @@ export const SettingsValidationRuleHelperPanel = ({
   highlightedIndex,
   isFocused,
   editorFields,
-  shouldShowValidationRuleGuidance,
   onHighlight,
   onSelect,
 }: SettingsValidationRuleHelperPanelProps) => {
@@ -99,7 +97,6 @@ export const SettingsValidationRuleHelperPanel = ({
         <SettingsValidationRuleHelperDetails
           item={highlightedItem}
           editorFields={editorFields}
-          shouldShowValidationRuleGuidance={shouldShowValidationRuleGuidance}
         />
       ) : (
         <div />

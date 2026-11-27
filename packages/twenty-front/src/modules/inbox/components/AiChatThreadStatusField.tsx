@@ -42,7 +42,7 @@ export const AiChatThreadStatusField = ({
   const scopeLabel =
     scope.type === 'personal' ? t`Your inbox` : scope.channelName;
   const statusLabels = {
-    open: t({ message: 'Open', context: 'Inbox thread status' }),
+    open: t`Open`,
     snoozed: t`Snoozed`,
     done: t`Done`,
   };

@@ -22,11 +22,6 @@ type DeferredWorkspaceOperationPayloadByName = {
       isComputed: boolean;
     }[];
   };
-  compute_storedFormulaFields: {
-    objectMetadataId: string;
-    formulaFieldMetadataIds: string[];
-    afterRecordId?: string | null;
-  };
 };
 
 export type DeferredWorkspaceOperationName =

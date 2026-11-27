@@ -86,7 +86,7 @@ export class AgentRunConversationService {
     threadId,
     agentId,
     turnId: requestedTurnId,
-    senderWorkspaceMemberId,
+    senderUserWorkspaceId,
     senderApplicationId,
     createdBy,
     messages,
@@ -97,7 +97,7 @@ export class AgentRunConversationService {
     threadId: string;
     agentId: string | null;
     turnId?: string;
-    senderWorkspaceMemberId: string | null;
+    senderUserWorkspaceId: string | null;
     senderApplicationId: string | null;
     createdBy: ActorMetadata;
     messages: RunAgentMessage[];
@@ -162,9 +162,9 @@ export class AgentRunConversationService {
                 ? AgentMessageRole.ASSISTANT
                 : AgentMessageRole.USER,
               agentId: null,
-              senderWorkspaceMemberId: isAssistantMessage
+              senderUserWorkspaceId: isAssistantMessage
                 ? null
-                : senderWorkspaceMemberId,
+                : senderUserWorkspaceId,
               senderApplicationId: isAssistantMessage
                 ? null
                 : senderApplicationId,

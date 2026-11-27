@@ -94,9 +94,6 @@ export const SettingsRole = ({ roleId, isCreateMode }: SettingsRoleProps) => {
   });
 
   const isRoleEditable = settingsDraftRole.isEditable;
-  // TODO(@charlesBochet): temporary Admin record permissions exception, remove once the workspace owns Admin's record permissions
-  const areRecordPermissionsEditable =
-    settingsDraftRole.areRecordPermissionsEditable;
 
   const tabs = [
     {
@@ -204,7 +201,7 @@ export const SettingsRole = ({ roleId, isCreateMode }: SettingsRoleProps) => {
         },
       ]}
       actionButton={
-        areRecordPermissionsEditable &&
+        isRoleEditable &&
         isDirty && (
           <SaveAndCancelButtons
             onSave={handleSave}
@@ -221,8 +218,7 @@ export const SettingsRole = ({ roleId, isCreateMode }: SettingsRoleProps) => {
         {activeTabId === SETTINGS_ROLE_DETAIL_TABS.TABS_IDS.PERMISSIONS && (
           <SettingsRolePermissions
             roleId={roleId}
-            areRecordPermissionsEditable={areRecordPermissionsEditable}
-            arePermissionFlagsEditable={isRoleEditable}
+            isEditable={isRoleEditable}
           />
         )}
         {activeTabId === SETTINGS_ROLE_DETAIL_TABS.TABS_IDS.SETTINGS && (

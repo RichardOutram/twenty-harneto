@@ -6,7 +6,7 @@ import { useListenToEventsForQuery } from '@/sse-db-event/hooks/useListenToEvent
 export const RecordTableRecordGroupsSSESubscribeEffect = () => {
   const { objectMetadataItem } = useRecordIndexContextOrThrow();
   const { recordTableId } = useRecordTableContextOrThrow();
-  const { combinedFiltersWithoutViewPresetFilter, orderBy } =
+  const { combinedFilters, orderBy } =
     useRecordIndexGroupCommonQueryVariables();
 
   useListenToEventsForQuery({
@@ -14,7 +14,7 @@ export const RecordTableRecordGroupsSSESubscribeEffect = () => {
     operationSignature: {
       objectNameSingular: objectMetadataItem.nameSingular,
       variables: {
-        filter: combinedFiltersWithoutViewPresetFilter,
+        filter: combinedFilters,
         orderBy,
       },
     },

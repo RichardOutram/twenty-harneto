@@ -20,8 +20,6 @@ import { ADD_WORKSPACE_WORKFLOW_ID_TO_WORKFLOW_UPGRADE_COMMAND_NAME } from 'src/
 import { ADD_CORE_VERSION_POINTERS_UPGRADE_COMMAND_NAME } from 'src/database/commands/upgrade-version-command/2-41/add-core-version-pointers-upgrade-command-name.constant';
 import { ADD_WORKFLOW_VISIBILITY_UPGRADE_COMMAND_NAME } from 'src/database/commands/upgrade-version-command/2-42/add-workflow-visibility-upgrade-command-name.constant';
 import { ADD_WORKFLOW_IS_PRIVATE_UPGRADE_COMMAND_NAME } from 'src/database/commands/upgrade-version-command/2-62/add-workflow-is-private-upgrade-command-name.constant';
-import { DROP_LEGACY_WORKFLOW_VERSION_ID_COLUMNS_UPGRADE_COMMAND_NAME } from 'src/database/commands/upgrade-version-command/2-64/drop-legacy-workflow-version-id-columns-upgrade-command-name.constant';
-import { DROP_WORKFLOW_VISIBILITY_UPGRADE_COMMAND_NAME } from 'src/database/commands/upgrade-version-command/2-64/drop-workflow-visibility-upgrade-command-name.constant';
 import { type MessageQueueJobConfig } from 'src/engine/core-modules/message-queue/types/message-queue-job-config.type';
 import { UserWorkspaceEntity } from 'src/engine/core-modules/user-workspace/user-workspace.entity';
 import { WasIntroducedInUpgrade } from 'src/engine/core-modules/upgrade/decorators/was-introduced-in-upgrade.decorator';
@@ -56,12 +54,8 @@ export class WorkflowEntity extends SyncableEntity implements PrivatableEntity {
   @Column({ type: 'text', nullable: true })
   versionDefinitionHash: string | null;
 
-  @WasRemovedInUpgrade({
-    upgradeCommandName:
-      DROP_LEGACY_WORKFLOW_VERSION_ID_COLUMNS_UPGRADE_COMMAND_NAME,
-  })
   @Column({ type: 'uuid', nullable: true })
-  lastPublishedVersionId: WasRemovedInUpgrade<string | null>;
+  lastPublishedVersionId: string | null;
 
   @WasIntroducedInUpgrade({
     upgradeCommandName:
@@ -85,9 +79,6 @@ export class WorkflowEntity extends SyncableEntity implements PrivatableEntity {
 
   @WasIntroducedInUpgrade({
     upgradeCommandName: ADD_WORKFLOW_VISIBILITY_UPGRADE_COMMAND_NAME,
-  })
-  @WasRemovedInUpgrade({
-    upgradeCommandName: DROP_WORKFLOW_VISIBILITY_UPGRADE_COMMAND_NAME,
   })
   @Column({
     type: 'varchar',

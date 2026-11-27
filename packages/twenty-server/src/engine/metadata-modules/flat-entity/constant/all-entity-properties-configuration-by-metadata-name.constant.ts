@@ -140,11 +140,6 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       toStringify: true,
       universalProperty: 'universalSettings',
     },
-    formula: {
-      toCompare: true,
-      toStringify: true,
-      universalProperty: undefined,
-    },
     objectMetadataId: {
       toCompare: false,
       toStringify: false,
@@ -351,12 +346,12 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
     },
     key: { toCompare: false, toStringify: false, universalProperty: undefined },
     deletedAt: {
-      toCompare: false,
+      toCompare: true,
       toStringify: false,
       universalProperty: undefined,
     },
     createdByUserWorkspaceId: {
-      toCompare: false,
+      toCompare: true,
       toStringify: false,
       universalProperty: undefined,
     },
@@ -436,12 +431,6 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       toCompare: true,
       toStringify: false,
       universalProperty: 'calendarEndFieldMetadataUniversalIdentifier',
-      isOverridable: true,
-    },
-    listPinnedFieldMetadataId: {
-      toCompare: true,
-      toStringify: false,
-      universalProperty: 'listPinnedFieldMetadataUniversalIdentifier',
       isOverridable: true,
     },
     isPrivate: {
@@ -540,7 +529,7 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
     deletedAt: {
       toStringify: false,
       universalProperty: undefined,
-      toCompare: false,
+      toCompare: true,
     },
     createdAt: {
       toCompare: false,
@@ -621,7 +610,7 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       isOverridable: true,
     },
     deletedAt: {
-      toCompare: false,
+      toCompare: true,
       toStringify: false,
       universalProperty: undefined,
     },
@@ -674,7 +663,7 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       universalProperty: undefined,
     },
     deletedAt: {
-      toCompare: false,
+      toCompare: true,
       toStringify: false,
       universalProperty: undefined,
     },
@@ -842,7 +831,7 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       universalProperty: 'viewUniversalIdentifier',
     },
     deletedAt: {
-      toCompare: false,
+      toCompare: true,
       toStringify: false,
       universalProperty: undefined,
     },
@@ -1126,7 +1115,7 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       universalProperty: undefined,
     },
     createdByUserWorkspaceId: {
-      toCompare: false,
+      toCompare: true,
       toStringify: false,
       universalProperty: undefined,
     },
@@ -1527,11 +1516,6 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       universalProperty: undefined,
     },
     builtInSectionKey: {
-      toCompare: true,
-      toStringify: false,
-      universalProperty: undefined,
-    },
-    visibleItemLimit: {
       toCompare: true,
       toStringify: false,
       universalProperty: undefined,
@@ -2014,7 +1998,7 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       universalProperty: 'viewUniversalIdentifier',
     },
     deletedAt: {
-      toCompare: false,
+      toCompare: true,
       toStringify: false,
       universalProperty: undefined,
     },
@@ -2026,7 +2010,7 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       universalProperty: 'viewUniversalIdentifier',
     },
     deletedAt: {
-      toCompare: false,
+      toCompare: true,
       toStringify: false,
       universalProperty: undefined,
     },
@@ -2640,7 +2624,12 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       toStringify: false,
       universalProperty: undefined,
     },
-    tree: {
+    expression: {
+      toCompare: true,
+      toStringify: false,
+      universalProperty: undefined,
+    },
+    bindings: {
       toCompare: true,
       toStringify: true,
       universalProperty: undefined,
@@ -2684,7 +2673,12 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       universalProperty: undefined,
     },
     createdByUserWorkspaceId: {
-      toCompare: false,
+      toCompare: true,
+      toStringify: false,
+      universalProperty: undefined,
+    },
+    lastPublishedVersionId: {
+      toCompare: true,
       toStringify: false,
       universalProperty: undefined,
     },
@@ -2732,6 +2726,11 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       universalProperty: 'coreWorkflowUniversalIdentifier',
     },
     workflowId: {
+      toCompare: false,
+      toStringify: false,
+      universalProperty: undefined,
+    },
+    workspaceWorkflowVersionId: {
       toCompare: false,
       toStringify: false,
       universalProperty: undefined,

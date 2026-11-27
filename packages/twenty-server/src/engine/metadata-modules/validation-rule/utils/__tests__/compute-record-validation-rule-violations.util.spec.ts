@@ -1,11 +1,7 @@
 /* @license Enterprise */
 
 import { FieldMetadataType, type ObjectRecord } from 'twenty-shared/types';
-import {
-  isDefined,
-  parseExpressionNode,
-  resolveExpressionFieldReferences,
-} from 'twenty-shared/utils';
+import { isDefined } from 'twenty-shared/utils';
 
 import { computeRecordValidationRuleViolations } from 'src/engine/metadata-modules/validation-rule/utils/compute-record-validation-rule-violations.util';
 
@@ -22,29 +18,16 @@ const FIELDS = [
   },
 ];
 
-const toTree = (expression: string) => {
-  const parsing = parseExpressionNode(expression);
-
-  if (!parsing.isValid) {
-    throw new Error(parsing.errorMessage);
-  }
-
-  return resolveExpressionFieldReferences({
-    node: parsing.node,
-    fields: FIELDS,
-  });
-};
-
 const WON_WITHOUT_AMOUNT_RULE = {
   id: 'rule-won-without-amount',
-  tree: toTree('stage != "WON" or not isEmpty(amount)'),
+  expression: 'stage != "WON" or not isEmpty(amount)',
   message: 'A won opportunity needs an amount',
   errorFieldMetadataId: 'amount-field-metadata-id',
 };
 
 const BROKEN_RULE = {
   id: 'rule-broken',
-  tree: toTree('stage'),
+  expression: 'stage',
   message: 'Never shown',
   errorFieldMetadataId: null,
 };
@@ -124,14 +107,11 @@ describe('computeRecordValidationRuleViolations', () => {
     ).toBeNull();
   });
 
-  it.each([
-    ['does not return a boolean', BROKEN_RULE],
-    ['has no tree', { ...BROKEN_RULE, tree: null }],
-  ])('should report a rule that %s as an evaluation error', (_, rule) => {
+  it('should report a rule that cannot be evaluated as an evaluation error', () => {
     expect(
       computeRecordValidationRuleViolations({
         records: [{ id: 'record', stage: 'WON' }],
-        validationRules: [rule],
+        validationRules: [BROKEN_RULE],
         fields: FIELDS,
         now: '2026-09-23T10:00:00.000Z',
         inputIndexByRecordId: new Map(),
@@ -155,9 +135,8 @@ describe('computeRecordValidationRuleViolations', () => {
 describe('computeRecordValidationRuleViolations with previous values', () => {
   const NO_SKIPPED_STAGE_RULE = {
     id: 'rule-no-skipped-stage',
-    tree: toTree(
+    expression:
       'stage == previous.stage or isEmpty(previous.stage) or (previous.stage == "NEW" and stage == "MEETING") or (previous.stage == "MEETING" and stage == "WON")',
-    ),
     message: 'Move one stage at a time',
     errorFieldMetadataId: 'stage-field-metadata-id',
   };

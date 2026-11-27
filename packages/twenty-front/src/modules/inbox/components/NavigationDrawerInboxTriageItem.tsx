@@ -6,7 +6,6 @@ import {
   type AgentChatThreadPresetFilter,
 } from 'twenty-shared/ai';
 
-import { NavigationDrawerInboxCountBadge } from '@/inbox/components/NavigationDrawerInboxCountBadge';
 import { INBOX_THREAD_PRESET_FILTER_ICONS } from '@/inbox/constants/InboxThreadPresetFilterIcons';
 import { INBOX_THREAD_PRESET_FILTER_LABELS } from '@/inbox/constants/InboxThreadPresetFilterLabels';
 import { INBOX_INSTANCE_ID } from '@/inbox/constants/InboxInstanceId';
@@ -16,7 +15,6 @@ import { isInboxOpenThreadPresetFilter } from '@/inbox/utils/isInboxOpenThreadPr
 import { NavigationDrawerItem } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerItem';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import { isInboxPath } from '~/utils/isInboxPath';
-import { NavigationMenuTabFirstItemOpenEffect } from '@/navigation-menu-item/display/effect-components/NavigationMenuTabFirstItemOpenEffect';
 
 type NavigationDrawerInboxTriageItemProps = {
   presetFilter: AgentChatThreadPresetFilter;
@@ -42,27 +40,16 @@ export const NavigationDrawerInboxTriageItem = ({
         isInboxOpenThreadPresetFilter(
           inboxSelectedThreadListSource.presetFilter,
         )));
-  const hasCount = isDefined(count) && count > 0;
 
   return (
-    <>
-      <NavigationMenuTabFirstItemOpenEffect
-        onOpen={() => openInboxPresetFilter(presetFilter)}
-      />
-      <NavigationDrawerItem
-        label={t(INBOX_THREAD_PRESET_FILTER_LABELS[presetFilter])}
-        isUnread={isUnread}
-        Icon={INBOX_THREAD_PRESET_FILTER_ICONS[presetFilter]}
-        active={isInboxPath(location.pathname) && isCurrentFilter}
-        onClick={() => openInboxPresetFilter(presetFilter)}
-        triggerEvent="CLICK"
-        rightOptions={
-          hasCount ? (
-            <NavigationDrawerInboxCountBadge count={count} />
-          ) : undefined
-        }
-        alwaysShowRightOptions={hasCount}
-      />
-    </>
+    <NavigationDrawerItem
+      label={t(INBOX_THREAD_PRESET_FILTER_LABELS[presetFilter])}
+      secondaryLabel={isDefined(count) && count > 0 ? `${count}` : undefined}
+      isUnread={isUnread}
+      Icon={INBOX_THREAD_PRESET_FILTER_ICONS[presetFilter]}
+      active={isInboxPath(location.pathname) && isCurrentFilter}
+      onClick={() => openInboxPresetFilter(presetFilter)}
+      triggerEvent="CLICK"
+    />
   );
 };

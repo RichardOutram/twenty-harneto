@@ -13,7 +13,6 @@ const dispatchQueueJobEvent = (jobId: string, state: JobState) => {
     state,
     attemptsMade: 1,
     enqueuedAt: 1,
-    scheduledAt: 1,
   });
 };
 

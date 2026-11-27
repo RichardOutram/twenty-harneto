@@ -31,8 +31,7 @@ export const getActiveValidationRules = ({
     for (const rule of Object.values(
       flatValidationRuleMaps.byUniversalIdentifier,
     )) {
-      // Fence until upgrade:2-65:convert-validation-rules-to-trees reached the workspace, drop it in 2.67
-      if (!isDefined(rule) || !rule.isActive || !isDefined(rule.tree)) {
+      if (!isDefined(rule) || !rule.isActive) {
         continue;
       }
 

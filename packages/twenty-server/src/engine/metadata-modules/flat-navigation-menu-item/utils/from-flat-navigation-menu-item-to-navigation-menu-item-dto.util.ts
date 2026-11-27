@@ -32,8 +32,6 @@ export const fromFlatNavigationMenuItemToNavigationMenuItemDto = (
     nativePageKey: effectiveFlatNavigationMenuItem.nativePageKey ?? undefined,
     builtInSectionKey:
       effectiveFlatNavigationMenuItem.builtInSectionKey ?? undefined,
-    visibleItemLimit:
-      effectiveFlatNavigationMenuItem.visibleItemLimit ?? undefined,
     workflowId: effectiveFlatNavigationMenuItem.workflowId ?? undefined,
     agentId: effectiveFlatNavigationMenuItem.agentId ?? undefined,
     position: effectiveFlatNavigationMenuItem.position,

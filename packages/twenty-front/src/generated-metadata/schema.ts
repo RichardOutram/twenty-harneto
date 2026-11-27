@@ -61,7 +61,6 @@ export type Agent = {
   responseFormat?: Maybe<Scalars['JSON']['output']>;
   roleId?: Maybe<Scalars['UUID']['output']>;
   triggers: Array<Scalars['JSON']['output']>;
-  universalIdentifier: Scalars['UUID']['output'];
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -215,6 +214,7 @@ export type AgentMessage = {
   reactions: Array<AgentMessageReactionSummary>;
   role: Scalars['String']['output'];
   senderApplicationId?: Maybe<Scalars['UUID']['output']>;
+  senderUserWorkspaceId?: Maybe<Scalars['UUID']['output']>;
   senderWorkspaceMemberId?: Maybe<Scalars['UUID']['output']>;
   status: Scalars['String']['output'];
   threadId: Scalars['UUID']['output'];
@@ -1060,8 +1060,7 @@ export type AuthToken = {
 export type AuthTokenPair = {
   __typename?: 'AuthTokenPair';
   accessOrWorkspaceAgnosticToken: AuthToken;
-  /** @deprecated Always null. Will be removed. */
-  refreshToken?: Maybe<AuthToken>;
+  refreshToken: AuthToken;
 };
 
 export type AuthTokens = {
@@ -1084,7 +1083,6 @@ export type AvailableWorkspace = {
   __typename?: 'AvailableWorkspace';
   displayName?: Maybe<Scalars['String']['output']>;
   id: Scalars['UUID']['output'];
-  /** @deprecated Always null. Will be removed. */
   inviteHash?: Maybe<Scalars['String']['output']>;
   loginToken?: Maybe<Scalars['String']['output']>;
   logo?: Maybe<Scalars['String']['output']>;
@@ -1197,7 +1195,6 @@ export type BillingCustomer = {
   __typename?: 'BillingCustomer';
   hasPaymentMethod?: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['UUID']['output'];
-  stripeCustomerEmail?: Maybe<Scalars['String']['output']>;
   userCreditsFallback: UserCreditsFallback;
 };
 
@@ -1344,9 +1341,6 @@ export enum BillingSubscriptionCollectionMethod {
 
 export type BillingSubscriptionItem = {
   __typename?: 'BillingSubscriptionItem';
-  applicationLogoUrl?: Maybe<Scalars['String']['output']>;
-  applicationName?: Maybe<Scalars['String']['output']>;
-  applicationPricePer?: Maybe<ApplicationBillingPriceUnit>;
   billingProduct: BillingProduct;
   creditAmount?: Maybe<Scalars['Float']['output']>;
   hasReachedCurrentPeriodCap: Scalars['Boolean']['output'];
@@ -1443,31 +1437,6 @@ export type CalendarConfiguration = {
   __typename?: 'CalendarConfiguration';
   configurationType: WidgetConfigurationType;
 };
-
-export enum CalendarEventRecurrenceFrequency {
-  DAILY = 'DAILY',
-  MONTHLY = 'MONTHLY',
-  WEEKLY = 'WEEKLY',
-  YEARLY = 'YEARLY'
-}
-
-export type CalendarEventRecurrenceInput = {
-  daysOfWeek?: InputMaybe<Array<CalendarEventRecurrenceWeekday>>;
-  endDate?: InputMaybe<Scalars['String']['input']>;
-  endOccurrenceCount?: InputMaybe<Scalars['Int']['input']>;
-  frequency: CalendarEventRecurrenceFrequency;
-  interval?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export enum CalendarEventRecurrenceWeekday {
-  FRIDAY = 'FRIDAY',
-  MONDAY = 'MONDAY',
-  SATURDAY = 'SATURDAY',
-  SUNDAY = 'SUNDAY',
-  THURSDAY = 'THURSDAY',
-  TUESDAY = 'TUESDAY',
-  WEDNESDAY = 'WEDNESDAY'
-}
 
 export type CallRecordingSummaryConfiguration = {
   __typename?: 'CallRecordingSummaryConfiguration';
@@ -1632,6 +1601,7 @@ export type ClientConfig = {
   enterpriseInstanceType: Scalars['String']['output'];
   frontDomain: Scalars['String']['output'];
   isAttachmentPreviewEnabled: Scalars['Boolean']['output'];
+  isBookCallOnboardingStepEnabled: Scalars['Boolean']['output'];
   isClickHouseConfigured: Scalars['Boolean']['output'];
   isCloudflareIntegrationEnabled: Scalars['Boolean']['output'];
   isCompanyEnrichmentEnabled: Scalars['Boolean']['output'];
@@ -1843,7 +1813,6 @@ export type CreateCalendarEventInput = {
   endsAt: Scalars['String']['input'];
   isFullDay?: InputMaybe<Scalars['Boolean']['input']>;
   location?: InputMaybe<Scalars['String']['input']>;
-  recurrence?: InputMaybe<CalendarEventRecurrenceInput>;
   sendInvitations?: InputMaybe<Scalars['Boolean']['input']>;
   startsAt: Scalars['String']['input'];
   timeZone?: InputMaybe<Scalars['String']['input']>;
@@ -1898,7 +1867,6 @@ export type CreateEmailingDomainInput = {
 export type CreateFieldInput = {
   defaultValue?: InputMaybe<Scalars['JSON']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
-  formula?: InputMaybe<Scalars['JSON']['input']>;
   icon?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   isAuditLogged?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1989,7 +1957,6 @@ export type CreateNavigationMenuItemInput = {
   type: NavigationMenuItemType;
   userWorkspaceId?: InputMaybe<Scalars['UUID']['input']>;
   viewId?: InputMaybe<Scalars['UUID']['input']>;
-  visibleItemLimit?: InputMaybe<Scalars['Int']['input']>;
   workflowId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
@@ -2183,7 +2150,6 @@ export type CreateViewInput = {
   kanbanAggregateOperationFieldMetadataId?: InputMaybe<Scalars['UUID']['input']>;
   kanbanColumnWidth?: InputMaybe<Scalars['Int']['input']>;
   key?: InputMaybe<ViewKey>;
-  listPinnedFieldMetadataId?: InputMaybe<Scalars['UUID']['input']>;
   mainGroupByFieldMetadataId?: InputMaybe<Scalars['UUID']['input']>;
   name: Scalars['String']['input'];
   objectMetadataId: Scalars['UUID']['input'];
@@ -2564,14 +2530,8 @@ export type EnqueueJobResult = {
 export type EnqueueJobsInput = {
   delayMs?: InputMaybe<Scalars['Int']['input']>;
   jobs?: InputMaybe<Array<EnqueueJobItemInput>>;
-  limiter?: InputMaybe<EnqueueJobsLimiterInput>;
   logicFunctionUniversalIdentifier: Scalars['String']['input'];
   retryLimit?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type EnqueueJobsLimiterInput = {
-  durationMs: Scalars['Int']['input'];
-  max: Scalars['Int']['input'];
 };
 
 export type EnqueueJobsResult = {
@@ -2587,7 +2547,6 @@ export type EnqueueJobsResult = {
 export type EnqueuedJob = {
   __typename?: 'EnqueuedJob';
   jobId: Scalars['String']['output'];
-  scheduledAt: Scalars['Float']['output'];
   sizeBytes: Scalars['Int']['output'];
 };
 
@@ -2695,23 +2654,32 @@ export type FeatureFlag = {
 };
 
 export enum FeatureFlagKey {
-  IS_ADMIN_CHANNEL_WRITE_ACCESS_RESTORED = 'IS_ADMIN_CHANNEL_WRITE_ACCESS_RESTORED',
+  IS_ACCESS_GROUPS_ENABLED = 'IS_ACCESS_GROUPS_ENABLED',
   IS_AGENT_CHAT_DIRECT_MESSAGE_IDENTITY_ENABLED = 'IS_AGENT_CHAT_DIRECT_MESSAGE_IDENTITY_ENABLED',
   IS_AI_CHAT_COMPONENT_BUILDER_ENABLED = 'IS_AI_CHAT_COMPONENT_BUILDER_ENABLED',
   IS_AI_CHAT_INBOX_ENABLED = 'IS_AI_CHAT_INBOX_ENABLED',
   IS_AI_DATA_POLICY_ENABLED = 'IS_AI_DATA_POLICY_ENABLED',
+  IS_APPLICATION_PRICE_BILLING_ENABLED = 'IS_APPLICATION_PRICE_BILLING_ENABLED',
+  IS_CALENDAR_EVENT_SHARED_ACROSS_CHANNELS_ENABLED = 'IS_CALENDAR_EVENT_SHARED_ACROSS_CHANNELS_ENABLED',
+  IS_CALENDAR_INTERNAL_EVENTS_FILTER_ENABLED = 'IS_CALENDAR_INTERNAL_EVENTS_FILTER_ENABLED',
+  IS_CALENDAR_RECURRING_EVENT_HORIZON_ENABLED = 'IS_CALENDAR_RECURRING_EVENT_HORIZON_ENABLED',
   IS_CHANNEL_VISIBILITY_ENFORCED_ON_API_KEYS = 'IS_CHANNEL_VISIBILITY_ENFORCED_ON_API_KEYS',
+  IS_CHANNEL_VISIBILITY_RLS_ENABLED = 'IS_CHANNEL_VISIBILITY_RLS_ENABLED',
   IS_CONFIGURABLE_SEARCH_FIELDS_ENABLED = 'IS_CONFIGURABLE_SEARCH_FIELDS_ENABLED',
+  IS_CREATE_RECORDS_PERMISSION_ENABLED = 'IS_CREATE_RECORDS_PERMISSION_ENABLED',
   IS_CUSTOMIZABLE_SIDEBAR_ENABLED = 'IS_CUSTOMIZABLE_SIDEBAR_ENABLED',
-  IS_FORMULA_FIELD_ENABLED = 'IS_FORMULA_FIELD_ENABLED',
+  IS_GETTING_STARTED_ENABLED = 'IS_GETTING_STARTED_ENABLED',
   IS_INBOX_OBJECT_NAMING_ENABLED = 'IS_INBOX_OBJECT_NAMING_ENABLED',
   IS_INTERNAL_IMPORT_COLUMN_ENABLED = 'IS_INTERNAL_IMPORT_COLUMN_ENABLED',
   IS_LOOKUP_COLUMNS_ENABLED = 'IS_LOOKUP_COLUMNS_ENABLED',
   IS_MCP_SERVERS_ENABLED = 'IS_MCP_SERVERS_ENABLED',
+  IS_MESSAGE_ATTACHMENT_ENABLED = 'IS_MESSAGE_ATTACHMENT_ENABLED',
   IS_PRIVATE_RECORDS_ENABLED = 'IS_PRIVATE_RECORDS_ENABLED',
   IS_RECORD_GROUP_TABS_ENABLED = 'IS_RECORD_GROUP_TABS_ENABLED',
   IS_RECORD_LEVEL_SHARING_ENABLED = 'IS_RECORD_LEVEL_SHARING_ENABLED',
+  IS_RELATED_RECORD_PATHS_ENABLED = 'IS_RELATED_RECORD_PATHS_ENABLED',
   IS_REST_METADATA_API_NEW_FORMAT_DIRECT = 'IS_REST_METADATA_API_NEW_FORMAT_DIRECT',
+  IS_ROW_LEVEL_PERMISSION_RELATION_HOP_ENABLED = 'IS_ROW_LEVEL_PERMISSION_RELATION_HOP_ENABLED',
   IS_WIDGET_CONDITIONAL_AVAILABILITY_ENABLED = 'IS_WIDGET_CONDITIONAL_AVAILABILITY_ENABLED'
 }
 
@@ -2722,7 +2690,6 @@ export type Field = {
   defaultValue?: Maybe<Scalars['JSON']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   disabledFieldPermissionActions?: Maybe<Array<Scalars['String']['output']>>;
-  formula?: Maybe<Scalars['JSON']['output']>;
   icon?: Maybe<Scalars['String']['output']>;
   id: Scalars['UUID']['output'];
   isActive?: Maybe<Scalars['Boolean']['output']>;
@@ -2937,7 +2904,6 @@ export type FormFieldConfiguration = {
 
 export type FrontComponent = {
   __typename?: 'FrontComponent';
-  applicationFunctionsBaseUrl?: Maybe<Scalars['String']['output']>;
   applicationGrantedCapabilities?: Maybe<Array<Scalars['String']['output']>>;
   applicationGrantedIframeMediaPermissions?: Maybe<Array<IframeMediaPermission>>;
   applicationId: Scalars['UUID']['output'];
@@ -3266,7 +3232,6 @@ export type JobStatus = {
   finishedAt?: Maybe<Scalars['Float']['output']>;
   jobId: Scalars['String']['output'];
   progress?: Maybe<Scalars['Int']['output']>;
-  scheduledAt: Scalars['Float']['output'];
   startedAt?: Maybe<Scalars['Float']['output']>;
   state: JobState;
 };
@@ -3808,6 +3773,7 @@ export type Mutation = {
   claimApplicationRegistrationOwnership: ApplicationRegistration;
   completeAppTarballUpload: ApplicationRegistration;
   completeApplicationFileUploads: CompleteApplicationFileUploadsResult;
+  completeBookCallOnboardingStep: OnboardingStepSuccess;
   completeFileUpload: FileWithSignedUrl;
   completeNewWorkspaceLogoUpload: FileWithSignedUrl;
   completeWorkspaceLogoUpload: FileWithSignedUrl;
@@ -3961,7 +3927,6 @@ export type Mutation = {
   removeRecordShare: RecordSharingDto;
   removeRoleFromAgent: Scalars['Boolean']['output'];
   renewApplicationToken: ApplicationTokenPair;
-  /** @deprecated Refresh tokens are no longer issued; this is removed once the last one expires. */
   renewToken: AuthTokens;
   reopenAgentChatThreadInChannel: Scalars['Boolean']['output'];
   reportAppConnectionAuthFailure: Scalars['Boolean']['output'];
@@ -4212,6 +4177,12 @@ export type MutationCompleteAppTarballUploadArgs = {
 export type MutationCompleteApplicationFileUploadsArgs = {
   applicationUniversalIdentifier: Scalars['String']['input'];
   fileIds: Array<Scalars['UUID']['input']>;
+};
+
+
+export type MutationCompleteBookCallOnboardingStepArgs = {
+  hasBookedCall?: Scalars['Boolean']['input'];
+  isAutoSkipped?: Scalars['Boolean']['input'];
 };
 
 
@@ -5156,6 +5127,11 @@ export type MutationSignInArgs = {
 };
 
 
+export type MutationSignOutArgs = {
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationSignUpArgs = {
   affiliatePartnerName?: InputMaybe<Scalars['String']['input']>;
   captchaToken?: InputMaybe<Scalars['String']['input']>;
@@ -5715,7 +5691,6 @@ export type NavigationMenuItem = {
   updatedAt: Scalars['DateTime']['output'];
   userWorkspaceId?: Maybe<Scalars['UUID']['output']>;
   viewId?: Maybe<Scalars['UUID']['output']>;
-  visibleItemLimit?: Maybe<Scalars['Int']['output']>;
   workflowId?: Maybe<Scalars['UUID']['output']>;
 };
 
@@ -5930,6 +5905,7 @@ export type ObjectRecordsPermissions = {
 
 /** Onboarding status */
 export enum OnboardingStatus {
+  BOOK_CALL = 'BOOK_CALL',
   COMPLETED = 'COMPLETED',
   INVITE_TEAM = 'INVITE_TEAM',
   PLAN_REQUIRED = 'PLAN_REQUIRED',
@@ -7164,7 +7140,6 @@ export type Role = {
   agents: Array<Agent>;
   apiKeys: Array<ApiKeyForRole>;
   applicationId: Scalars['UUID']['output'];
-  areRecordPermissionsEditable: Scalars['Boolean']['output'];
   canAccessAllAgentChatChannels: Scalars['Boolean']['output'];
   canAccessAllTools: Scalars['Boolean']['output'];
   canBeAssignedToAgents: Scalars['Boolean']['output'];
@@ -7481,7 +7456,7 @@ export type SendInboxMessageInput = {
   text: Scalars['String']['input'];
   threadKey: Scalars['String']['input'];
   title: Scalars['String']['input'];
-  toolCalls?: InputMaybe<Array<Scalars['JSON']['input']>>;
+  toolCall?: InputMaybe<Scalars['JSON']['input']>;
   workspaceMemberIds: Array<Scalars['UUID']['input']>;
 };
 
@@ -8007,7 +7982,6 @@ export type UpdateEmailGroupChannelInput = {
 export type UpdateFieldInput = {
   defaultValue?: InputMaybe<Scalars['JSON']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
-  formula?: InputMaybe<Scalars['JSON']['input']>;
   icon?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   isAuditLogged?: InputMaybe<Scalars['Boolean']['input']>;
@@ -8131,7 +8105,6 @@ export type UpdateNavigationMenuItemInput = {
   pageLayoutId?: InputMaybe<Scalars['UUID']['input']>;
   parentId?: InputMaybe<Scalars['UUID']['input']>;
   position?: InputMaybe<Scalars['Float']['input']>;
-  visibleItemLimit?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type UpdateObjectPayload = {
@@ -8389,7 +8362,6 @@ export type UpdateViewInput = {
   kanbanAggregateOperation?: InputMaybe<AggregateOperations>;
   kanbanAggregateOperationFieldMetadataId?: InputMaybe<Scalars['UUID']['input']>;
   kanbanColumnWidth?: InputMaybe<Scalars['Int']['input']>;
-  listPinnedFieldMetadataId?: InputMaybe<Scalars['UUID']['input']>;
   mainGroupByFieldMetadataId?: InputMaybe<Scalars['UUID']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   /** Deprecated: Superseded by objectMetadata.openRecordIn and the workspace member preference; kept one release for API compatibility, no longer read by the frontend. */
@@ -8919,6 +8891,7 @@ export type View = {
   calendarLayout?: Maybe<ViewCalendarLayout>;
   createdAt: Scalars['DateTime']['output'];
   createdByUserWorkspaceId?: Maybe<Scalars['UUID']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   groupLoadLimit?: Maybe<Scalars['Int']['output']>;
   icon: Scalars['String']['output'];
   id: Scalars['UUID']['output'];
@@ -8932,7 +8905,6 @@ export type View = {
   kanbanAggregateOperationFieldMetadataId?: Maybe<Scalars['UUID']['output']>;
   kanbanColumnWidth?: Maybe<Scalars['Int']['output']>;
   key?: Maybe<ViewKey>;
-  listPinnedFieldMetadataId?: Maybe<Scalars['UUID']['output']>;
   mainGroupByFieldMetadataId?: Maybe<Scalars['UUID']['output']>;
   name: Scalars['String']['output'];
   objectMetadataId: Scalars['UUID']['output'];
@@ -8951,6 +8923,8 @@ export type View = {
   viewFilters: Array<ViewFilter>;
   viewGroups: Array<ViewGroup>;
   viewSorts: Array<ViewSort>;
+  /** @deprecated Use isPrivate instead */
+  visibility: ViewVisibility;
   workspaceId: Scalars['UUID']['output'];
 };
 
@@ -8970,6 +8944,7 @@ export type ViewField = {
   aggregateOperation?: Maybe<AggregateOperations>;
   applicationId: Scalars['UUID']['output'];
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   fieldMetadataId: Scalars['UUID']['output'];
   id: Scalars['UUID']['output'];
   isActive: Scalars['Boolean']['output'];
@@ -8993,6 +8968,7 @@ export type ViewField = {
 export type ViewFieldGroup = {
   __typename?: 'ViewFieldGroup';
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['UUID']['output'];
   isActive: Scalars['Boolean']['output'];
   /** @deprecated isOverridden is deprecated */
@@ -9075,6 +9051,7 @@ export type ViewFieldRelationScopeSortInput = {
 export type ViewFilter = {
   __typename?: 'ViewFilter';
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   fieldMetadataId: Scalars['UUID']['output'];
   id: Scalars['UUID']['output'];
   operand: ViewFilterOperand;
@@ -9091,6 +9068,7 @@ export type ViewFilter = {
 export type ViewFilterGroup = {
   __typename?: 'ViewFilterGroup';
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['UUID']['output'];
   logicalOperator: ViewFilterGroupLogicalOperator;
   parentViewFilterGroupId?: Maybe<Scalars['UUID']['output']>;
@@ -9128,6 +9106,7 @@ export enum ViewFilterOperand {
 export type ViewGroup = {
   __typename?: 'ViewGroup';
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   fieldValue: Scalars['String']['output'];
   id: Scalars['UUID']['output'];
   isVisible: Scalars['Boolean']['output'];
@@ -9159,6 +9138,7 @@ export enum ViewPresetFilter {
 export type ViewSort = {
   __typename?: 'ViewSort';
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   direction: ViewSortDirection;
   fieldMetadataId: Scalars['UUID']['output'];
   id: Scalars['UUID']['output'];
@@ -9185,6 +9165,11 @@ export enum ViewType {
   LIST_WIDGET = 'LIST_WIDGET',
   TABLE = 'TABLE',
   TABLE_WIDGET = 'TABLE_WIDGET'
+}
+
+export enum ViewVisibility {
+  UNLISTED = 'UNLISTED',
+  WORKSPACE = 'WORKSPACE'
 }
 
 export type Webhook = {
@@ -9399,6 +9384,7 @@ export enum WorkspaceCompanyEnrichmentOutcome {
 export type WorkspaceCompanyEnrichmentResult = {
   __typename?: 'WorkspaceCompanyEnrichmentResult';
   enrichment?: Maybe<Scalars['JSON']['output']>;
+  isBookCallOnboardingStepPending: Scalars['Boolean']['output'];
   outcome: WorkspaceCompanyEnrichmentOutcome;
   personEnrichment?: Maybe<Scalars['JSON']['output']>;
   personOutcome: WorkspacePersonEnrichmentOutcome;

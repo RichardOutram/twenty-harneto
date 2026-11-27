@@ -1,7 +1,7 @@
 import {
-  buildDeviceConditionalEvaluationNode,
-  type ConditionalEvaluationNode,
-} from 'twenty-shared/conditional-evaluation';
+  buildDeviceConditionalAvailability,
+  type ConditionalAvailabilityNode,
+} from 'twenty-shared/conditional-availability';
 import { STANDARD_PAGE_LAYOUT_UNIVERSAL_IDENTIFIERS } from 'twenty-shared/metadata';
 import { FeatureFlagKey } from 'twenty-shared/types';
 
@@ -38,7 +38,7 @@ const PLANTED_WIDGET_UNIVERSAL_IDENTIFIERS = [
 ];
 
 type WidgetRule = {
-  conditionalAvailability: ConditionalEvaluationNode | null;
+  conditionalAvailability: ConditionalAvailabilityNode | null;
   conditionalAvailabilityExpression: string | null;
   conditionalDisplay: object | null;
 };
@@ -168,12 +168,11 @@ describe('2-63 workspace command - copy page layout widget rules to conditional 
     expect(widgetRules).toEqual({
       [TEXT_RULE_WIDGET_UNIVERSAL_IDENTIFIER]: {
         ...PLANTED_RULES[TEXT_RULE_WIDGET_UNIVERSAL_IDENTIFIER],
-        conditionalAvailability: buildDeviceConditionalEvaluationNode('MOBILE'),
+        conditionalAvailability: buildDeviceConditionalAvailability('MOBILE'),
       },
       [JSON_LOGIC_RULE_WIDGET_UNIVERSAL_IDENTIFIER]: {
         ...PLANTED_RULES[JSON_LOGIC_RULE_WIDGET_UNIVERSAL_IDENTIFIER],
-        conditionalAvailability:
-          buildDeviceConditionalEvaluationNode('DESKTOP'),
+        conditionalAvailability: buildDeviceConditionalAvailability('DESKTOP'),
       },
       [UNREADABLE_RULE_WIDGET_UNIVERSAL_IDENTIFIER]:
         PLANTED_RULES[UNREADABLE_RULE_WIDGET_UNIVERSAL_IDENTIFIER],

@@ -1,4 +1,3 @@
-import { UseGuards } from '@nestjs/common';
 import { Context, Int, Parent, ResolveField } from '@nestjs/graphql';
 
 import { AdminResolver } from 'src/engine/api/graphql/graphql-config/decorators/admin-resolver.decorator';
@@ -8,7 +7,6 @@ import { ApplicationRegistrationConfigurationIssue } from 'src/engine/core-modul
 import { type AdminApplicationRegistrationListItem } from 'src/engine/core-modules/application/application-registration/dtos/paginated-application-registrations.dto';
 import { getApplicationAuthorDisplayName } from 'src/engine/core-modules/application/application-registration/utils/get-application-author-display-name.util';
 import { type IDataloaders } from 'src/engine/dataloaders/dataloader.interface';
-import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 
 @AdminResolver(() => ApplicationRegistrationEntity)
 export class AdminPanelApplicationRegistrationResolver {
@@ -17,7 +15,6 @@ export class AdminPanelApplicationRegistrationResolver {
   ) {}
 
   @ResolveField(() => Boolean)
-  @UseGuards(NoPermissionGuard)
   async isConfigured(
     @Parent()
     registration:
@@ -38,7 +35,6 @@ export class AdminPanelApplicationRegistrationResolver {
   }
 
   @ResolveField(() => [ApplicationRegistrationConfigurationIssue])
-  @UseGuards(NoPermissionGuard)
   async configurationIssues(
     @Parent()
     registration:
@@ -52,7 +48,6 @@ export class AdminPanelApplicationRegistrationResolver {
   }
 
   @ResolveField(() => Int)
-  @UseGuards(NoPermissionGuard)
   async installCount(
     @Parent()
     registration:
@@ -70,13 +65,11 @@ export class AdminPanelApplicationRegistrationResolver {
   }
 
   @ResolveField(() => String, { nullable: true })
-  @UseGuards(NoPermissionGuard)
   author(@Parent() registration: ApplicationRegistrationEntity): string | null {
     return getApplicationAuthorDisplayName(registration.author);
   }
 
   @ResolveField(() => String, { nullable: true })
-  @UseGuards(NoPermissionGuard)
   logoUrl(
     @Parent() registration: ApplicationRegistrationEntity,
   ): string | null {
@@ -86,7 +79,6 @@ export class AdminPanelApplicationRegistrationResolver {
   }
 
   @ResolveField(() => [String])
-  @UseGuards(NoPermissionGuard)
   galleryImagesUrls(
     @Parent() registration: ApplicationRegistrationEntity,
   ): string[] {

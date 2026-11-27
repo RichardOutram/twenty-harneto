@@ -14,27 +14,12 @@ import { sortFlatEntitiesByUniversalIdentifier } from 'src/engine/core-modules/a
 import { ApplicationExportCoverageStatus } from 'src/engine/core-modules/application/enums/application-export-coverage-status.enum';
 import { type AllFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/all-flat-entity-maps.type';
 import { type FlatValidationRule } from 'src/engine/metadata-modules/flat-validation-rule/types/flat-validation-rule.type';
-import { listValidationRuleReadFieldUniversalIdentifiers } from 'src/engine/metadata-modules/validation-rule/utils/list-validation-rule-read-field-universal-identifiers.util';
-import { printFlatValidationRuleExpression } from 'src/engine/metadata-modules/validation-rule/utils/print-flat-validation-rule-expression.util';
 
-const convertFlatValidationRule = ({
-  flatValidationRule,
-  allFlatEntityMaps,
-}: {
-  flatValidationRule: FlatValidationRule;
-  allFlatEntityMaps: Pick<
-    AllFlatEntityMaps,
-    'flatObjectMetadataMaps' | 'flatFieldMetadataMaps'
-  >;
-}): { manifest: ValidationRuleManifest } | { reason: string } => {
-  const expression = printFlatValidationRuleExpression({
-    flatValidationRule,
-    flatObjectMetadataMaps: allFlatEntityMaps.flatObjectMetadataMaps,
-    flatFieldMetadataMaps: allFlatEntityMaps.flatFieldMetadataMaps,
-  });
-
+const convertFlatValidationRule = (
+  flatValidationRule: FlatValidationRule,
+): { manifest: ValidationRuleManifest } | { reason: string } => {
   if (
-    !isNonEmptyString(expression.trim()) ||
+    !isNonEmptyString(flatValidationRule.expression.trim()) ||
     !isNonEmptyString(flatValidationRule.message.trim())
   ) {
     return {
@@ -45,7 +30,6 @@ const convertFlatValidationRule = ({
 
   const manifest = fromFlatValidationRuleToValidationRuleManifest({
     flatValidationRule,
-    expression,
   });
   const reason = getUnreproducedPropertiesReason({
     metadataName: 'validationRule',
@@ -53,7 +37,7 @@ const convertFlatValidationRule = ({
     reproducedUniversalFlatEntity:
       fromValidationRuleManifestToUniversalFlatValidationRule({
         validationRuleManifest: manifest,
-        tree: flatValidationRule.tree,
+        bindings: flatValidationRule.bindings,
         // A sync keeps both of these from the workspace, so a definition never carries them
         isActive: flatValidationRule.isActive,
         applicationUniversalIdentifier:
@@ -65,24 +49,27 @@ const convertFlatValidationRule = ({
   return isDefined(reason) ? { reason } : { manifest };
 };
 
-// Deleting a field keeps it in the tree and turns the rule off, but the pulled expression would not compile
-const getDeletedReadFieldReason = ({
+// Deleting a field keeps its binding and turns the rule off, but the pulled expression would not compile
+const getDeletedBoundFieldReason = ({
   flatValidationRule,
   allFlatEntityMaps,
 }: {
   flatValidationRule: FlatValidationRule;
   allFlatEntityMaps: AllFlatEntityMaps;
-}): string | undefined =>
-  listValidationRuleReadFieldUniversalIdentifiers(flatValidationRule).some(
-    (fieldUniversalIdentifier) =>
+}): string | undefined => {
+  const deletedFieldPath = Object.entries(flatValidationRule.bindings).find(
+    ([, fieldUniversalIdentifier]) =>
       !isDefined(
         allFlatEntityMaps.flatFieldMetadataMaps.byUniversalIdentifier[
           fieldUniversalIdentifier
         ],
       ),
-  )
-    ? 'The rule reads a field that no longer exists in this workspace.'
+  )?.[0];
+
+  return isDefined(deletedFieldPath)
+    ? `The rule reads the field "${deletedFieldPath}", which no longer exists in this workspace.`
     : undefined;
+};
 
 export const reconstructValidationRulesManifest = ({
   applicationAllFlatEntityMaps,
@@ -104,10 +91,7 @@ export const reconstructValidationRulesManifest = ({
   for (const flatValidationRule of sortFlatEntitiesByUniversalIdentifier(
     applicationAllFlatEntityMaps.flatValidationRuleMaps,
   )) {
-    const conversion = convertFlatValidationRule({
-      flatValidationRule,
-      allFlatEntityMaps,
-    });
+    const conversion = convertFlatValidationRule(flatValidationRule);
     const reason =
       getUnresolvableReferenceReason({
         metadataName: 'validationRule',
@@ -129,7 +113,7 @@ export const reconstructValidationRulesManifest = ({
         resolvableReferenceUniversalIdentifiers:
           resolvableFieldUniversalIdentifiers,
       }) ??
-      getDeletedReadFieldReason({ flatValidationRule, allFlatEntityMaps }) ??
+      getDeletedBoundFieldReason({ flatValidationRule, allFlatEntityMaps }) ??
       ('reason' in conversion ? conversion.reason : undefined);
 
     if (isDefined(reason) || 'reason' in conversion) {

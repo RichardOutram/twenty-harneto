@@ -259,6 +259,7 @@ export class WorkflowVersionStepResolver {
   ): Promise<TestMcpToolStepDTO> {
     const { flatApplication } = await this.findWorkflowFlatApplicationOrThrow({
       workspace,
+      userWorkspaceId,
       workflowVersionId,
     });
 
@@ -277,11 +278,13 @@ export class WorkflowVersionStepResolver {
   @UseGuards(AccessPolicyGuard(WORKFLOW_CODE_STEP_ACCESS_POLICY))
   async workflowCodeStepAvailablePackages(
     @AuthWorkspace() workspace: WorkspaceEntity,
+    @AuthUserWorkspaceId() userWorkspaceId: string,
     @Args('workflowVersionId', { type: () => UUIDScalarType })
     workflowVersionId: string,
   ): Promise<Record<string, string>> {
     const { flatApplication } = await this.findWorkflowApplicationOrThrow({
       workspace,
+      userWorkspaceId,
       workflowVersionId,
     });
 
@@ -300,6 +303,7 @@ export class WorkflowVersionStepResolver {
     const { flatApplication, workflowId } =
       await this.findWorkflowApplicationOrThrow({
         workspace,
+        userWorkspaceId,
         workflowVersionId,
       });
 
@@ -317,14 +321,17 @@ export class WorkflowVersionStepResolver {
 
   private async findWorkflowFlatApplicationOrThrow({
     workspace: { id: workspaceId },
+    userWorkspaceId,
     workflowVersionId,
   }: {
     workspace: Pick<WorkspaceEntity, 'id'>;
+    userWorkspaceId: string;
     workflowVersionId: string;
   }): Promise<{ flatApplication: FlatApplication; workflowId: string }> {
     const coreWorkflowVersion =
       await this.coreWorkflowVersionListService.findOneByCoreWorkflowVersionId({
         workspaceId,
+        userWorkspaceId,
         callerApplication: undefined,
         coreWorkflowVersionId: workflowVersionId,
       });
@@ -367,14 +374,17 @@ export class WorkflowVersionStepResolver {
 
   private async findWorkflowApplicationOrThrow({
     workspace,
+    userWorkspaceId,
     workflowVersionId,
   }: {
     workspace: Pick<WorkspaceEntity, 'id' | 'workspaceCustomApplicationId'>;
+    userWorkspaceId: string;
     workflowVersionId: string;
   }): Promise<{ flatApplication: FlatApplication; workflowId: string }> {
     const { flatApplication, workflowId } =
       await this.findWorkflowFlatApplicationOrThrow({
         workspace,
+        userWorkspaceId,
         workflowVersionId,
       });
 

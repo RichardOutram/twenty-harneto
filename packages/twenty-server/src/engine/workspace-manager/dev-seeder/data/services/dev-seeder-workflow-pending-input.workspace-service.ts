@@ -9,6 +9,7 @@ import { assertIsDefinedOrThrow } from 'twenty-shared/utils';
 import { StepStatus, WorkflowActionType } from 'twenty-shared/workflow';
 import { v5 } from 'uuid';
 
+import { UserWorkspaceAuthContextService } from 'src/engine/core-modules/user-workspace/services/user-workspace-auth-context.service';
 import {
   WorkflowVersionEntity,
   WorkflowVersionStatus,
@@ -175,6 +176,7 @@ export class DevSeederWorkflowPendingInputWorkspaceService {
     private readonly coreWorkflowRepository: WorkspaceScopedRepository<WorkflowEntity>,
     @InjectWorkspaceScopedRepository(WorkflowVersionEntity)
     private readonly coreWorkflowVersionRepository: WorkspaceScopedRepository<WorkflowVersionEntity>,
+    private readonly userWorkspaceAuthContextService: UserWorkspaceAuthContextService,
   ) {}
 
   async seed({
@@ -195,7 +197,7 @@ export class DevSeederWorkflowPendingInputWorkspaceService {
         responseFormat: { type: 'text' },
       },
       workspaceId,
-      authContext: undefined,
+      userWorkspaceId: undefined,
     });
 
     for (const agentWorkflow of AGENT_WORKFLOWS_TO_SEED) {
@@ -284,12 +286,18 @@ export class DevSeederWorkflowPendingInputWorkspaceService {
             throw error;
           });
 
+          const { userWorkspaceId } =
+            await this.userWorkspaceAuthContextService.resolveWorkspaceMember({
+              workspaceId,
+              workspaceMemberId:
+                INITIATORS[agentWorkflow.initiator].workspaceMemberId,
+            });
+
           const openedTurn = await this.agentRunConversationService.openTurn({
             workspaceId,
             threadId,
             agentId: agent.id,
-            senderWorkspaceMemberId:
-              INITIATORS[agentWorkflow.initiator].workspaceMemberId,
+            senderUserWorkspaceId: userWorkspaceId,
             senderApplicationId: null,
             messages: [{ role: 'user', content: agentWorkflow.runPrompt }],
             createdBy:
@@ -327,7 +335,7 @@ export class DevSeederWorkflowPendingInputWorkspaceService {
             turnId,
             role: AgentMessageRole.ASSISTANT,
             agentId: agent.id,
-            senderWorkspaceMemberId: null,
+            senderUserWorkspaceId: null,
             isAwaitingAnswer: true,
             parts: mapAiStepsToUIMessageParts([{ content }]),
           });

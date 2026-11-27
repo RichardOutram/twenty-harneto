@@ -5,6 +5,7 @@ import {
   kv,
 } from 'twenty-sdk/logic-function';
 
+import { RELEASE_FLAGS } from 'src/constants/release-flags';
 import { type TeamsTenantClaimConflict } from 'src/features/chat/logic-functions/types/teams-tenant-claim-conflict.type';
 import { buildTeamsConnectedAccountTenantKvKey } from 'src/features/chat/logic-functions/utils/build-teams-connected-account-tenant-kv-key';
 import { buildTeamsTenantClaimConflictKvKey } from 'src/features/chat/logic-functions/utils/build-teams-tenant-claim-conflict-kv-key';
@@ -57,7 +58,9 @@ export const registerTeamsConnection = async ({
   claimedTenantId: string | null;
   conflictingTenantId?: string;
 }> => {
-  const connection = await getConnection(connectedAccountId);
+  const connection = RELEASE_FLAGS.IS_CHAT_ASSISTANT_RELEASED
+    ? await getConnection(connectedAccountId)
+    : undefined;
 
   if (connection?.scope !== 'WORKSPACE') {
     await releaseTeamsConnectionTenant({ connectedAccountId });

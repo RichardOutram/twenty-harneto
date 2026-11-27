@@ -18,7 +18,6 @@ const StyledContainer = styled(StyledWidgetContentContainer)`
 `;
 
 const StyledSection = styled(Section.Root)`
-  align-items: flex-start;
   display: flex;
   flex: 1;
   min-height: 0;

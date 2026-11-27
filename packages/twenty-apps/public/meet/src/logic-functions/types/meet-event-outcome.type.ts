@@ -1,4 +1,0 @@
-export type MeetEventOutcome =
-  | 'IMPORT_QUEUED'
-  | 'EVENT_TYPE_IGNORED'
-  | 'SUBSCRIPTION_WITHOUT_CONNECTION';

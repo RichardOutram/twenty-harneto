@@ -25,10 +25,6 @@ export class AgentDTO {
   @Field(() => UUIDScalarType)
   id: string;
 
-  @IsUUID()
-  @Field(() => UUIDScalarType)
-  universalIdentifier: string;
-
   @IsString()
   @Field()
   name: string;

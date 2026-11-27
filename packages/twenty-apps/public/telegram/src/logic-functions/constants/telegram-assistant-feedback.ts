@@ -1,4 +1,0 @@
-export const TELEGRAM_ASSISTANT_FEEDBACK = {
-  POSITIVE: 'POSITIVE',
-  NEGATIVE: 'NEGATIVE',
-} as const;

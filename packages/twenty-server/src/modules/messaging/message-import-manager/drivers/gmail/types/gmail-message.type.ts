@@ -1,7 +1,4 @@
-import {
-  type ActorMetadata,
-  type MessageParticipantRole,
-} from 'twenty-shared/types';
+import { type MessageParticipantRole } from 'twenty-shared/types';
 
 import { type ExplicitParticipantIdentity } from 'src/modules/messaging/message-import-manager/types/message.type';
 
@@ -25,10 +22,7 @@ export type Participant = {
   displayName: string;
 } & ExplicitParticipantIdentity;
 
-export type ParticipantWithMessageId = Participant & {
-  messageId: string;
-  createdBy?: ActorMetadata;
-};
+export type ParticipantWithMessageId = Participant & { messageId: string };
 
 export type ParticipantWithId = Participant & {
   id: string;

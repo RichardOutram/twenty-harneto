@@ -11,5 +11,4 @@ export type ObjectOptionsContentId =
   | 'addRecordGroup'
   | 'calendarFields'
   | 'calendarView'
-  | 'listPinnedField'
   | 'visibility';

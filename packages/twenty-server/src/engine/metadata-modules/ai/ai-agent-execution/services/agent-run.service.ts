@@ -221,10 +221,10 @@ export class AgentRunService implements AgentRunCallerHandler, OnModuleInit {
       callerApplication,
     });
 
-    const memberWorkspaceMemberId = isUserAuthContext(
+    const memberUserWorkspaceId = isUserAuthContext(
       executionContext.authContext,
     )
-      ? executionContext.authContext.workspaceMemberId
+      ? executionContext.authContext.userWorkspaceId
       : null;
 
     const isContinuingConversation = isDefined(thread);
@@ -283,7 +283,7 @@ export class AgentRunService implements AgentRunCallerHandler, OnModuleInit {
       turnId: runId,
       prompt: {
         messages,
-        senderWorkspaceMemberId: memberWorkspaceMemberId,
+        senderUserWorkspaceId: memberUserWorkspaceId,
         senderApplicationId: callerApplication?.id ?? null,
       },
     });

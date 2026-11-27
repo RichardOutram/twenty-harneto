@@ -13,6 +13,7 @@ export const readSharedChatThreadOperationFactory = ({
       chatMessages(threadId: $threadId) {
         id
         senderWorkspaceMemberId
+        senderUserWorkspaceId
       }
       chatStreamCatchupChunks(threadId: $threadId) {
         chunks

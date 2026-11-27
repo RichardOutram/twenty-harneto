@@ -3,7 +3,6 @@ import { getCoreAgentInitialFormValues } from '@/object-core/agents/utils/getCor
 const agent = {
   __typename: 'Agent' as const,
   id: 'agent-id',
-  universalIdentifier: 'agent-universal-identifier',
   name: 'salesAssistant',
   label: 'Sales assistant',
   description: 'Qualifies leads',

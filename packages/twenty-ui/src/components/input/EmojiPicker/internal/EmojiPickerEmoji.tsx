@@ -2,8 +2,6 @@ import { type EmojiPickerListEmojiProps } from 'frimousse';
 
 import { isDefined } from '@ui/utilities/utils/isDefined';
 
-import styles from '../EmojiPicker.module.scss';
-
 export const EmojiPickerEmoji = ({
   emoji,
   'aria-colindex': columnIndex,
@@ -16,6 +14,6 @@ export const EmojiPickerEmoji = ({
     role="gridcell"
     aria-colindex={isDefined(columnIndex) ? columnIndex + 1 : undefined}
   >
-    <span className={styles.glyph}>{emoji.emoji}</span>
+    {emoji.emoji}
   </button>
 );

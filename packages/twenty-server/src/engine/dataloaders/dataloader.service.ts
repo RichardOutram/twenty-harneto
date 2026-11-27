@@ -228,30 +228,20 @@ export class DataloaderService {
     const agentsByApplicationIdLoader =
       this.createFlatEntitiesByApplicationIdLoader({
         loadFlatEntityMaps: async (workspaceId) => {
-          const {
-            flatAgentMaps,
-            flatRoleTargetByAgentIdMaps,
-            flatObjectMetadataMaps,
-            flatFieldMetadataMaps,
-          } = await this.workspaceCacheService.getOrRecompute(workspaceId, [
-            'flatAgentMaps',
-            'flatRoleTargetByAgentIdMaps',
-            'flatObjectMetadataMaps',
-            'flatFieldMetadataMaps',
-          ]);
+          const { flatAgentMaps, flatRoleTargetByAgentIdMaps } =
+            await this.workspaceCacheService.getOrRecompute(workspaceId, [
+              'flatAgentMaps',
+              'flatRoleTargetByAgentIdMaps',
+            ]);
 
           return {
             flatEntityMaps: flatAgentMaps,
             toDtos: (flatAgents: FlatAgent[]) =>
               flatAgents.map((flatAgent) =>
                 fromFlatAgentWithRoleIdToAgentDto({
-                  flatAgentWithRoleId: {
-                    ...flatAgent,
-                    roleId:
-                      flatRoleTargetByAgentIdMaps[flatAgent.id]?.roleId ?? null,
-                  },
-                  flatObjectMetadataMaps,
-                  flatFieldMetadataMaps,
+                  ...flatAgent,
+                  roleId:
+                    flatRoleTargetByAgentIdMaps[flatAgent.id]?.roleId ?? null,
                 }),
               ),
           };
@@ -299,34 +289,21 @@ export class DataloaderService {
       });
     const logicFunctionsByApplicationIdLoader =
       this.createFlatEntitiesByApplicationIdLoader({
-        loadFlatEntityMaps: async (workspaceId) => {
-          const {
-            flatLogicFunctionMaps,
-            flatObjectMetadataMaps,
-            flatFieldMetadataMaps,
-          } = await this.workspaceCacheService.getOrRecompute(workspaceId, [
-            'flatLogicFunctionMaps',
-            'flatObjectMetadataMaps',
-            'flatFieldMetadataMaps',
-          ]);
-
-          return {
-            flatEntityMaps: flatLogicFunctionMaps,
-            toDtos: (flatLogicFunctions: FlatLogicFunction[]) =>
-              flatLogicFunctions
-                .filter(
-                  (flatLogicFunction) =>
-                    !isDefined(flatLogicFunction.deletedAt),
-                )
-                .map((flatLogicFunction) =>
-                  fromFlatLogicFunctionToLogicFunctionDto({
-                    flatLogicFunction,
-                    flatObjectMetadataMaps,
-                    flatFieldMetadataMaps,
-                  }),
-                ),
-          };
-        },
+        loadFlatEntityMaps: async (workspaceId) => ({
+          flatEntityMaps: (
+            await this.workspaceCacheService.getOrRecompute(workspaceId, [
+              'flatLogicFunctionMaps',
+            ])
+          ).flatLogicFunctionMaps,
+          toDtos: (flatLogicFunctions: FlatLogicFunction[]) =>
+            flatLogicFunctions
+              .filter(
+                (flatLogicFunction) => !isDefined(flatLogicFunction.deletedAt),
+              )
+              .map((flatLogicFunction) =>
+                fromFlatLogicFunctionToLogicFunctionDto({ flatLogicFunction }),
+              ),
+        }),
       });
     const objectMetadataByApplicationIdLoader =
       this.createFlatEntitiesByApplicationIdLoader({
@@ -756,12 +733,14 @@ export class DataloaderService {
           flatEntityIds: flatView.viewFieldGroupIds,
           flatEntityMaps: flatViewFieldGroupMaps,
         })
-          .filter((flatViewFieldGroup) =>
-            resolveEffectiveFlatEntityProperty({
-              metadataName: 'viewFieldGroup',
-              flatEntity: flatViewFieldGroup,
-              property: 'isActive',
-            }),
+          .filter(
+            (flatViewFieldGroup) =>
+              flatViewFieldGroup.deletedAt === null &&
+              resolveEffectiveFlatEntityProperty({
+                metadataName: 'viewFieldGroup',
+                flatEntity: flatViewFieldGroup,
+                property: 'isActive',
+              }),
           )
           .map(fromFlatViewFieldGroupToViewFieldGroupDto);
       });
@@ -797,6 +776,7 @@ export class DataloaderService {
       )) {
         if (
           !isDefined(flatViewField) ||
+          flatViewField.deletedAt !== null ||
           !resolveEffectiveFlatEntityProperty({
             metadataName: 'viewField',
             flatEntity: flatViewField,
@@ -878,12 +858,14 @@ export class DataloaderService {
           flatEntityIds: flatView.viewFieldIds,
           flatEntityMaps: flatViewFieldMaps,
         })
-          .filter((flatViewField) =>
-            resolveEffectiveFlatEntityProperty({
-              metadataName: 'viewField',
-              flatEntity: flatViewField,
-              property: 'isActive',
-            }),
+          .filter(
+            (flatViewField) =>
+              flatViewField.deletedAt === null &&
+              resolveEffectiveFlatEntityProperty({
+                metadataName: 'viewField',
+                flatEntity: flatViewField,
+                property: 'isActive',
+              }),
           )
           .map(fromFlatViewFieldToViewFieldDto);
       });
@@ -1157,8 +1139,6 @@ export class DataloaderService {
           flatRoleTargetMaps,
           flatAgentMaps,
           flatApplicationMaps,
-          flatObjectMetadataMaps,
-          flatFieldMetadataMaps,
         } =
           await this.flatEntityMapsCacheService.getOrRecomputeManyOrAllFlatEntityMaps(
             {
@@ -1168,8 +1148,6 @@ export class DataloaderService {
                 'flatRoleTargetMaps',
                 'flatAgentMaps',
                 'flatApplicationMaps',
-                'flatObjectMetadataMaps',
-                'flatFieldMetadataMaps',
               ],
             },
           );
@@ -1199,11 +1177,7 @@ export class DataloaderService {
               isDefined(flatApplicationMaps.byId[flatAgent.applicationId]),
             )
             .map((flatAgent) =>
-              fromFlatAgentWithRoleIdToAgentDto({
-                flatAgentWithRoleId: { ...flatAgent, roleId },
-                flatObjectMetadataMaps,
-                flatFieldMetadataMaps,
-              }),
+              fromFlatAgentWithRoleIdToAgentDto({ ...flatAgent, roleId }),
             );
         });
       },

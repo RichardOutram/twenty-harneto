@@ -16,11 +16,13 @@ import { recordBoardCardIsExpandedComponentState } from '@/object-record/record-
 import { RecordBoardComponentInstanceContext } from '@/object-record/record-board/states/contexts/RecordBoardComponentInstanceContext';
 import { RecordCard } from '@/object-record/record-card/components/RecordCard';
 import { RecordDragMultiDragStack } from '@/object-record/record-drag/components/RecordDragMultiDragStack';
+import { draggedRecordIdsComponentState } from '@/object-record/record-drag/states/draggedRecordIdsComponentState';
 import { isRecordIdSecondaryDragMultipleComponentFamilyState } from '@/object-record/record-drag/states/isRecordIdSecondaryDragMultipleComponentFamilyState';
 import { useOpenRecordFromIndexView } from '@/object-record/record-index/hooks/useOpenRecordFromIndexView';
 import { useAvailableComponentInstanceIdOrThrow } from '@/ui/utilities/state/component-state/hooks/useAvailableComponentInstanceIdOrThrow';
 import { useAtomComponentFamilyStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentFamilyStateValue';
 import { useAtomComponentState } from '@/ui/utilities/state/jotai/hooks/useAtomComponentState';
+import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
 import { useGetCurrentViewOnly } from '@/views/hooks/useGetCurrentViewOnly';
 import { styled } from '@linaria/react';
 import { useContext } from 'react';
@@ -41,8 +43,9 @@ const StyledBoardCardWrapper = styled.div`
 `;
 
 export const RecordBoardCard = () => {
-  const { recordId, rowIndex, columnIndex, isDragOverlay, isMultiDragOverlay } =
-    useContext(RecordBoardCardContext);
+  const { recordId, rowIndex, columnIndex, isDragOverlay } = useContext(
+    RecordBoardCardContext,
+  );
 
   const recordBoardId = useAvailableComponentInstanceIdOrThrow(
     RecordBoardComponentInstanceContext,
@@ -52,6 +55,12 @@ export const RecordBoardCard = () => {
     isRecordIdSecondaryDragMultipleComponentFamilyState,
     { recordId },
   );
+
+  const draggedRecordIds = useAtomComponentStateValue(
+    draggedRecordIdsComponentState,
+  );
+
+  const isMultiDragOverlay = isDragOverlay && draggedRecordIds.length > 1;
 
   const { currentView } = useGetCurrentViewOnly();
 

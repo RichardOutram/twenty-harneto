@@ -1,4 +1,5 @@
 import { useApolloClient } from '@apollo/client/react';
+import { isUndefined } from '@sniptt/guards';
 import { useStore } from 'jotai';
 import { useCallback } from 'react';
 import { isDefined, isNonEmptyArray } from 'twenty-shared/utils';
@@ -7,7 +8,9 @@ import { v4 } from 'uuid';
 import { AI_CHAT_NEW_THREAD_DEFAULT_RECIPIENTS } from '@/ai-chat/composer/constants/AiChatNewThreadDefaultRecipients';
 import { useOptimisticallyRestoreOnSend } from '@/ai-chat/composer/hooks/useOptimisticallyRestoreOnSend';
 import { useWarnAboutParticipantMentionsNotAdded } from '@/ai-chat/composer/hooks/useWarnAboutParticipantMentionsNotAdded';
+import { aiChatComposerAttachmentsFamilyState } from '@/ai-chat/composer/states/aiChatComposerAttachmentsFamilyState';
 import { aiChatComposerNewThreadRecipientsFamilyState } from '@/ai-chat/composer/states/aiChatComposerNewThreadRecipientsFamilyState';
+import { aiChatThreadReplyLastBrowsingContextFamilyState } from '@/ai-chat/composer/states/aiChatThreadReplyLastBrowsingContextFamilyState';
 import { aiChatThreadReplyUnconfirmedFirstMessageFamilyState } from '@/ai-chat/composer/states/aiChatThreadReplyUnconfirmedFirstMessageFamilyState';
 import { type AiChatMessageToSend } from '@/ai-chat/composer/types/AiChatMessageToSend';
 import { createOptimisticAiChatUserMessage } from '@/ai-chat/composer/utils/createOptimisticAiChatUserMessage';
@@ -24,8 +27,6 @@ import { aiChatThreadReplyStatusFamilyState } from '@/ai-chat/states/reply/aiCha
 import { aiChatThreadIsFetchingMessagesFamilyState } from '@/ai-chat/states/server/aiChatThreadIsFetchingMessagesFamilyState';
 import { useAttachAiChatThreadToRecord } from '@/ai-chat/threads/hooks/useAttachAiChatThreadToRecord';
 import { useRefreshAiChatThreadPermissions } from '@/ai-chat/threads/hooks/useRefreshAiChatThreadPermissions';
-import { cancelPendingAiChatToolCallApprovals } from '@/ai-chat/tool-calls/utils/cancelPendingAiChatToolCallApprovals';
-import { getPendingAiChatToolCallApprovals } from '@/ai-chat/tool-calls/utils/getPendingAiChatToolCallApprovals';
 import { isAiChatCreditsExhaustedError } from '@/ai-chat/usage/utils/isAiChatCreditsExhaustedError';
 import { endAiChatReplyStatus } from '@/ai-chat/utils/endAiChatReplyStatus';
 import { getAiChatModelIdForRequest } from '@/ai-chat/utils/getAiChatModelIdForRequest';
@@ -62,7 +63,6 @@ export const useSendAiChatMessageToThread = () => {
       newThreadRecipients,
       serializedContentToSend,
       contentToSend,
-      attachments,
       participantMentions,
       initialRecipients,
       isAssistantMentioned,
@@ -73,7 +73,22 @@ export const useSendAiChatMessageToThread = () => {
     }: AiChatMessageToSend) => {
       const isSendingMessageAtom =
         aiChatThreadReplyIsSendingFamilyState.atomFamily({ threadId });
-      const fileIds = attachments.map(({ fileId }) => fileId);
+      const uploadedFilesAtom = aiChatComposerAttachmentsFamilyState.atomFamily(
+        { threadId },
+      );
+      const aiChatComposerAttachments = isDirectMessage
+        ? []
+        : store.get(uploadedFilesAtom);
+      const browsingContext = getBrowsingContext();
+      const lastSentBrowsingContextAtom =
+        aiChatThreadReplyLastBrowsingContextFamilyState.atomFamily(threadId);
+      const lastSentBrowsingContext = store.get(lastSentBrowsingContextAtom);
+      const isBrowsingContextChanged = isUndefined(lastSentBrowsingContext)
+        ? isDefined(browsingContext)
+        : !isDeeplyEqual(browsingContext, lastSentBrowsingContext, {
+            strict: true,
+          });
+      const fileIds = aiChatComposerAttachments.map(({ fileId }) => fileId);
       const unconfirmedFirstMessageAtom =
         aiChatThreadReplyUnconfirmedFirstMessageFamilyState.atomFamily(
           threadId,
@@ -121,7 +136,7 @@ export const useSendAiChatMessageToThread = () => {
         createOptimisticAiChatUserMessage({
           messageId,
           text: contentToSend,
-          attachments,
+          attachments: aiChatComposerAttachments,
           createdAt: optimisticMessageCreatedAt,
           senderWorkspaceMemberId: store.get(currentWorkspaceMemberState.atom)
             ?.id,
@@ -133,15 +148,14 @@ export const useSendAiChatMessageToThread = () => {
         getAiChatReplyStatusUnlessStreaming('awaiting-first-chunk'),
       );
 
-      const fileAttachments = attachments.map((file) => ({
+      const fileAttachments = aiChatComposerAttachments.map((file) => ({
         id: file.fileId,
         filename: file.filename,
       }));
 
-      const pendingApprovalToolCallIdsAtSend =
-        getPendingAiChatToolCallApprovals(store.get(messagesAtom)).map(
-          ({ toolCallId }) => toolCallId,
-        );
+      if (!isDirectMessage) {
+        store.set(uploadedFilesAtom, []);
+      }
 
       store.set(isSendingMessageAtom, true);
 
@@ -152,7 +166,10 @@ export const useSendAiChatMessageToThread = () => {
             threadId,
             text: contentToSend,
             messageId,
-            browsingContext: isDirectMessage ? null : getBrowsingContext(),
+            browsingContext:
+              isDirectMessage || !isBrowsingContextChanged
+                ? null
+                : browsingContext,
             modelId: isDirectMessage
               ? undefined
               : getAiChatModelIdForRequest(store),
@@ -182,21 +199,16 @@ export const useSendAiChatMessageToThread = () => {
           data?.sendChatMessage.queued ||
           isDefined(data?.sendChatMessage.streamId);
 
-        if (isDefined(data?.sendChatMessage.streamId)) {
-          store.set(messagesAtom, (messages) =>
-            cancelPendingAiChatToolCallApprovals({
-              messages,
-              toolCallIds: pendingApprovalToolCallIdsAtSend,
-            }),
-          );
-        }
-
         if (isAssistantReplying) {
           if (!isAiChatCreditsExhaustedError(store.get(errorAtom))) {
             store.set(
               currentWorkspaceState.atom,
               markWorkspaceCreditsAvailable,
             );
+          }
+
+          if (isBrowsingContextChanged) {
+            store.set(lastSentBrowsingContextAtom, browsingContext);
           }
         } else {
           store.set(
@@ -259,7 +271,6 @@ export const useSendAiChatMessageToThread = () => {
         }
 
         removeOptimisticUserMessage();
-        refetchAiChatThreadMessages(threadId);
         store.set(errorAtom, toAiChatError(error));
 
         if (isAiChatCreditsExhaustedError(error)) {
@@ -270,7 +281,7 @@ export const useSendAiChatMessageToThread = () => {
           store,
           threadId,
           serializedContent: serializedContentToSend,
-          attachments,
+          attachments: aiChatComposerAttachments,
           quotedMessageId,
         });
       } finally {

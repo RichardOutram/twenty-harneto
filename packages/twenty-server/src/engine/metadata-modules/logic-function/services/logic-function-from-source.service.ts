@@ -1,7 +1,6 @@
 import { msg } from '@lingui/core/macro';
 import { Injectable } from '@nestjs/common';
 import crypto from 'crypto';
-import { type DatabaseEventTriggerSettings } from 'twenty-shared/application';
 import { isDefined } from 'twenty-shared/utils';
 import { v4 } from 'uuid';
 
@@ -26,7 +25,6 @@ import { fromCreateLogicFunctionFromSourceInputToUniversalFlatLogicFunctionToCre
 import { fromFlatLogicFunctionToLogicFunctionDto } from 'src/engine/metadata-modules/logic-function/utils/from-flat-logic-function-to-logic-function-dto.util';
 import { fromLogicFunctionExecuteResultToDTO } from 'src/engine/metadata-modules/logic-function/utils/from-logic-function-execute-result-to-dto.util';
 import { fromUpdateLogicFunctionFromSourceInputToFlatLogicFunctionToUpdate } from 'src/engine/metadata-modules/logic-function/utils/from-update-logic-function-from-source-input-to-flat-logic-function-to-update.util';
-import { computeDatabaseEventTriggerSettingsOrThrow } from 'src/engine/workspace-event-emitter/utils/compute-database-event-trigger-settings-or-throw.util';
 import { WorkspaceMigrationBuilderException } from 'src/engine/workspace-manager/workspace-migration/exceptions/workspace-migration-builder-exception';
 import { WorkspaceMigrationValidateBuildAndRunService } from 'src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service';
 
@@ -42,20 +40,12 @@ export class LogicFunctionFromSourceService {
   ) {}
 
   async createOneFromSource({
-    input: inputWithConditionText,
+    input,
     workspaceId,
   }: {
     input: CreateLogicFunctionFromSourceInput;
     workspaceId: string;
   }): Promise<LogicFunctionDTO> {
-    const input = {
-      ...inputWithConditionText,
-      databaseEventTriggerSettings:
-        await this.computeDatabaseEventTriggerSettingsOrThrow({
-          settings: inputWithConditionText.databaseEventTriggerSettings,
-          workspaceId,
-        }),
-    };
     const { workspaceCustomFlatApplication: ownerFlatApplication } =
       await this.applicationService.findWorkspaceTwentyStandardAndCustomApplicationOrThrow(
         { workspaceId },
@@ -252,20 +242,7 @@ export class LogicFunctionFromSourceService {
 
     const flatLogicFunctionToUpdate =
       fromUpdateLogicFunctionFromSourceInputToFlatLogicFunctionToUpdate({
-        updateLogicFunctionFromSourceInput: {
-          ...updateLogicFunctionFromSourceInput,
-          update: {
-            ...updateLogicFunctionFromSourceInput.update,
-            databaseEventTriggerSettings:
-              await this.computeDatabaseEventTriggerSettingsOrThrow({
-                settings:
-                  updateLogicFunctionFromSourceInput.update
-                    .databaseEventTriggerSettings,
-                storedSettings: flatLogicFunction.databaseEventTriggerSettings,
-                workspaceId,
-              }),
-          },
-        },
+        updateLogicFunctionFromSourceInput,
         existingFlatLogicFunction: flatLogicFunction,
       });
 
@@ -322,18 +299,8 @@ export class LogicFunctionFromSourceService {
       );
     }
 
-    const { flatObjectMetadataMaps, flatFieldMetadataMaps } =
-      await this.flatEntityMapsCacheService.getOrRecomputeManyOrAllFlatEntityMaps(
-        {
-          workspaceId,
-          flatMapsKeys: ['flatObjectMetadataMaps', 'flatFieldMetadataMaps'],
-        },
-      );
-
     return fromFlatLogicFunctionToLogicFunctionDto({
       flatLogicFunction: existingFlatLogicFunction,
-      flatObjectMetadataMaps,
-      flatFieldMetadataMaps,
     });
   }
 
@@ -453,19 +420,11 @@ export class LogicFunctionFromSourceService {
     id: string;
     workspaceId: string;
   }): Promise<LogicFunctionDTO> {
-    const {
-      flatLogicFunctionMaps,
-      flatObjectMetadataMaps,
-      flatFieldMetadataMaps,
-    } =
+    const { flatLogicFunctionMaps } =
       await this.flatEntityMapsCacheService.getOrRecomputeManyOrAllFlatEntityMaps(
         {
           workspaceId,
-          flatMapsKeys: [
-            'flatLogicFunctionMaps',
-            'flatObjectMetadataMaps',
-            'flatFieldMetadataMaps',
-          ],
+          flatMapsKeys: ['flatLogicFunctionMaps'],
         },
       );
 
@@ -474,48 +433,6 @@ export class LogicFunctionFromSourceService {
         flatEntityId: id,
         flatEntityMaps: flatLogicFunctionMaps,
       }),
-      flatObjectMetadataMaps,
-      flatFieldMetadataMaps,
-    });
-  }
-
-  private async computeDatabaseEventTriggerSettingsOrThrow<
-    TSettings extends DatabaseEventTriggerSettings | null | undefined,
-  >({
-    settings,
-    storedSettings,
-    workspaceId,
-  }: {
-    settings: TSettings;
-    storedSettings?: DatabaseEventTriggerSettings | null;
-    workspaceId: string;
-  }): Promise<TSettings | DatabaseEventTriggerSettings> {
-    if (!isDefined(settings)) {
-      return settings;
-    }
-
-    const { flatObjectMetadataMaps, flatFieldMetadataMaps } =
-      await this.flatEntityMapsCacheService.getOrRecomputeManyOrAllFlatEntityMaps(
-        {
-          workspaceId,
-          flatMapsKeys: ['flatObjectMetadataMaps', 'flatFieldMetadataMaps'],
-        },
-      );
-
-    return computeDatabaseEventTriggerSettingsOrThrow({
-      settings,
-      storedSettings: isDefined(storedSettings) ? [storedSettings] : [],
-      flatObjectMetadataMaps,
-      flatFieldMetadataMaps,
-      throwInvalidCondition: ({ condition, reason }) => {
-        throw new LogicFunctionException(
-          `Condition "${condition}" of the database event trigger is invalid: ${reason}`,
-          LogicFunctionExceptionCode.INVALID_LOGIC_FUNCTION_INPUT,
-          {
-            userFriendlyMessage: msg`The condition of the database event trigger is invalid`,
-          },
-        );
-      },
     });
   }
 }

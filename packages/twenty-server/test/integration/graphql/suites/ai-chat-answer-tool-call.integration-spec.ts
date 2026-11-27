@@ -64,7 +64,7 @@ describe('Answering a chat tool call', () => {
     const userMessage = await chat.addMessage({
       workspaceId,
       threadId,
-      workspaceMemberId,
+      userWorkspaceId,
       uiMessage: {
         role: AgentMessageRole.USER,
         parts: [{ type: 'text', text: 'Draft a quote' }],

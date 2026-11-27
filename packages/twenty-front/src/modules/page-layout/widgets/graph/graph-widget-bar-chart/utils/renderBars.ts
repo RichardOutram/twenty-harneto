@@ -1,4 +1,3 @@
-import { BAR_CHART_CONSTANTS } from '@/page-layout/widgets/graph/graph-widget-bar-chart/constants/BarChartConstants';
 import { LEGEND_HIGHLIGHT_DIMMED_OPACITY } from '@/page-layout/widgets/graph/constants/LegendHighlightDimmedOpacity';
 import { type BarPosition } from '@/page-layout/widgets/graph/graph-widget-bar-chart/types/BarPosition';
 import {
@@ -28,17 +27,6 @@ export const renderBars = ({
 
     const isNegative = bar.value < 0;
 
-    const segmentSize = isVertical ? bar.height : bar.width;
-    const segmentGap = bar.shouldRoundFreeEnd
-      ? 0
-      : Math.min(
-          BAR_CHART_CONSTANTS.STACKED_SEGMENT_GAP,
-          Math.max(
-            0,
-            segmentSize - BAR_CHART_CONSTANTS.MINIMUM_VISIBLE_SEGMENT_SIZE,
-          ),
-        );
-
     if (isVertical) {
       const roundTop = bar.shouldRoundFreeEnd && !isNegative;
       const roundBottom = bar.shouldRoundFreeEnd && isNegative;
@@ -46,9 +34,9 @@ export const renderBars = ({
       drawRoundedRect({
         ctx,
         x: bar.x,
-        y: isNegative ? bar.y : bar.y + segmentGap,
+        y: bar.y,
         width: bar.width,
-        height: Math.max(0, bar.height - segmentGap),
+        height: bar.height,
         radius: borderRadius,
         roundTop,
         roundBottom,
@@ -59,9 +47,9 @@ export const renderBars = ({
 
       drawHorizontalRoundedRect({
         ctx,
-        x: isNegative ? bar.x + segmentGap : bar.x,
+        x: bar.x,
         y: bar.y,
-        width: Math.max(0, bar.width - segmentGap),
+        width: bar.width,
         height: bar.height,
         radius: borderRadius,
         roundLeft,

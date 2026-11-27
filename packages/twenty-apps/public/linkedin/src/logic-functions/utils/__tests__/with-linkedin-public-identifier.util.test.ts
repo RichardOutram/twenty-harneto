@@ -4,7 +4,6 @@ const mocks = vi.hoisted(() => ({
   kvGet: vi.fn(),
   kvSet: vi.fn(),
   getUnipileUser: vi.fn(),
-  consumeLinkedinProfileLookupOrThrow: vi.fn(),
 }));
 
 vi.mock('twenty-sdk/logic-function', () => ({
@@ -15,15 +14,7 @@ vi.mock('src/unipile/utils/get-unipile-user.util', () => ({
   getUnipileUser: mocks.getUnipileUser,
 }));
 
-vi.mock(
-  'src/logic-functions/utils/consume-linkedin-profile-lookup-or-throw.util',
-  () => ({
-    consumeLinkedinProfileLookupOrThrow:
-      mocks.consumeLinkedinProfileLookupOrThrow,
-  }),
-);
-
-const { UnipileRateLimitError, UnipileRequestError } =
+const { UnipileRequestError } =
   await import('src/unipile/utils/request-unipile.util');
 
 const { withLinkedinPublicIdentifier } =
@@ -40,18 +31,13 @@ describe('withLinkedinPublicIdentifier', () => {
     vi.clearAllMocks();
     vi.spyOn(console, 'warn').mockImplementation(() => undefined);
     mocks.kvGet.mockResolvedValue(null);
-    mocks.consumeLinkedinProfileLookupOrThrow.mockResolvedValue(undefined);
   });
 
   it('keeps a user that already carries its public identifier', async () => {
     const user = { ...DAPHNE, public_identifier: 'daphne-muller' };
 
     await expect(
-      withLinkedinPublicIdentifier({
-        unipileAccountId: 'acc_1',
-        dailyLookupLimit: 60,
-        user,
-      }),
+      withLinkedinPublicIdentifier({ unipileAccountId: 'acc_1', user }),
     ).resolves.toBe(user);
     expect(mocks.kvGet).not.toHaveBeenCalled();
     expect(mocks.getUnipileUser).not.toHaveBeenCalled();
@@ -63,14 +49,12 @@ describe('withLinkedinPublicIdentifier', () => {
     await expect(
       withLinkedinPublicIdentifier({
         unipileAccountId: 'acc_1',
-        dailyLookupLimit: 60,
         user: DAPHNE,
         shouldLookUp,
       }),
     ).resolves.toBe(DAPHNE);
     expect(shouldLookUp).toHaveBeenCalledOnce();
     expect(mocks.getUnipileUser).not.toHaveBeenCalled();
-    expect(mocks.consumeLinkedinProfileLookupOrThrow).not.toHaveBeenCalled();
   });
 
   it('uses the cache without asking whether to look up', async () => {
@@ -81,7 +65,6 @@ describe('withLinkedinPublicIdentifier', () => {
     await expect(
       withLinkedinPublicIdentifier({
         unipileAccountId: 'acc_1',
-        dailyLookupLimit: 60,
         user: DAPHNE,
         shouldLookUp,
       }),
@@ -93,17 +76,12 @@ describe('withLinkedinPublicIdentifier', () => {
     mocks.kvGet.mockResolvedValue('daphne-muller');
 
     await expect(
-      withLinkedinPublicIdentifier({
-        unipileAccountId: 'acc_1',
-        dailyLookupLimit: 60,
-        user: DAPHNE,
-      }),
+      withLinkedinPublicIdentifier({ unipileAccountId: 'acc_1', user: DAPHNE }),
     ).resolves.toEqual({ ...DAPHNE, public_identifier: 'daphne-muller' });
     expect(mocks.kvGet).toHaveBeenCalledExactlyOnceWith(
       'linkedin-public-identifier:ACoDAPHNE',
     );
     expect(mocks.getUnipileUser).not.toHaveBeenCalled();
-    expect(mocks.consumeLinkedinProfileLookupOrThrow).not.toHaveBeenCalled();
   });
 
   it('fetches and caches the public identifier of an unknown user', async () => {
@@ -113,11 +91,7 @@ describe('withLinkedinPublicIdentifier', () => {
     });
 
     await expect(
-      withLinkedinPublicIdentifier({
-        unipileAccountId: 'acc_1',
-        dailyLookupLimit: 60,
-        user: DAPHNE,
-      }),
+      withLinkedinPublicIdentifier({ unipileAccountId: 'acc_1', user: DAPHNE }),
     ).resolves.toEqual({ ...DAPHNE, public_identifier: 'daphne-muller' });
     expect(mocks.getUnipileUser).toHaveBeenCalledExactlyOnceWith({
       accountId: 'acc_1',
@@ -127,27 +101,6 @@ describe('withLinkedinPublicIdentifier', () => {
       'linkedin-public-identifier:ACoDAPHNE',
       'daphne-muller',
     );
-    expect(
-      mocks.consumeLinkedinProfileLookupOrThrow,
-    ).toHaveBeenCalledExactlyOnceWith({
-      unipileAccountId: 'acc_1',
-      dailyLimit: 60,
-    });
-  });
-
-  it('does not look up a profile once the lookups of the day are used', async () => {
-    mocks.consumeLinkedinProfileLookupOrThrow.mockRejectedValue(
-      new UnipileRateLimitError('No lookup left today', 3600),
-    );
-
-    await expect(
-      withLinkedinPublicIdentifier({
-        unipileAccountId: 'acc_1',
-        dailyLookupLimit: 60,
-        user: DAPHNE,
-      }),
-    ).rejects.toThrow('No lookup left today');
-    expect(mocks.getUnipileUser).not.toHaveBeenCalled();
   });
 
   it('fails on a temporary lookup error rather than linking a member id URL', async () => {
@@ -156,11 +109,7 @@ describe('withLinkedinPublicIdentifier', () => {
     );
 
     await expect(
-      withLinkedinPublicIdentifier({
-        unipileAccountId: 'acc_1',
-        dailyLookupLimit: 60,
-        user: DAPHNE,
-      }),
+      withLinkedinPublicIdentifier({ unipileAccountId: 'acc_1', user: DAPHNE }),
     ).rejects.toThrow('(429)');
   });
 
@@ -170,11 +119,7 @@ describe('withLinkedinPublicIdentifier', () => {
     );
 
     await expect(
-      withLinkedinPublicIdentifier({
-        unipileAccountId: 'acc_1',
-        dailyLookupLimit: 60,
-        user: DAPHNE,
-      }),
+      withLinkedinPublicIdentifier({ unipileAccountId: 'acc_1', user: DAPHNE }),
     ).resolves.toBe(DAPHNE);
     expect(mocks.kvSet).not.toHaveBeenCalled();
   });

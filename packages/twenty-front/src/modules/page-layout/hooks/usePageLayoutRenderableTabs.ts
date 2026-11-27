@@ -1,10 +1,6 @@
-import { inboxNamesByLegacyNameSelector } from '@/ai-chat/states/selectors/inboxNamesByLegacyNameSelector';
-import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import { useObjectMetadataItems } from '@/object-metadata/hooks/useObjectMetadataItems';
-import { WIDGET_TYPE_TO_RELATION_FIELD_NAME } from '@/page-layout/constants/WidgetTypeToRelationFieldName';
 import { useCurrentPageLayoutOrThrow } from '@/page-layout/hooks/useCurrentPageLayoutOrThrow';
 import { useIsPageLayoutInEditMode } from '@/page-layout/hooks/useIsPageLayoutInEditMode';
-import { useIsPageLayoutWidgetReadable } from '@/page-layout/hooks/useIsPageLayoutWidgetReadable';
 import { useWidgetVisibilityContext } from '@/page-layout/hooks/useWidgetVisibilityContext';
 import { getIsFirstTabPinned } from '@/page-layout/utils/getIsFirstTabPinned';
 import { getTabsByDisplayMode } from '@/page-layout/utils/getTabsByDisplayMode';
@@ -14,7 +10,6 @@ import { useLayoutRenderingContext } from '@/ui/layout/contexts/LayoutRenderingC
 import { useWorkspaceSurface } from '@/ui/layout/hooks/useWorkspaceSurface';
 import { isDefined } from 'twenty-shared/utils';
 import { useIsMobile } from 'twenty-ui/utilities';
-import { WidgetType } from '~/generated-metadata/graphql';
 
 export const usePageLayoutRenderableTabs = () => {
   const isMobile = useIsMobile();
@@ -24,10 +19,6 @@ export const usePageLayoutRenderableTabs = () => {
   const isPageLayoutInEditMode = useIsPageLayoutInEditMode();
   const { objectMetadataItems } = useObjectMetadataItems();
   const widgetVisibilityContext = useWidgetVisibilityContext();
-  const isWidgetReadable = useIsPageLayoutWidgetReadable();
-  const inboxNamesByLegacyName = useAtomStateValue(
-    inboxNamesByLegacyNameSelector,
-  );
 
   const targetObjectMetadataItem = isDefined(targetRecordIdentifier)
     ? objectMetadataItems.find(
@@ -36,13 +27,8 @@ export const usePageLayoutRenderableTabs = () => {
       )
     : undefined;
 
-  const tabsWithReadableWidgets = currentPageLayout.tabs.map((tab) => ({
-    ...tab,
-    widgets: tab.widgets.filter(isWidgetReadable),
-  }));
-
   const tabsWithVisibleWidgets = getTabsWithVisibleWidgets({
-    tabs: tabsWithReadableWidgets,
+    tabs: currentPageLayout.tabs,
     isEditMode: isPageLayoutInEditMode,
     context: widgetVisibilityContext,
   });
@@ -53,11 +39,6 @@ export const usePageLayoutRenderableTabs = () => {
     : getTabsRenderableForTargetObject({
         tabs: tabsWithVisibleWidgets,
         targetObjectFields: targetObjectMetadataItem?.fields,
-        relationFieldNameByWidgetType: {
-          ...WIDGET_TYPE_TO_RELATION_FIELD_NAME,
-          [WidgetType.CHAT_THREADS]:
-            inboxNamesByLegacyName.relationFields.agentChatThreadTargets,
-        },
       });
 
   const { tabsToRenderInTabList, pinnedLeftTab } = getTabsByDisplayMode({

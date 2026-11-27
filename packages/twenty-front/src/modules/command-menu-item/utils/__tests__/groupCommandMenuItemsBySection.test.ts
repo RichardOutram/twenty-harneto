@@ -20,12 +20,11 @@ describe('groupCommandMenuItemsBySection', () => {
       'SELECTION',
       'CURRENT_VIEW',
       'THIS_OBJECT',
+      'ASK_AND_FIND',
+      'CREATE_RECORD',
       'WORKSPACE',
       'GO_TO',
-      'CREATE_RECORD',
       'DEVELOPER',
-      'ASK_AI',
-      'SEARCH',
       'FALLBACK',
     ]);
   });
@@ -60,8 +59,8 @@ describe('groupCommandMenuItemsBySection', () => {
     expect(
       commandMenuItemsBySection.CURRENT_VIEW.map((item) => item.id),
     ).toEqual(['export-view']);
-    expect(commandMenuItemsBySection.SEARCH.map((item) => item.id)).toEqual([
-      'search',
-    ]);
+    expect(
+      commandMenuItemsBySection.ASK_AND_FIND.map((item) => item.id),
+    ).toEqual(['search']);
   });
 });

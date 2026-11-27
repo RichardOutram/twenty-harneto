@@ -244,7 +244,7 @@ describe('Agent conversations read by their application (integration)', () => {
       turnId,
       agentId: null,
       role: AgentMessageRole.USER,
-      senderWorkspaceMemberId: null,
+      senderUserWorkspaceId: null,
       senderApplicationId: application.id,
       parts: [{ type: 'text', text: 'Please summarize the renewal.' }],
     });

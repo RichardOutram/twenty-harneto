@@ -1,7 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
 import { EmailConnectionSecurity } from 'src/engine/core-modules/imap-smtp-caldav-connection/enums/email-connection-security.enum';
-import { WORKSPACE_MEMBER_DATA_SEED_IDS } from 'src/engine/workspace-manager/dev-seeder/data/constants/workspace-member-data-seeds.constant';
 import { MessageChannelEntity } from 'src/engine/metadata-modules/message-channel/entities/message-channel.entity';
 import { deleteConnectedAccount } from 'test/integration/metadata/suites/connected-account/utils/delete-connected-account.util';
 import { saveImapSmtpCaldavAccount } from 'test/integration/metadata/suites/connected-account/utils/save-imap-smtp-caldav-account.util';
@@ -15,10 +14,6 @@ import {
   startGreenmailContainer,
 } from 'test/integration/utils/start-greenmail-container.util';
 import { serializeEmailBody } from 'test/integration/utils/serialize-email-body.util';
-import {
-  grantRoleWideAccessToChannelObjects,
-  revokeRoleWideAccessToChannelObjects,
-} from 'test/integration/utils/role-wide-access-to-channel-objects.util';
 
 const PASSWORD = 'greenmail-password';
 const HANDLE = `imap-smtp-outbound-${randomUUID()}@acme.test`;
@@ -29,7 +24,6 @@ describe('IMAP/SMTP outbound messaging (integration)', () => {
   let messageChannelId: string;
 
   beforeAll(async () => {
-    await grantRoleWideAccessToChannelObjects();
     greenmail = await startGreenmailContainer({
       username: HANDLE,
       password: PASSWORD,
@@ -88,7 +82,6 @@ describe('IMAP/SMTP outbound messaging (integration)', () => {
     }
 
     await greenmail?.stop().catch(() => undefined);
-    await revokeRoleWideAccessToChannelObjects();
   });
 
   it('sends a threaded SMTP message through GraphQL and persists it', async () => {
@@ -114,54 +107,37 @@ describe('IMAP/SMTP outbound messaging (integration)', () => {
       isDraft: boolean;
       messageThreadId: string | null;
       text: string | null;
-      createdBy: { workspaceMemberId: string | null };
-    }>(
-      'message',
-      'messages',
-      'id isDraft messageThreadId text createdBy { workspaceMemberId }',
-      { subject: { eq: subject } },
-    );
-
-    const createdBy = {
-      workspaceMemberId: WORKSPACE_MEMBER_DATA_SEED_IDS.JANE,
-    };
+    }>('message', 'messages', 'id isDraft messageThreadId text', {
+      subject: { eq: subject },
+    });
 
     expect(message).toMatchObject({
       isDraft: false,
       messageThreadId: expect.any(String),
       text: 'SMTP reply body',
-      createdBy,
     });
-    expect(
-      await findRecordNodesByFilter(
-        'messageThread',
-        'messageThreads',
-        'createdBy { workspaceMemberId }',
-        { id: { eq: message.messageThreadId } },
-      ),
-    ).toEqual([{ createdBy }]);
     expect(
       await findRecordNodesByFilter<{
         messageChannelId: string;
       }>(
         'messageChannelMessageAssociation',
         'messageChannelMessageAssociations',
-        'messageChannelId createdBy { workspaceMemberId }',
+        'messageChannelId',
         { messageId: { eq: message.id } },
       ),
-    ).toEqual([expect.objectContaining({ messageChannelId, createdBy })]);
+    ).toEqual([expect.objectContaining({ messageChannelId })]);
     expect(
       await findRecordNodesByFilter<{ handle: string; role: string }>(
         'messageParticipant',
         'messageParticipants',
-        'handle role createdBy { workspaceMemberId }',
+        'handle role',
         { messageId: { eq: message.id } },
       ),
     ).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ handle: HANDLE, role: 'TO', createdBy }),
-        expect.objectContaining({ handle: HANDLE, role: 'CC', createdBy }),
-        expect.objectContaining({ handle: HANDLE, role: 'BCC', createdBy }),
+        expect.objectContaining({ handle: HANDLE, role: 'TO' }),
+        expect.objectContaining({ handle: HANDLE, role: 'CC' }),
+        expect.objectContaining({ handle: HANDLE, role: 'BCC' }),
       ]),
     );
   }, 300000);

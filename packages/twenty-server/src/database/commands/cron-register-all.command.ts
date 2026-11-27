@@ -42,10 +42,7 @@ import { WorkflowCleanWorkflowRunsCronCommand } from 'src/modules/workflow/workf
 import { WorkflowHandleStaledRunsCronCommand } from 'src/modules/workflow/workflow-runner/workflow-run-queue/cron/command/workflow-handle-staled-runs.cron.command';
 import { WorkflowCronTriggerCronCommand } from 'src/modules/workflow/workflow-trigger/automated-trigger/crons/commands/workflow-cron-trigger.cron.command';
 
-const LEGACY_CRON_JOB_NAMES = [
-  'ApplicationRecurringChargeCronJob',
-  'WorkflowRunEnqueueCronJob',
-];
+const LEGACY_CRON_JOB_NAMES = ['ApplicationRecurringChargeCronJob'];
 
 @Command({
   name: 'cron:register:all',

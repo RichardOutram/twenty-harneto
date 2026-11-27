@@ -56,6 +56,10 @@ const PROJECT_NAME = 'pathAccessProject';
 const TASK_NAME = 'pathAccessTask';
 const workspaceId = SEED_APPLE_WORKSPACE_ID;
 const SCHEMA = `"${getWorkspaceSchemaName(workspaceId)}"`;
+const PATH_FEATURE_FLAGS = [
+  FeatureFlagKey.IS_RELATED_RECORD_PATHS_ENABLED,
+  FeatureFlagKey.IS_ACCESS_GROUPS_ENABLED,
+];
 
 describe('Record access through related record paths', () => {
   let projectObjectMetadataId: string;
@@ -326,6 +330,14 @@ describe('Record access through related record paths', () => {
   };
 
   beforeAll(async () => {
+    for (const featureFlag of PATH_FEATURE_FLAGS) {
+      await updateFeatureFlag({
+        featureFlag,
+        value: true,
+        expectToFail: false,
+      });
+    }
+
     projectObjectMetadataId = await createObject(PROJECT_NAME);
     taskObjectMetadataId = await createObject(TASK_NAME);
 
@@ -386,6 +398,14 @@ describe('Record access through related record paths', () => {
       await deleteObject(projectObjectMetadataId);
       await deleteObject(taskObjectMetadataId);
     } finally {
+      for (const featureFlag of PATH_FEATURE_FLAGS) {
+        await updateFeatureFlag({
+          featureFlag,
+          value: false,
+          expectToFail: false,
+        });
+      }
+
       await global.testDataSource.query(`DELETE FROM ${SCHEMA}."accessGroup"`);
     }
   });

@@ -4,6 +4,7 @@ import {
   ViewCalendarLayout,
   ViewFilterOperand,
   ViewSortDirection,
+  ViewVisibility,
 } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import { z } from 'zod';
@@ -17,6 +18,7 @@ import { CREATABLE_VIEW_TYPES } from 'src/engine/metadata-modules/view/tools/con
 import { CompleteViewUpsertService } from 'src/engine/metadata-modules/view/tools/services/complete-view-upsert.service';
 import { ViewAccessService } from 'src/engine/permissions/metadata-permissions/services/view-access.service';
 import { ViewToolIdentifierService } from 'src/engine/metadata-modules/view/tools/services/view-tool-identifier.service';
+import { resolveViewIsPrivateFromInput } from 'src/engine/metadata-modules/view/utils/resolve-view-is-private-from-input.util';
 
 const fieldReferenceShape = {
   fieldName: z
@@ -102,11 +104,11 @@ const upsertCompleteViewInputSchema = z.object({
     .describe(
       'View type. Defaults to TABLE on create. Use the *_WIDGET variants for views backing a dashboard widget so they stay out of record index view pickers.',
     ),
-  isPrivate: z
-    .boolean()
+  visibility: z
+    .enum([ViewVisibility.WORKSPACE, ViewVisibility.UNLISTED])
     .optional()
     .describe(
-      'Whether the view is private to its creator. Defaults to false on create, which is almost always the best fit: the view is visible to everyone, as REQUIRED for any view backing a dashboard widget. Only set true for a personal view a specific user explicitly asked for, AND only when a user identity is available. A private view created without a creator is invisible to everyone (its dashboard widget renders blank), so never make widget-backing views private.',
+      'View visibility. Defaults to WORKSPACE on create, which is almost always the best fit — it makes the view visible to everyone and is REQUIRED for any view backing a dashboard widget. Only set UNLISTED for a private, personal view a specific user explicitly asked for, AND only when a user identity is available. An UNLISTED view created without an owner is invisible to everyone (its dashboard widget renders blank), so never use UNLISTED for widget-backing views.',
     ),
   mainGroupByFieldName: z
     .string()
@@ -209,7 +211,9 @@ export class UpsertCompleteViewTool extends BaseTool<
 
     if (!isDefined(existingView)) {
       await this.viewAccessService.canUserCreateView({
-        isPrivate: input.isPrivate ?? false,
+        isPrivate:
+          resolveViewIsPrivateFromInput({ visibility: input.visibility }) ??
+          false,
         accessContext: { workspaceId, userWorkspaceId, authContext },
       });
     }
@@ -273,13 +277,13 @@ export class UpsertCompleteViewTool extends BaseTool<
 
     const view = await this.completeViewUpsertService.upsertCompleteView({
       workspaceId,
-      authContext,
+      userWorkspaceId,
       existingViewId,
       objectMetadataId,
       name: input.name,
       icon: input.icon,
       type: input.type,
-      isPrivate: input.isPrivate,
+      visibility: input.visibility,
       mainGroupByFieldMetadataId,
       kanbanAggregateOperation: input.kanbanAggregateOperation,
       kanbanAggregateOperationFieldMetadataId,
@@ -300,7 +304,7 @@ export class UpsertCompleteViewTool extends BaseTool<
         objectMetadataId,
         type: view.type,
         icon: view.icon,
-        isPrivate: view.isPrivate,
+        visibility: view.visibility,
         fieldCount: view.viewFields?.length ?? 0,
         filterCount: view.viewFilters?.length ?? 0,
         sortCount: view.viewSorts?.length ?? 0,

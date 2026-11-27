@@ -3,7 +3,6 @@ import { currentWorkspaceMemberState } from '@/auth/states/currentWorkspaceMembe
 import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
 import { domainConfigurationState } from '@/domain-manager/states/domainConfigurationState';
 import { isMultiWorkspaceEnabledState } from '@/client-config/states/isMultiWorkspaceEnabledState';
-import { isLayoutCustomizationModeEnabledState } from '@/layout-customization/states/isLayoutCustomizationModeEnabledState';
 import { MultiWorkspaceDropdownButton } from '@/navigation/components/MultiWorkspaceDropdown/MultiWorkspaceDropdownButton';
 import { isNavigationDrawerExpandedState } from '@/ui/navigation/states/isNavigationDrawerExpanded';
 import { jotaiStore } from '@/ui/utilities/state/jotai/jotaiStore';
@@ -49,6 +48,7 @@ const AVAILABLE_WORKSPACES: AvailableWorkspace[] = [
 const INVITED_WORKSPACE: AvailableWorkspace = {
   id: 'invited',
   displayName: 'Invited workspace',
+  inviteHash: 'workspace-invite',
   personalInviteToken: 'personal-invite',
   sso: [],
   workspaceUrls: { subdomainUrl: 'https://invited.example.com' },
@@ -66,7 +66,6 @@ const meta: Meta<typeof MultiWorkspaceDropdownButton> = {
       openRecordIn: OpenRecordIn.SIDE_PANEL,
     });
     jotaiStore.set(isNavigationDrawerExpandedState.atom, true);
-    jotaiStore.set(isLayoutCustomizationModeEnabledState.atom, false);
     jotaiStore.set(isMultiWorkspaceEnabledState.atom, true);
     jotaiStore.set(domainConfigurationState.atom, {
       frontDomain: 'example.com',
@@ -172,12 +171,12 @@ export const PagesAndWorkspaceLinks: Story = {
       });
       expect(invitedWorkspace).toHaveAttribute(
         'href',
-        'https://invited.example.com/welcome?inviteToken=personal-invite',
+        'https://invited.example.com/invite/workspace-invite?inviteToken=personal-invite',
       );
       await userEvent.click(invitedWorkspace);
       await waitFor(() =>
         expect(openWindow).toHaveBeenCalledWith(
-          'https://invited.example.com/welcome?inviteToken=personal-invite&locale=en',
+          'https://invited.example.com/invite/workspace-invite?inviteToken=personal-invite&locale=en',
           '_self',
         ),
       );
@@ -208,32 +207,12 @@ export const RootInvitationLink: Story = {
 
     expect(invitedWorkspace).toHaveAttribute(
       'href',
-      'https://invited.example.com/welcome?inviteToken=personal-invite',
+      'https://invited.example.com/invite/workspace-invite?inviteToken=personal-invite',
     );
     await userEvent.keyboard('{Escape}');
     await waitFor(() =>
       expect(canvas.queryByRole('menu')).not.toBeInTheDocument(),
     );
-  },
-};
-
-export const DisabledWhileEditingLayout: Story = {
-  beforeEach: () => {
-    jotaiStore.set(isLayoutCustomizationModeEnabledState.atom, true);
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement.ownerDocument.body);
-    const trigger = canvas.getByRole('button', { name: 'Twenty' });
-
-    expect(trigger).toHaveAttribute('aria-disabled', 'true');
-    await userEvent.hover(trigger);
-    await waitFor(() =>
-      expect(
-        canvas.getByText('Finish editing the layout to open this menu'),
-      ).toBeVisible(),
-    );
-    await userEvent.click(trigger);
-    expect(canvas.queryByRole('menu')).not.toBeInTheDocument();
   },
 };
 

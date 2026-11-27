@@ -11,6 +11,7 @@ import {
   ViewOpenRecordIn,
   ViewPresetFilter,
   ViewType,
+  ViewVisibility,
   ViewKey,
 } from 'twenty-shared/types';
 
@@ -29,6 +30,7 @@ registerEnumType(ViewOpenRecordIn, { name: 'ViewOpenRecordIn' });
 registerEnumType(ViewType, { name: 'ViewType' });
 registerEnumType(ViewKey, { name: 'ViewKey' });
 registerEnumType(ViewCalendarLayout, { name: 'ViewCalendarLayout' });
+registerEnumType(ViewVisibility, { name: 'ViewVisibility' });
 registerEnumType(ViewPresetFilter, { name: 'ViewPresetFilter' });
 
 @ObjectType('View')
@@ -102,9 +104,6 @@ export class ViewDTO {
   @Field(() => UUIDScalarType, { nullable: true })
   calendarEndFieldMetadataId?: string | null;
 
-  @Field(() => UUIDScalarType, { nullable: true })
-  listPinnedFieldMetadataId?: string | null;
-
   @Field(() => UUIDScalarType, { nullable: false })
   workspaceId: string;
 
@@ -122,6 +121,9 @@ export class ViewDTO {
 
   @Field()
   updatedAt: Date;
+
+  @Field(() => Date, { nullable: true })
+  deletedAt?: Date | null;
 
   @Field(() => [ViewFieldDTO])
   viewFields?: ViewFieldDTO[];
@@ -143,6 +145,12 @@ export class ViewDTO {
 
   @Field(() => Boolean, { nullable: false })
   isPrivate: boolean;
+
+  @Field(() => ViewVisibility, {
+    nullable: false,
+    deprecationReason: 'Use isPrivate instead',
+  })
+  visibility: ViewVisibility;
 
   @Field(() => UUIDScalarType, { nullable: true })
   createdByUserWorkspaceId?: string | null;

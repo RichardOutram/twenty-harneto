@@ -8,9 +8,9 @@ import {
   ViewType,
 } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
+import { IsNull } from 'typeorm';
 import { v4 } from 'uuid';
 
-import { workspaceAuthContextStorage } from 'src/engine/core-modules/auth/storage/workspace-auth-context.storage';
 import { ApplicationService } from 'src/engine/core-modules/application/application.service';
 import { WorkspaceManyOrAllFlatEntityMapsCacheService } from 'src/engine/metadata-modules/flat-entity/services/workspace-many-or-all-flat-entity-maps-cache.service';
 import { type FlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/flat-entity-maps.type';
@@ -219,7 +219,12 @@ export class ViewWidgetUpsertService {
     ) {
       const view = await this.viewRepository.findOne(
         upsertContext.workspaceId,
-        { where: { id: upsertContext.viewId } },
+        {
+          where: {
+            id: upsertContext.viewId,
+            deletedAt: IsNull(),
+          },
+        },
       );
 
       if (!isDefined(view)) {
@@ -412,7 +417,6 @@ export class ViewWidgetUpsertService {
           },
           workspaceId: upsertContext.workspaceId,
           isSystemBuild: false,
-          authContext: workspaceAuthContextStorage.getStore(),
           applicationUniversalIdentifier:
             upsertContext.applicationUniversalIdentifier,
         },
@@ -426,7 +430,10 @@ export class ViewWidgetUpsertService {
     }
 
     const view = await this.viewRepository.findOne(upsertContext.workspaceId, {
-      where: { id: upsertContext.viewId },
+      where: {
+        id: upsertContext.viewId,
+        deletedAt: IsNull(),
+      },
     });
 
     if (!isDefined(view)) {

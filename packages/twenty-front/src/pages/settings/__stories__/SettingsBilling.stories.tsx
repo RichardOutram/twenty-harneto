@@ -12,7 +12,6 @@ import { getSettingsPath } from 'twenty-shared/utils';
 
 import { SettingsBilling } from '~/pages/settings/billing/SettingsBilling';
 import { WorkspaceDecorator } from '~/testing/decorators/WorkspaceDecorator';
-import { mockCurrentWorkspace } from '~/testing/mock-data/users';
 
 const meta: Meta<PageDecoratorArgs> = {
   title: 'Pages/Settings/SettingsBilling',
@@ -34,18 +33,6 @@ export const Default: Story = {
 
     await expect(
       await canvas.findByRole('button', { name: 'View billing details' }),
-    ).toBeVisible();
-  },
-};
-
-export const BillingEmail: Story = {
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    await expect(
-      await canvas.findByRole('button', {
-        name: mockCurrentWorkspace.billingCustomer.stripeCustomerEmail,
-      }),
     ).toBeVisible();
   },
 };

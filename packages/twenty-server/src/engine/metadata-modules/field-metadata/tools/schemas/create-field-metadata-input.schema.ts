@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { RELATION_TYPE_DESCRIPTION } from 'src/engine/metadata-modules/field-metadata/tools/constants/relation-type-description.constant';
 import {
   fieldMetadataDefaultValueInputSchema,
-  fieldMetadataFormulaInputSchema,
   fieldMetadataOptionsInputSchema,
   fieldMetadataSettingsInputSchema,
 } from 'src/engine/metadata-modules/field-metadata/tools/schemas/field-metadata-configuration-input.schema';
@@ -42,7 +41,6 @@ export const createFieldMetadataInputSchema = z.object({
   defaultValue: fieldMetadataDefaultValueInputSchema,
   options: fieldMetadataOptionsInputSchema,
   settings: fieldMetadataSettingsInputSchema,
-  formula: fieldMetadataFormulaInputSchema,
   isLabelSyncedWithName: z
     .boolean()
     .optional()

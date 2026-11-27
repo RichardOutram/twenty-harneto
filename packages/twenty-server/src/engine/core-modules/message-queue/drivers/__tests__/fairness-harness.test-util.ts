@@ -1,5 +1,3 @@
-import { createHash } from 'node:crypto';
-
 import { Logger } from '@nestjs/common';
 
 import { PRIORITY_LIMIT } from 'bullmq';
@@ -25,8 +23,6 @@ type StoredJobOptions = {
   delay?: number;
   attempts?: number;
   backoff?: { type: string; delay: number };
-  timestamp?: number;
-  scheduledAt?: number;
 };
 
 type StoredJob = {
@@ -66,9 +62,7 @@ type BullMQDouble = {
   processor: ((job: object) => Promise<void>) | undefined;
   client: RedisClientDouble | undefined;
   redis: Redis | undefined;
-  beforeNextAddBulk: (() => Promise<void>) | undefined;
   store: (jobToStore: JobToStore) => Promise<{ id: string }>;
-  addIfMissing: (jobToStore: JobToStore) => Promise<{ id: string }>;
   takeNext: () => Promise<StoredJob | undefined>;
   release: (job: StoredJob) => Promise<void>;
   refreshPriorities: () => Promise<void>;
@@ -110,7 +104,6 @@ const mockBullMQ: BullMQDouble = {
   processor: undefined,
   client: undefined,
   redis: undefined,
-  beforeNextAddBulk: undefined,
   store: async ({ id, name, data, options, attemptsMade = 0 }) => {
     const priority = options.priority ?? 0;
 
@@ -141,8 +134,6 @@ const mockBullMQ: BullMQDouble = {
       buildJobKey(job.id),
       'opts',
       JSON.stringify(options),
-      'timestamp',
-      options.timestamp ?? job.timestamp,
     );
 
     if (!job.isPromoted) {
@@ -156,18 +147,6 @@ const mockBullMQ: BullMQDouble = {
     }
 
     return { id: job.id };
-  },
-  addIfMissing: async (jobToStore) => {
-    const jobId = jobToStore.options.jobId;
-
-    if (
-      isDefined(jobId) &&
-      (await mockBullMQ.redis?.exists(buildJobKey(jobId))) === 1
-    ) {
-      return { id: jobId };
-    }
-
-    return mockBullMQ.store(jobToStore);
   },
   takeNext: async () => {
     const eligibleJobs = mockBullMQ.jobs.filter(
@@ -232,7 +211,6 @@ const mockBullMQ: BullMQDouble = {
     mockBullMQ.processor = undefined;
     mockBullMQ.client = client;
     mockBullMQ.redis = redis;
-    mockBullMQ.beforeNextAddBulk = undefined;
   },
 };
 
@@ -246,20 +224,14 @@ jest.mock('bullmq', () => ({
       name: string,
       data: ScenarioJobData,
       options: StoredJobOptions,
-    ) => mockBullMQ.addIfMissing({ name, data, options }),
+    ) => mockBullMQ.store({ name, data, options }),
     addBulk: async (
       jobs: { name: string; data: ScenarioJobData; opts: StoredJobOptions }[],
     ) => {
       const storedJobs: { id: string }[] = [];
-      const beforeAddBulk = mockBullMQ.beforeNextAddBulk;
-
-      mockBullMQ.beforeNextAddBulk = undefined;
-      await beforeAddBulk?.();
 
       for (const { name, data, opts } of jobs) {
-        storedJobs.push(
-          await mockBullMQ.addIfMissing({ name, data, options: opts }),
-        );
+        storedJobs.push(await mockBullMQ.store({ name, data, options: opts }));
       }
 
       return storedJobs;
@@ -488,39 +460,31 @@ export const createFairnessHarness = async ({
       groupKey,
       delay,
       jobIds,
-      isJobIdGenerated,
-      limiter,
     }: {
       labels: string[];
       jobIds?: string[];
-      isJobIdGenerated?: boolean;
       workspaceId: string;
       applicationUniversalIdentifier?: string;
       groupKey?: string;
       delay?: number;
-      limiter?: MessageQueueLimiter;
-    }) =>
-      driver.bulkAdd<ScenarioJobData>(
+    }) => {
+      await driver.bulkAdd<ScenarioJobData>(
         QUEUE,
         JOB_NAME,
         labels.map((label, index) => ({
           data: { label, workspaceId },
           jobId: jobIds?.[index],
-          isJobIdGenerated,
           groupKey,
           ...buildScenarioJobScope({
             workspaceId,
             applicationUniversalIdentifier,
           }),
         })),
-        isDefined(delay) || isDefined(jobIds) || isDefined(limiter)
-          ? {
-              delay,
-              doNotCheckDuplicatesBasedOnPrefix: isDefined(jobIds),
-              limiter,
-            }
+        isDefined(delay) || isDefined(jobIds)
+          ? { delay, doNotCheckDuplicatesBasedOnPrefix: isDefined(jobIds) }
           : undefined,
-      ),
+      );
+    },
     scheduleCron: async ({
       label,
       every,
@@ -608,31 +572,6 @@ export const createFairnessHarness = async ({
       mockBullMQ.jobs.find((job) => job.data.label === label)?.options.priority,
     readDelay: ({ label }: { label: string }) =>
       mockBullMQ.jobs.find((job) => job.data.label === label)?.options.delay,
-    readScheduledAt: ({ label }: { label: string }) =>
-      mockBullMQ.jobs.find((job) => job.data.label === label)?.options
-        .scheduledAt,
-    beforeNextAddBulk: (hook: () => Promise<void>) => {
-      mockBullMQ.beforeNextAddBulk = hook;
-    },
-    storeJob: (jobToStore: JobToStore) => mockBullMQ.store(jobToStore),
-    failScript: ({ script }: { script: string }) => {
-      const scriptSha = createHash('sha1').update(script).digest('hex');
-      const client = mockBullMQ.client;
-
-      mockBullMQ.client = {
-        runCommand: async (name, args) => {
-          if (args[0] === scriptSha || args[0] === script) {
-            throw new Error('Redis read failed');
-          }
-
-          if (!isDefined(client)) {
-            throw new Error('Redis client is not set');
-          }
-
-          return client.runCommand(name, args);
-        },
-      };
-    },
     breakRedis: () => {
       const runCommand = jest
         .fn()

@@ -33,16 +33,11 @@ export class BillingWebhookCustomerService {
   async processStripeEvent(
     event:
       | Stripe.CustomerCreatedEvent
-      | Stripe.CustomerUpdatedEvent
       | Stripe.PaymentMethodAttachedEvent
       | Stripe.PaymentMethodDetachedEvent,
   ) {
     if (event.type === BillingWebhookEvent.CUSTOMER_CREATED) {
       return this.processCustomerCreated(event.data);
-    }
-
-    if (event.type === BillingWebhookEvent.CUSTOMER_UPDATED) {
-      return this.processCustomerUpdated(event.data);
     }
 
     if (event.type === BillingWebhookEvent.PAYMENT_METHOD_ATTACHED) {
@@ -55,7 +50,7 @@ export class BillingWebhookCustomerService {
   }
 
   private async processCustomerCreated(data: Stripe.CustomerCreatedEvent.Data) {
-    const { id: stripeCustomerId, email, metadata } = data.object;
+    const { id: stripeCustomerId, metadata } = data.object;
 
     const workspaceId = metadata?.workspaceId;
 
@@ -68,35 +63,11 @@ export class BillingWebhookCustomerService {
 
     await this.billingCustomerRepository.upsert(
       workspaceId,
-      { stripeCustomerId, stripeCustomerEmail: email },
+      { stripeCustomerId },
       {
         conflictPaths: ['workspaceId'],
         skipUpdateIfNoValuesChanged: true,
       },
-    );
-  }
-
-  private async processCustomerUpdated(data: Stripe.CustomerUpdatedEvent.Data) {
-    if (
-      !isDefined(data.previous_attributes) ||
-      !('email' in data.previous_attributes)
-    ) {
-      return;
-    }
-
-    const { id: stripeCustomerId, email } = data.object;
-
-    const workspaceId =
-      await this.getWorkspaceIdFromStripeCustomerId(stripeCustomerId);
-
-    if (!isDefined(workspaceId)) {
-      return;
-    }
-
-    await this.billingCustomerRepository.update(
-      workspaceId,
-      { stripeCustomerId },
-      { stripeCustomerEmail: email },
     );
   }
 

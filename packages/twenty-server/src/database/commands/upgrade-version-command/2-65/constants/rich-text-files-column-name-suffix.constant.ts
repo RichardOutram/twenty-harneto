@@ -1,1 +1,0 @@
-export const RICH_TEXT_FILES_COLUMN_NAME_SUFFIX = 'Files';

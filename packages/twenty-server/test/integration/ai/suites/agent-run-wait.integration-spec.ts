@@ -733,7 +733,7 @@ describe('agent runs that wait (integration)', () => {
           agentId,
           createdBy: executionContext.turnCreatedBy,
           queuedMessageIds: [message.id],
-          senderWorkspaceMemberId: null,
+          senderUserWorkspaceId: null,
           senderApplicationId: null,
           messages: [],
         });

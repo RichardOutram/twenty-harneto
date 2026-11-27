@@ -79,14 +79,17 @@ export class CoreWorkflowLifecycleWorkspaceService {
 
   async validateCoreWorkflowVersion({
     workspaceId,
+    userWorkspaceId,
     coreWorkflowVersionId,
   }: {
     workspaceId: string;
+    userWorkspaceId: string | undefined;
     coreWorkflowVersionId: string;
   }): Promise<boolean> {
     const coreWorkflowVersion =
       await this.coreWorkflowAccessService.findReadableCoreWorkflowVersion({
         workspaceId,
+        userWorkspaceId,
         coreWorkflowVersionId,
       });
 
@@ -113,13 +116,16 @@ export class CoreWorkflowLifecycleWorkspaceService {
 
   async activateCoreWorkflowVersion({
     workspaceId,
+    userWorkspaceId,
     coreWorkflowVersionId,
   }: {
     workspaceId: string;
+    userWorkspaceId: string | undefined;
     coreWorkflowVersionId: string;
   }): Promise<boolean> {
     const resolved = await this.resolveCoreVersionWithWorkflowOrThrow({
       workspaceId,
+      userWorkspaceId,
       coreWorkflowVersionId,
     });
 
@@ -217,6 +223,7 @@ export class CoreWorkflowLifecycleWorkspaceService {
         const previous = isDefined(previousCoreWorkflowVersionId)
           ? await this.resolveCoreVersionWithWorkflowOrThrow({
               workspaceId,
+              userWorkspaceId,
               coreWorkflowVersionId: previousCoreWorkflowVersionId,
             })
           : undefined;
@@ -279,13 +286,16 @@ export class CoreWorkflowLifecycleWorkspaceService {
 
   async deactivateCoreWorkflowVersion({
     workspaceId,
+    userWorkspaceId,
     coreWorkflowVersionId,
   }: {
     workspaceId: string;
+    userWorkspaceId: string | undefined;
     coreWorkflowVersionId: string;
   }): Promise<boolean> {
     const resolved = await this.resolveCoreVersionWithWorkflowOrThrow({
       workspaceId,
+      userWorkspaceId,
       coreWorkflowVersionId,
     });
 
@@ -333,14 +343,16 @@ export class CoreWorkflowLifecycleWorkspaceService {
 
   private async resolveCoreVersionWithWorkflowOrThrow({
     workspaceId,
+    userWorkspaceId,
     coreWorkflowVersionId,
   }: {
     workspaceId: string;
+    userWorkspaceId: string | undefined;
     coreWorkflowVersionId: string;
   }): Promise<ResolvedCoreVersion> {
     const { coreWorkflowVersion, coreWorkflow } =
       await this.coreWorkflowAccessService.findEditableCoreWorkflowVersionOrThrow(
-        { workspaceId, coreWorkflowVersionId },
+        { workspaceId, userWorkspaceId, coreWorkflowVersionId },
       );
 
     if (!isDefined(coreWorkflowVersion.coreWorkflowId)) {

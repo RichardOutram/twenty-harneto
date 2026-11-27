@@ -22,7 +22,7 @@ export const WorkflowEditActionFilter = ({
   actionOptions,
 }: WorkflowEditActionFilterProps) => {
   const handleFilterSettingsUpdate = (filterSettings: FilterSettings) => {
-    if (actionOptions.readonly) {
+    if (actionOptions.readonly === true) {
       return;
     }
 

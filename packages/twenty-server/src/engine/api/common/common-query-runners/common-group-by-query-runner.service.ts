@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { turnViewPresetFilterIntoRecordGqlOperationFilter } from 'twenty-shared/ai';
 import {
   CompositeFieldSubFieldName,
   type ObjectRecord,
@@ -49,7 +48,6 @@ import {
 import { getGroupLimit } from 'src/engine/api/common/common-query-runners/group-by/utils/get-group-limit.util';
 import { ProcessAggregateHelper } from 'src/engine/api/common/utils/process-aggregate.helper';
 import { getFlatFieldsFromFlatObjectMetadata } from 'src/engine/metadata-modules/flat-object-metadata/utils/get-flat-fields-for-flat-object-metadata.util';
-import { isUserAuthContext } from 'src/engine/core-modules/auth/guards/is-user-auth-context.guard';
 import { FlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/flat-entity-maps.type';
 import { findFlatEntityByIdInFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-id-in-flat-entity-maps.util';
 import { type FlatFieldMetadataOptionMaps } from 'src/engine/metadata-modules/flat-field-metadata-option/types/flat-field-metadata-option-maps.type';
@@ -128,9 +126,6 @@ export class CommonGroupByQueryRunnerService extends CommonBaseQueryRunnerServic
       flatFieldMetadataMaps,
       flatFieldMetadataOptionMaps,
       workspaceId: authContext.workspace.id,
-      currentWorkspaceMemberId: isUserAuthContext(authContext)
-        ? authContext.workspaceMemberId
-        : undefined,
       commonQueryParser,
       permissionsPrincipals,
     });
@@ -217,7 +212,6 @@ export class CommonGroupByQueryRunnerService extends CommonBaseQueryRunnerServic
     unreadableFieldMetadataIds,
     appliedFilters,
     workspaceId,
-    currentWorkspaceMemberId,
   }: {
     args: GroupByQueryArgs;
     flatObjectMetadata: FlatObjectMetadata;
@@ -227,7 +221,6 @@ export class CommonGroupByQueryRunnerService extends CommonBaseQueryRunnerServic
     unreadableFieldMetadataIds: Set<string>;
     appliedFilters: ObjectRecordFilter;
     workspaceId: string;
-    currentWorkspaceMemberId: string | undefined;
   }): Promise<ObjectRecordFilter> {
     assertIsDefinedOrThrow(args.viewId);
 
@@ -293,33 +286,26 @@ export class CommonGroupByQueryRunnerService extends CommonBaseQueryRunnerServic
         }) as PartialFieldMetadataItemOption[],
       }));
 
-    const view = await this.viewService.findById(args.viewId, workspaceId);
-    const visibleView =
-      isDefined(view) && isViewVisibleToCaller({ view }) ? view : null;
-
     const filtersFromView = this.filterArgProcessor.process({
-      filter: combineFilters([
-        computeRecordGqlOperationFilterFromFlatMaps({
-          recordFilters,
-          recordFilterGroups: recordFilterGroups,
-          flatFieldMetadataMaps,
-          flatObjectMetadataMaps,
-          filterValueDependencies: {
-            currentWorkspaceMemberId,
-            timeZone: 'UTC', // TODO: see if we use workspace member timezone here
-          },
-        }),
-        turnViewPresetFilterIntoRecordGqlOperationFilter({
-          presetFilter: visibleView?.presetFilter,
-          currentWorkspaceMemberId,
-        }),
-      ]),
+      filter: computeRecordGqlOperationFilterFromFlatMaps({
+        recordFilters,
+        recordFilterGroups: recordFilterGroups,
+        flatFieldMetadataMaps,
+        flatObjectMetadataMaps,
+        filterValueDependencies: {
+          timeZone: 'UTC', // TODO: see if we use workspace member timezone here
+        },
+      }),
       flatObjectMetadata,
       flatObjectMetadataMaps,
       flatFieldMetadataMaps,
     });
 
-    const viewAnyFieldFilterValue = visibleView?.anyFieldFilterValue ?? null;
+    const view = await this.viewService.findById(args.viewId, workspaceId);
+    const viewAnyFieldFilterValue =
+      isDefined(view) && isViewVisibleToCaller({ view })
+        ? (view.anyFieldFilterValue ?? null)
+        : null;
 
     const { recordGqlOperationFilter: anyFieldFilter } =
       turnAnyFieldFilterIntoRecordGqlFilter({
@@ -345,7 +331,6 @@ export class CommonGroupByQueryRunnerService extends CommonBaseQueryRunnerServic
     flatFieldMetadataMaps,
     flatFieldMetadataOptionMaps,
     workspaceId,
-    currentWorkspaceMemberId,
     commonQueryParser,
     permissionsPrincipals,
   }: {
@@ -357,7 +342,6 @@ export class CommonGroupByQueryRunnerService extends CommonBaseQueryRunnerServic
     flatFieldMetadataMaps: FlatEntityMaps<OrmFlatFieldMetadata>;
     flatFieldMetadataOptionMaps: FlatFieldMetadataOptionMaps;
     workspaceId: string;
-    currentWorkspaceMemberId: string | undefined;
     commonQueryParser: CommonQueryParser;
     permissionsPrincipals: CommonExtendedQueryRunnerContext['permissionsPrincipals'];
   }): Promise<void> {
@@ -377,7 +361,6 @@ export class CommonGroupByQueryRunnerService extends CommonBaseQueryRunnerServic
           }),
         appliedFilters,
         workspaceId,
-        currentWorkspaceMemberId,
       });
     }
 

@@ -48,13 +48,11 @@ type LinkedinChatPickerState =
   | { step: 'ready'; page: LinkedinChatOptionsPage };
 
 type LinkedinChatPickerProps = {
-  connectedAccountId: string;
   selectedChats: LinkedinSelectedChat[];
   onChange: (selectedChats: LinkedinSelectedChat[]) => void;
 };
 
 export const LinkedinChatPicker = ({
-  connectedAccountId,
   selectedChats,
   onChange,
 }: LinkedinChatPickerProps) => {
@@ -66,10 +64,7 @@ export const LinkedinChatPicker = ({
   const [search, setSearch] = useState('');
 
   const loadChatsOrThrow = async (requestedLimit: number) => {
-    const page = await fetchLinkedinChatOptions({
-      connectedAccountId,
-      limit: requestedLimit,
-    });
+    const page = await fetchLinkedinChatOptions(requestedLimit);
 
     setLimit(requestedLimit);
     setState({ step: 'ready', page });

@@ -1,8 +1,8 @@
-import {
-  createWorkspaceCustomApplicationSyncWorkspace,
-  type WorkspaceCustomApplicationSyncWorkspace,
-} from 'test/integration/metadata/suites/application/utils/create-workspace-custom-application-sync-workspace.util';
+import { buildBaseManifest } from 'test/integration/metadata/suites/application/utils/build-base-manifest.util';
+import { cleanupApplicationAndAppRegistration } from 'test/integration/metadata/suites/application/utils/cleanup-application-and-app-registration.util';
+import { setupApplicationForSync } from 'test/integration/metadata/suites/application/utils/setup-application-for-sync.util';
 import { syncApplication } from 'test/integration/metadata/suites/application/utils/sync-application.util';
+import { uninstallApplication } from 'test/integration/metadata/suites/application/utils/uninstall-application.util';
 import { type FieldManifest, type Manifest } from 'twenty-shared/application';
 import { STANDARD_OBJECTS } from 'twenty-shared/metadata';
 import {
@@ -11,7 +11,15 @@ import {
 } from 'twenty-shared/types';
 import { v4 as uuidv4 } from 'uuid';
 
+import { SEED_APPLE_WORKSPACE_ID } from 'src/engine/workspace-manager/dev-seeder/core/constants/seeder-workspaces.constant';
+
+const TEST_WORKSPACE_ID = SEED_APPLE_WORKSPACE_ID;
+
+const TEST_APP_ID = uuidv4();
+const TEST_ROLE_ID = uuidv4();
+const TEST_OBJECT_PERMISSION_ID = uuidv4();
 const TEST_FIELD_ID = uuidv4();
+const TEST_PREDICATE_ID = uuidv4();
 
 const PERSON_OBJECT_UNIVERSAL_IDENTIFIER =
   STANDARD_OBJECTS.person.universalIdentifier;
@@ -28,46 +36,38 @@ const personScopingFieldManifest: FieldManifest = {
   objectUniversalIdentifier: PERSON_OBJECT_UNIVERSAL_IDENTIFIER,
 };
 
-// Only the workspace custom application may declare row-level permissions
-const buildManifestWithPredicates = ({
-  workspace,
-  roleUniversalIdentifier,
-  predicates,
-}: {
-  workspace: WorkspaceCustomApplicationSyncWorkspace;
-  roleUniversalIdentifier: string;
+const buildManifestWithPredicates = (
   predicates: NonNullable<
     Manifest['roles'][number]['rowLevelPermissionPredicates']
-  >;
-}): Manifest => ({
-  ...workspace.manifest,
-  fields: [...workspace.manifest.fields, personScopingFieldManifest],
-  roles: [
-    ...workspace.manifest.roles,
-    {
-      universalIdentifier: roleUniversalIdentifier,
-      label: 'RLS Test Role',
-      description: 'Role exercising declarative row-level predicates',
-      objectPermissions: [
+  >,
+): Manifest =>
+  buildBaseManifest({
+    appId: TEST_APP_ID,
+    roleId: TEST_ROLE_ID,
+    overrides: {
+      fields: [personScopingFieldManifest],
+      roles: [
         {
-          universalIdentifier: uuidv4(),
-          objectUniversalIdentifier: PERSON_OBJECT_UNIVERSAL_IDENTIFIER,
-          canReadObjectRecords: true,
+          universalIdentifier: TEST_ROLE_ID,
+          label: 'RLS Test Role',
+          description: 'Role exercising declarative row-level predicates',
+          objectPermissions: [
+            {
+              universalIdentifier: TEST_OBJECT_PERMISSION_ID,
+              objectUniversalIdentifier: PERSON_OBJECT_UNIVERSAL_IDENTIFIER,
+              canReadObjectRecords: true,
+            },
+          ],
+          rowLevelPermissionPredicates: predicates,
         },
       ],
-      rowLevelPermissionPredicates: predicates,
     },
-  ],
-});
+  });
 
-const partnerUserStylePredicate = ({
-  predicateUniversalIdentifier,
-  operand,
-}: {
-  predicateUniversalIdentifier: string;
-  operand: RowLevelPermissionPredicateOperand;
-}) => ({
-  universalIdentifier: predicateUniversalIdentifier,
+const partnerUserStylePredicate = (
+  operand: RowLevelPermissionPredicateOperand,
+) => ({
+  universalIdentifier: TEST_PREDICATE_ID,
   objectUniversalIdentifier: PERSON_OBJECT_UNIVERSAL_IDENTIFIER,
   fieldUniversalIdentifier: TEST_FIELD_ID,
   operand,
@@ -85,98 +85,77 @@ type PredicateRow = {
   applicationId: string;
 };
 
-const findActivePredicateRows = async ({
-  workspaceId,
-  predicateUniversalIdentifier,
-}: {
-  workspaceId: string;
-  predicateUniversalIdentifier: string;
-}): Promise<PredicateRow[]> =>
+const findActivePredicateRows = async (): Promise<PredicateRow[]> =>
   globalThis.testDataSource.query(
     `SELECT id, operand, "roleId", "objectMetadataId", "fieldMetadataId",
             "workspaceMemberFieldMetadataId", "applicationId"
      FROM core."rowLevelPermissionPredicate"
      WHERE "universalIdentifier" = $1 AND "workspaceId" = $2 AND "deletedAt" IS NULL`,
-    [predicateUniversalIdentifier, workspaceId],
+    [TEST_PREDICATE_ID, TEST_WORKSPACE_ID],
   );
 
-const findIdByUniversalIdentifier = async ({
-  table,
-  universalIdentifier,
-  workspaceId,
-}: {
-  table: 'application' | 'role' | 'objectMetadata';
-  universalIdentifier: string;
-  workspaceId: string;
-}): Promise<string> => {
+const findApplicationId = async (): Promise<string> => {
   const rows = await globalThis.testDataSource.query(
-    `SELECT id FROM core."${table}"
+    `SELECT id FROM core."application"
      WHERE "universalIdentifier" = $1 AND "workspaceId" = $2`,
-    [universalIdentifier, workspaceId],
+    [TEST_APP_ID, TEST_WORKSPACE_ID],
+  );
+
+  return rows[0]?.id;
+};
+
+const findRoleId = async (): Promise<string> => {
+  const rows = await globalThis.testDataSource.query(
+    `SELECT id FROM core."role"
+     WHERE "universalIdentifier" = $1 AND "workspaceId" = $2`,
+    [TEST_ROLE_ID, TEST_WORKSPACE_ID],
+  );
+
+  return rows[0]?.id;
+};
+
+const findPersonObjectId = async (): Promise<string> => {
+  const rows = await globalThis.testDataSource.query(
+    `SELECT id FROM core."objectMetadata"
+     WHERE "universalIdentifier" = $1 AND "workspaceId" = $2`,
+    [PERSON_OBJECT_UNIVERSAL_IDENTIFIER, TEST_WORKSPACE_ID],
   );
 
   return rows[0]?.id;
 };
 
 describe('Manifest sync - row level permission predicates declared on a role', () => {
-  let workspace: WorkspaceCustomApplicationSyncWorkspace;
+  beforeEach(async () => {
+    await setupApplicationForSync({
+      applicationUniversalIdentifier: TEST_APP_ID,
+      name: 'Test RLS Predicate Application',
+      description: 'App for testing declarative row-level predicate sync',
+      sourcePath: 'test-manifest-rls-predicate',
+    });
+  }, 60000);
 
-  const sync = async (manifest: Manifest) => {
+  afterEach(async () => {
+    await cleanupApplicationAndAppRegistration({
+      applicationUniversalIdentifier: TEST_APP_ID,
+    });
+  });
+
+  it('creates a row-level predicate owned by the app and pointing at the declared role/object/field', async () => {
     const { errors } = await syncApplication({
-      manifest,
-      inferDeletionFromMissingEntities: true,
+      manifest: buildManifestWithPredicates([
+        partnerUserStylePredicate(RowLevelPermissionPredicateOperand.CONTAINS),
+      ]),
       expectToFail: false,
-      token: workspace.accessToken,
     });
 
     expect(errors).toBeUndefined();
-  };
 
-  beforeAll(async () => {
-    workspace = await createWorkspaceCustomApplicationSyncWorkspace();
-  }, 120000);
-
-  afterAll(async () => {
-    await workspace.deleteWorkspace();
-  }, 120000);
-
-  it('creates a row-level predicate owned by the app and pointing at the declared role/object/field', async () => {
-    const roleUniversalIdentifier = uuidv4();
-    const predicateUniversalIdentifier = uuidv4();
-
-    await sync(
-      buildManifestWithPredicates({
-        workspace,
-        roleUniversalIdentifier,
-        predicates: [
-          partnerUserStylePredicate({
-            predicateUniversalIdentifier,
-            operand: RowLevelPermissionPredicateOperand.CONTAINS,
-          }),
-        ],
-      }),
-    );
-
-    const { workspaceId } = workspace;
     const [applicationId, roleId, personObjectId, predicateRows] =
       await Promise.all([
-        findIdByUniversalIdentifier({
-          table: 'application',
-          universalIdentifier:
-            workspace.manifest.application.universalIdentifier,
-          workspaceId,
-        }),
-        findIdByUniversalIdentifier({
-          table: 'role',
-          universalIdentifier: roleUniversalIdentifier,
-          workspaceId,
-        }),
-        findIdByUniversalIdentifier({
-          table: 'objectMetadata',
-          universalIdentifier: PERSON_OBJECT_UNIVERSAL_IDENTIFIER,
-          workspaceId,
-        }),
-        findActivePredicateRows({ workspaceId, predicateUniversalIdentifier }),
+        findApplicationId(),
+        findRoleId(),
+        findPersonObjectId(),
+        findActivePredicateRows(),
       ]);
 
     expect(predicateRows).toHaveLength(1);
@@ -192,46 +171,28 @@ describe('Manifest sync - row level permission predicates declared on a role', (
   }, 60000);
 
   it('updates the predicate in place on re-sync and removes it when dropped from the manifest', async () => {
-    const roleUniversalIdentifier = uuidv4();
-    const predicateUniversalIdentifier = uuidv4();
-    const { workspaceId } = workspace;
-    const syncWithPredicates = (
-      predicates: ReturnType<typeof partnerUserStylePredicate>[],
-    ) =>
-      sync(
-        buildManifestWithPredicates({
-          workspace,
-          roleUniversalIdentifier,
-          predicates,
-        }),
-      );
-
-    await syncWithPredicates([
-      partnerUserStylePredicate({
-        predicateUniversalIdentifier,
-        operand: RowLevelPermissionPredicateOperand.CONTAINS,
-      }),
-    ]);
-
-    const createdRows = await findActivePredicateRows({
-      workspaceId,
-      predicateUniversalIdentifier,
+    await syncApplication({
+      manifest: buildManifestWithPredicates([
+        partnerUserStylePredicate(RowLevelPermissionPredicateOperand.CONTAINS),
+      ]),
+      expectToFail: false,
     });
+
+    const createdRows = await findActivePredicateRows();
 
     expect(createdRows).toHaveLength(1);
     const predicateId = createdRows[0].id;
 
-    await syncWithPredicates([
-      partnerUserStylePredicate({
-        predicateUniversalIdentifier,
-        operand: RowLevelPermissionPredicateOperand.DOES_NOT_CONTAIN,
-      }),
-    ]);
-
-    const updatedRows = await findActivePredicateRows({
-      workspaceId,
-      predicateUniversalIdentifier,
+    await syncApplication({
+      manifest: buildManifestWithPredicates([
+        partnerUserStylePredicate(
+          RowLevelPermissionPredicateOperand.DOES_NOT_CONTAIN,
+        ),
+      ]),
+      expectToFail: false,
     });
+
+    const updatedRows = await findActivePredicateRows();
 
     expect(updatedRows).toHaveLength(1);
     expect(updatedRows[0].id).toBe(predicateId);
@@ -239,13 +200,29 @@ describe('Manifest sync - row level permission predicates declared on a role', (
       RowLevelPermissionPredicateOperand.DOES_NOT_CONTAIN,
     );
 
-    await syncWithPredicates([]);
+    await syncApplication({
+      manifest: buildManifestWithPredicates([]),
+      expectToFail: false,
+    });
 
-    expect(
-      await findActivePredicateRows({
-        workspaceId,
-        predicateUniversalIdentifier,
-      }),
-    ).toHaveLength(0);
+    expect(await findActivePredicateRows()).toHaveLength(0);
+  }, 60000);
+
+  it('removes the predicate on uninstall', async () => {
+    await syncApplication({
+      manifest: buildManifestWithPredicates([
+        partnerUserStylePredicate(RowLevelPermissionPredicateOperand.CONTAINS),
+      ]),
+      expectToFail: false,
+    });
+
+    expect(await findActivePredicateRows()).toHaveLength(1);
+
+    await uninstallApplication({
+      universalIdentifier: TEST_APP_ID,
+      expectToFail: false,
+    });
+
+    expect(await findActivePredicateRows()).toHaveLength(0);
   }, 60000);
 });

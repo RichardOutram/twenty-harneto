@@ -222,8 +222,6 @@ export class LocalDriver implements LogicFunctionDriver {
     return this.prebuiltBundle.getInstalledBundleChecksum(flatLogicFunction);
   }
 
-  async warmUp(): Promise<void> {}
-
   async execute({
     flatLogicFunction,
     flatApplication,

@@ -16,17 +16,12 @@ export const seedBillingCustomers = async ({
   await queryRunner.manager
     .createQueryBuilder()
     .insert()
-    .into(`${schemaName}.${tableName}`, [
-      'workspaceId',
-      'stripeCustomerId',
-      'stripeCustomerEmail',
-    ])
+    .into(`${schemaName}.${tableName}`, ['workspaceId', 'stripeCustomerId'])
     .orIgnore()
     .values([
       {
         workspaceId,
         stripeCustomerId: 'cus_default0',
-        stripeCustomerEmail: 'tim@apple.dev',
       },
     ])
     .execute();

@@ -127,7 +127,7 @@ export const RecordTableHeaderAddColumnButton = () => {
           </Dropdown.Trigger>
           <DropdownContent
             align="start"
-            width={GenericDropdownContentWidth.ExtraLarge}
+            width={GenericDropdownContentWidth.Medium}
           >
             <RecordTableHeaderPlusButtonContent />
           </DropdownContent>

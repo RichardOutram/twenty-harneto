@@ -14,6 +14,7 @@ import {
   IconCircleX,
   IconCoins,
   IconCreditCard,
+  IconExternalLink,
   IconId,
   IconStatusChange,
   IconTag,
@@ -27,7 +28,6 @@ import { SettingsAdminWorkspaceCreditGrantModal } from '@/settings/admin-panel/c
 import { SettingsAdminWorkspaceCreditGrantsTable } from '@/settings/admin-panel/components/SettingsAdminWorkspaceCreditGrantsTable';
 import { SettingsAdminWorkspaceUsageLimitsSection } from '@/settings/admin-panel/components/SettingsAdminWorkspaceUsageLimitsSection';
 import { formatSubscriptionItemValue } from '@/settings/admin-panel/utils/formatSubscriptionItemValue';
-import { SettingsTextLink } from '@/settings/components/SettingsTextLink';
 import { useDialog } from '@/ui/layout/dialog/hooks/useDialog';
 import { GET_WORKSPACE_BILLING_ADMIN_PANEL } from '@/settings/admin-panel/graphql/queries/getWorkspaceBillingAdminPanel';
 import { SettingsTableCard } from '@/settings/components/SettingsTableCard';
@@ -58,6 +58,14 @@ const StyledContainer = styled.div`
   flex-direction: column;
   gap: ${themeCssVariables.spacing[3]};
   margin-top: ${themeCssVariables.spacing[6]};
+`;
+
+const StyledExternalLink = styled.a`
+  align-items: center;
+  color: inherit;
+  display: inline-flex;
+  gap: ${themeCssVariables.spacing[1]};
+  text-decoration: none;
 `;
 
 const StyledMono = styled.span`
@@ -104,12 +112,14 @@ const StripeLink = ({
   path: 'customers' | 'subscriptions';
   id: string;
 }) => (
-  <SettingsTextLink
+  <StyledExternalLink
     href={`${STRIPE_DASHBOARD_BASE_URL}/${path}/${id}`}
-    title={id}
+    target="_blank"
+    rel="noopener noreferrer"
   >
     <StyledMono>{id}</StyledMono>
-  </SettingsTextLink>
+    <IconExternalLink size={12} />
+  </StyledExternalLink>
 );
 
 export const SettingsAdminWorkspaceBillingContent = ({

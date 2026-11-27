@@ -216,10 +216,6 @@ export const PageChangeEffect = () => {
   ]);
 
   useEffect(() => {
-    if (location.pathname === previousLocation) {
-      return;
-    }
-
     const isLeavingRecordIndexPage = !!matchPath(
       AppPath.RecordIndexPage,
       previousLocation,
@@ -236,6 +232,10 @@ export const PageChangeEffect = () => {
         deactivateBoardCard();
         unfocusBoardCard();
       }
+    }
+
+    if (location.pathname === previousLocation) {
+      return;
     }
 
     switch (true) {

@@ -51,7 +51,6 @@ const CREATABLE_ARRANGEMENT_TYPES: BillingArrangementType[] = [
   BillingArrangementType.FREE_SEATS,
   BillingArrangementType.COMMITTED_SEATS,
   BillingArrangementType.WORKSPACE_CREDIT_ALLOWANCE,
-  BillingArrangementType.TRIAL_EXTENSION,
 ];
 
 const TYPE_DESCRIPTIONS: Partial<
@@ -60,7 +59,6 @@ const TYPE_DESCRIPTIONS: Partial<
   [BillingArrangementType.FREE_SEATS]: msg`This many members are not billed. Seats are synced right away.`,
   [BillingArrangementType.COMMITTED_SEATS]: msg`At least this many seats are billed until the end date. A hard cap also blocks new members above it.`,
   [BillingArrangementType.WORKSPACE_CREDIT_ALLOWANCE]: msg`Replaces the plan's included workspace credits with a fixed amount per month, starting now. Paid and granted credits still add on top.`,
-  [BillingArrangementType.TRIAL_EXTENSION]: msg`Moves the end of a running trial to this date. Adding one again replaces the current extension.`,
 };
 
 export const SettingsAdminWorkspaceBillingArrangementModal = ({
@@ -99,8 +97,6 @@ export const SettingsAdminWorkspaceBillingArrangementModal = ({
   const isCommittedSeats = type === BillingArrangementType.COMMITTED_SEATS;
   const isCreditAllowance =
     type === BillingArrangementType.WORKSPACE_CREDIT_ALLOWANCE;
-  const isEndsAtRequired =
-    isCommittedSeats || type === BillingArrangementType.TRIAL_EXTENSION;
 
   const parsedSeats = parseAdminBillingArrangementSeats(seats);
   const parsedCreditAllowance =
@@ -108,7 +104,7 @@ export const SettingsAdminWorkspaceBillingArrangementModal = ({
 
   const isEndsAtValid = isDefined(endsAt)
     ? endsAt.getTime() > Date.now()
-    : !isEndsAtRequired;
+    : !isCommittedSeats;
 
   const isValid =
     isEndsAtValid &&
@@ -147,10 +143,9 @@ export const SettingsAdminWorkspaceBillingArrangementModal = ({
           seatCapMode: isCommittedSeats ? seatCapMode : null,
           creditAllowance: isCreditAllowance ? parsedCreditAllowance : null,
         },
-        refetchQueries: [
-          WORKSPACE_BILLING_ARRANGEMENTS,
-          GET_WORKSPACE_BILLING_ADMIN_PANEL,
-        ],
+        refetchQueries: isCreditAllowance
+          ? [WORKSPACE_BILLING_ARRANGEMENTS, GET_WORKSPACE_BILLING_ADMIN_PANEL]
+          : [WORKSPACE_BILLING_ARRANGEMENTS],
       });
 
       enqueueToast({ status: 'success', children: t`Arrangement added.` });
@@ -240,9 +235,9 @@ export const SettingsAdminWorkspaceBillingArrangementModal = ({
 
               <SettingsDatePickerInput
                 instanceId={`${modalInstanceId}-ends-at`}
-                label={isEndsAtRequired ? t`Ends` : t`Ends (optional)`}
+                label={isCommittedSeats ? t`Ends` : t`Ends (optional)`}
                 placeholder={
-                  isEndsAtRequired ? t`Pick the end date` : t`No end date`
+                  isCommittedSeats ? t`Pick the end date` : t`No end date`
                 }
                 value={endsAt}
                 onChange={setEndsAt}

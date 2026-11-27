@@ -1,6 +1,5 @@
 import {
   IconBrandAnthropic,
-  IconBrandGroq,
   IconBrandMistral,
   IconBrandTypesafeAi,
   IconBrandXai,
@@ -15,7 +14,6 @@ export const PROVIDER_ICON_CONFIG: Record<string, { Icon: IconComponent }> = {
   anthropic: { Icon: IconBrandAnthropic },
   bedrock: { Icon: IconRobot },
   google: { Icon: IconGoogle },
-  groq: { Icon: IconBrandGroq },
   mistral: { Icon: IconBrandMistral },
   xai: { Icon: IconBrandXai },
   'openai-compatible': { Icon: IconProviderOpenai },

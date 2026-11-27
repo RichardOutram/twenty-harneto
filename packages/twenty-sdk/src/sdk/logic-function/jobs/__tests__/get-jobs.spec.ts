@@ -34,7 +34,6 @@ const successResponse = () =>
         attemptsMade: 1,
         failedReason: null,
         enqueuedAt: 1788000000000,
-        scheduledAt: 1788000000500,
         startedAt: 1788000001000,
         finishedAt: 1788000002000,
       },
@@ -71,7 +70,6 @@ describe('getJobs', () => {
         attemptsMade: 1,
         failedReason: null,
         enqueuedAt: 1788000000000,
-        scheduledAt: 1788000000500,
         startedAt: 1788000001000,
         finishedAt: 1788000002000,
       },
@@ -84,7 +82,7 @@ describe('getJobs', () => {
     const sentBody = JSON.parse(requestInit?.body as string);
 
     expect(sentBody.query).toContain(
-      'getJobs(jobIds:$v1){jobId,state,attemptsMade,failedReason,enqueuedAt,scheduledAt,startedAt,finishedAt}',
+      'getJobs(jobIds:$v1){jobId,state,attemptsMade,failedReason,enqueuedAt,startedAt,finishedAt}',
     );
     expect(Object.values(sentBody.variables)).toEqual([JOB_IDS]);
   });

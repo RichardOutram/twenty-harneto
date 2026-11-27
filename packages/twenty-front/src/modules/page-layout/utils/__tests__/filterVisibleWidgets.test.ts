@@ -1,7 +1,6 @@
-import { EMPTY_CONDITIONAL_AVAILABILITY_CURRENT_USER_CONTEXT } from '@/conditional-availability/conditional-availability-user-context/constants/EmptyConditionalAvailabilityCurrentUserContext';
 import { type PageLayoutTab } from '@/page-layout/types/PageLayoutTab';
 import { filterVisibleWidgets } from '@/page-layout/utils/filterVisibleWidgets';
-import { buildDeviceConditionalEvaluationNode } from 'twenty-shared/conditional-evaluation';
+import { buildDeviceConditionalAvailability } from 'twenty-shared/conditional-availability';
 import {
   FeatureFlagKey,
   PageLayoutTabLayoutMode,
@@ -52,11 +51,7 @@ describe('filterVisibleWidgets', () => {
 
     const result = filterVisibleWidgets({
       widgets,
-      context: {
-        ...EMPTY_CONDITIONAL_AVAILABILITY_CURRENT_USER_CONTEXT,
-        device: 'DESKTOP',
-        selectedRecords: [],
-      },
+      context: { device: 'DESKTOP', selectedRecords: [], featureFlags: {} },
     });
 
     expect(result).toHaveLength(3);
@@ -76,11 +71,7 @@ describe('filterVisibleWidgets', () => {
 
     const result = filterVisibleWidgets({
       widgets,
-      context: {
-        ...EMPTY_CONDITIONAL_AVAILABILITY_CURRENT_USER_CONTEXT,
-        device: 'MOBILE',
-        selectedRecords: [],
-      },
+      context: { device: 'MOBILE', selectedRecords: [], featureFlags: {} },
     });
 
     expect(result).toHaveLength(2);
@@ -100,11 +91,7 @@ describe('filterVisibleWidgets', () => {
 
     const result = filterVisibleWidgets({
       widgets,
-      context: {
-        ...EMPTY_CONDITIONAL_AVAILABILITY_CURRENT_USER_CONTEXT,
-        device: 'DESKTOP',
-        selectedRecords: [],
-      },
+      context: { device: 'DESKTOP', selectedRecords: [], featureFlags: {} },
     });
 
     expect(result).toHaveLength(2);
@@ -114,11 +101,7 @@ describe('filterVisibleWidgets', () => {
   it('should handle empty widgets array', () => {
     const result = filterVisibleWidgets({
       widgets: [],
-      context: {
-        ...EMPTY_CONDITIONAL_AVAILABILITY_CURRENT_USER_CONTEXT,
-        device: 'DESKTOP',
-        selectedRecords: [],
-      },
+      context: { device: 'DESKTOP', selectedRecords: [], featureFlags: {} },
     });
 
     expect(result).toHaveLength(0);
@@ -136,11 +119,7 @@ describe('filterVisibleWidgets', () => {
 
     filterVisibleWidgets({
       widgets,
-      context: {
-        ...EMPTY_CONDITIONAL_AVAILABILITY_CURRENT_USER_CONTEXT,
-        device: 'DESKTOP',
-        selectedRecords: [],
-      },
+      context: { device: 'DESKTOP', selectedRecords: [], featureFlags: {} },
     });
 
     expect(widgets).toHaveLength(originalLength);
@@ -148,7 +127,6 @@ describe('filterVisibleWidgets', () => {
 
   describe('when the workspace reads the conditional availability tree only', () => {
     const context = {
-      ...EMPTY_CONDITIONAL_AVAILABILITY_CURRENT_USER_CONTEXT,
       device: 'DESKTOP' as const,
       selectedRecords: [],
       featureFlags: {
@@ -161,8 +139,7 @@ describe('filterVisibleWidgets', () => {
         createMockWidget('widget-1'),
         {
           ...createMockWidget('widget-2'),
-          conditionalAvailability:
-            buildDeviceConditionalEvaluationNode('MOBILE'),
+          conditionalAvailability: buildDeviceConditionalAvailability('MOBILE'),
         },
       ];
 
@@ -187,103 +164,6 @@ describe('filterVisibleWidgets', () => {
       expect(result.map((widget) => widget.id)).toEqual([
         'widget-1',
         'widget-2',
-      ]);
-    });
-
-    it('should apply a rule on the role of the current workspace member', () => {
-      const buildWidgetForRole = ({
-        id,
-        roleUniversalIdentifier,
-      }: {
-        id: string;
-        roleUniversalIdentifier: string;
-      }) => ({
-        ...createMockWidget(id),
-        conditionalAvailability: {
-          type: 'COMPARISON' as const,
-          operator: 'EQUAL' as const,
-          left: {
-            type: 'VARIABLE' as const,
-            path: 'currentRole.universalIdentifier',
-          },
-          right: { type: 'LITERAL' as const, value: roleUniversalIdentifier },
-        },
-      });
-
-      const result = filterVisibleWidgets({
-        widgets: [
-          buildWidgetForRole({
-            id: 'widget-for-sales',
-            roleUniversalIdentifier: 'sales-role-universal-identifier',
-          }),
-          buildWidgetForRole({
-            id: 'widget-for-support',
-            roleUniversalIdentifier: 'support-role-universal-identifier',
-          }),
-        ],
-        context: {
-          ...context,
-          currentRole: {
-            universalIdentifier: 'sales-role-universal-identifier',
-          },
-        },
-      });
-
-      expect(result.map((widget) => widget.id)).toEqual(['widget-for-sales']);
-    });
-
-    it('should evaluate a rule on the role while the role is not loaded', () => {
-      const roleIsSales = {
-        type: 'COMPARISON' as const,
-        operator: 'EQUAL' as const,
-        left: {
-          type: 'VARIABLE' as const,
-          path: 'currentRole.universalIdentifier',
-        },
-        right: {
-          type: 'LITERAL' as const,
-          value: 'sales-role-universal-identifier',
-        },
-      };
-      const deviceIsDesktop = buildDeviceConditionalEvaluationNode('DESKTOP');
-
-      const result = filterVisibleWidgets({
-        widgets: [
-          {
-            ...createMockWidget('widget-for-sales'),
-            conditionalAvailability: roleIsSales,
-          },
-          {
-            ...createMockWidget('widget-for-everyone-but-sales'),
-            conditionalAvailability: {
-              ...roleIsSales,
-              operator: 'NOT_EQUAL' as const,
-            },
-          },
-          {
-            ...createMockWidget('widget-for-sales-or-desktop'),
-            conditionalAvailability: {
-              type: 'GROUP' as const,
-              logicalOperator: 'OR' as const,
-              children: [roleIsSales, deviceIsDesktop],
-            },
-          },
-          {
-            ...createMockWidget('widget-for-desktop-or-sales'),
-            conditionalAvailability: {
-              type: 'GROUP' as const,
-              logicalOperator: 'OR' as const,
-              children: [deviceIsDesktop, roleIsSales],
-            },
-          },
-        ],
-        context,
-      });
-
-      expect(result.map((widget) => widget.id)).toEqual([
-        'widget-for-everyone-but-sales',
-        'widget-for-sales-or-desktop',
-        'widget-for-desktop-or-sales',
       ]);
     });
   });

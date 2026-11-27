@@ -9,7 +9,7 @@ import {
   IsUUID,
 } from 'class-validator';
 import { GraphQLJSON } from 'graphql-type-json';
-import { ConditionalEvaluationNode } from 'twenty-shared/conditional-evaluation';
+import { ConditionalAvailabilityNode } from 'twenty-shared/conditional-availability';
 import { PageLayoutWidgetPosition, WidgetType } from 'twenty-shared/types';
 
 import { UUIDScalarType } from 'src/engine/api/graphql/workspace-schema-builder/graphql-types/scalars';
@@ -49,5 +49,5 @@ export class CreatePageLayoutWidgetInput {
   @Field(() => GraphQLJSON, { nullable: true })
   @IsObject()
   @IsOptional()
-  conditionalAvailability?: ConditionalEvaluationNode | null;
+  conditionalAvailability?: ConditionalAvailabilityNode | null;
 }

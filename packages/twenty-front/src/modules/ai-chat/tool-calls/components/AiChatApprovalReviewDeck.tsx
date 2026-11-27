@@ -162,7 +162,6 @@ export const AiChatApprovalReviewDeck = ({
         variant="compact"
         role="group"
         aria-label={activeCard.title}
-        data-blocking-tool-card
       >
         <Card.Header>
           <StyledHeader>

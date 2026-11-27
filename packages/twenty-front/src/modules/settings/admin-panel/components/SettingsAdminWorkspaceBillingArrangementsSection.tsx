@@ -117,10 +117,13 @@ export const SettingsAdminWorkspaceBillingArrangementsSection = ({
     try {
       await endWorkspaceBillingArrangement({
         variables: { workspaceId, billingArrangementId: arrangement.id },
-        refetchQueries: [
-          WORKSPACE_BILLING_ARRANGEMENTS,
-          GET_WORKSPACE_BILLING_ADMIN_PANEL,
-        ],
+        refetchQueries:
+          arrangement.type === BillingArrangementType.WORKSPACE_CREDIT_ALLOWANCE
+            ? [
+                WORKSPACE_BILLING_ARRANGEMENTS,
+                GET_WORKSPACE_BILLING_ADMIN_PANEL,
+              ]
+            : [WORKSPACE_BILLING_ARRANGEMENTS],
       });
 
       enqueueToast({ status: 'success', children: t`Arrangement ended.` });
@@ -228,11 +231,7 @@ export const SettingsAdminWorkspaceBillingArrangementsSection = ({
       <ConfirmationDialog
         dialogId={END_BILLING_ARRANGEMENT_DIALOG_ID}
         title={t`End arrangement`}
-        subtitle={
-          arrangementPendingEnd?.type === BillingArrangementType.TRIAL_EXTENSION
-            ? t`The trial ends now: workspaces with a card are charged right away, the others are suspended until they add one.`
-            : t`The ${pendingEndTypeLabel} arrangement stops applying now and stays in the history. It cannot be restarted: add a new one instead.`
-        }
+        subtitle={t`The ${pendingEndTypeLabel} arrangement stops applying now and stays in the history. It cannot be restarted: add a new one instead.`}
         confirmButtonText={t`End`}
         loading={isEnding}
         onConfirmClick={() => {

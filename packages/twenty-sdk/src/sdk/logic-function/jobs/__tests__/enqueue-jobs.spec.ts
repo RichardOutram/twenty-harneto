@@ -36,7 +36,6 @@ const successResponse = (enqueuedJobsCount: number) =>
       jobs: JOB_IDS.slice(0, enqueuedJobsCount).map((jobId) => ({
         jobId,
         sizeBytes: 1_200,
-        scheduledAt: 1_788_000_000_000,
       })),
       availableBytes: 50_000,
     },
@@ -75,11 +74,7 @@ describe('enqueueJobs', () => {
       logicFunctionUniversalIdentifier: TARGET_UNIVERSAL_IDENTIFIER,
       enqueuedJobsCount: 2,
       jobIds: JOB_IDS,
-      jobs: JOB_IDS.map((jobId) => ({
-        jobId,
-        sizeBytes: 1_200,
-        scheduledAt: 1_788_000_000_000,
-      })),
+      jobs: JOB_IDS.map((jobId) => ({ jobId, sizeBytes: 1_200 })),
       availableBytes: 50_000,
     });
 
@@ -90,7 +85,7 @@ describe('enqueueJobs', () => {
     const sentBody = JSON.parse(requestInit?.body as string);
 
     expect(sentBody.query).toContain(
-      'enqueueJobs(input:$v1){enqueued,logicFunctionUniversalIdentifier,enqueuedJobsCount,jobIds,jobs{jobId,sizeBytes,scheduledAt},availableBytes}',
+      'enqueueJobs(input:$v1){enqueued,logicFunctionUniversalIdentifier,enqueuedJobsCount,jobIds,jobs{jobId,sizeBytes},availableBytes}',
     );
     expect(Object.values(sentBody.variables)).toEqual([
       {
@@ -98,29 +93,6 @@ describe('enqueueJobs', () => {
         payloads: [{ batchIndex: 0 }, { batchIndex: 1 }],
         retryLimit: 3,
         delayMs: 1000,
-      },
-    ]);
-  });
-
-  it('sends the limiter to the enqueueJobs mutation', async () => {
-    fetchSpy.mockResolvedValue(successResponse(1));
-
-    const enqueueJobs = await importEnqueueJobs();
-
-    await enqueueJobs({
-      logicFunctionUniversalIdentifier: TARGET_UNIVERSAL_IDENTIFIER,
-      jobs: [{ payload: {} }],
-      limiter: { max: 10, durationMs: 60_000 },
-    });
-
-    const [, requestInit] = fetchSpy.mock.calls[0];
-    const sentBody = JSON.parse(requestInit?.body as string);
-
-    expect(Object.values(sentBody.variables)).toEqual([
-      {
-        logicFunctionUniversalIdentifier: TARGET_UNIVERSAL_IDENTIFIER,
-        jobs: [{ payload: {} }],
-        limiter: { max: 10, durationMs: 60_000 },
       },
     ]);
   });

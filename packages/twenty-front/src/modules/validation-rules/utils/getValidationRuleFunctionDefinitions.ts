@@ -1,8 +1,12 @@
 import { VALIDATION_RULE_FUNCTIONS } from 'twenty-shared/constants';
-import { isValidationRuleFunctionName } from 'twenty-shared/utils';
+import { type ValidationRuleFunctionName } from 'twenty-shared/types';
 
 import { VALIDATION_RULE_FUNCTION_DESCRIPTIONS } from '@/validation-rules/constants/ValidationRuleFunctionDescriptions';
 import { type ValidationRuleSyntaxDefinition } from '@/validation-rules/types/ValidationRuleSyntaxDefinition';
+
+const isValidationRuleFunctionName = (
+  name: string,
+): name is ValidationRuleFunctionName => name in VALIDATION_RULE_FUNCTIONS;
 
 export const getValidationRuleFunctionDefinitions =
   (): ValidationRuleSyntaxDefinition[] =>

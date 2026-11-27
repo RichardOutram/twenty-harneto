@@ -21,7 +21,10 @@ import { type APP_LOCALES, SOURCE_LOCALE } from 'twenty-shared/translations';
 import { isDefined } from 'twenty-shared/utils';
 import { doNotTranslate } from 'twenty-shared/i18n';
 import { useQuery } from '@apollo/client/react';
-import { GetCurrentUserDocument } from '~/generated-metadata/graphql';
+import {
+  type WorkspaceMember,
+  GetCurrentUserDocument,
+} from '~/generated-metadata/graphql';
 import { dateLocaleState } from '@/localization/states/dateLocaleState';
 import { dynamicActivate } from '~/utils/i18n/dynamicActivate';
 import { type ColorScheme } from '@/ui/theme/types/ColorScheme';
@@ -133,9 +136,7 @@ export const UserMetadataProviderInitialEffect = () => {
     } = userQueryData.currentUser;
 
     const affectDefaultValuesOnEmptyWorkspaceMemberFields = (
-      workspaceMember: NonNullable<
-        typeof userQueryData.currentUser.workspaceMember
-      >,
+      workspaceMember: WorkspaceMember,
     ) => {
       return {
         ...workspaceMember,

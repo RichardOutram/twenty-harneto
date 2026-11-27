@@ -1,3 +1,4 @@
+import { resolveObjectPermissionValue } from 'twenty-shared/application';
 import { PermissionFlagType } from 'twenty-shared/constants';
 import { STANDARD_OBJECTS } from 'twenty-shared/metadata';
 import {
@@ -28,8 +29,8 @@ type RoleDefinitionForRecordsPermissions = Pick<
   | 'canCreateAllObjectRecords'
 > & {
   isPermissionFlagGranted: (permissionFlag: PermissionFlagType) => boolean;
-  // an AI run scope leaves system objects readable unless it says otherwise
-  areSystemObjectsReadableByDefault?: boolean;
+  // an AI run scope leaves system objects readable but not writable unless it grants them
+  areSystemObjectsReadOnlyByDefault?: boolean;
   objectPermissions: Pick<
     ObjectPermissionEntity,
     | 'objectMetadataId'
@@ -94,11 +95,7 @@ const resolveObjectRecordsAccess = ({
   >;
   roleDefinition: RoleDefinitionForRecordsPermissions;
 }): ObjectRecordsAccess => {
-  const {
-    isPermissionFlagGranted,
-    objectPermissions,
-    areSystemObjectsReadableByDefault = false,
-  } = roleDefinition;
+  const { isPermissionFlagGranted, objectPermissions } = roleDefinition;
 
   if (
     WORKFLOW_STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.includes(universalIdentifier)
@@ -119,28 +116,39 @@ const resolveObjectRecordsAccess = ({
     };
   }
 
+  const isSystemObjectWritableByDefault =
+    isSystem && !roleDefinition.areSystemObjectsReadOnlyByDefault;
   const objectPermissionOverride = objectPermissions.find(
     (objectPermission) =>
       objectPermission.objectMetadataId === objectMetadataId,
   );
 
   return {
-    canCreate:
-      objectPermissionOverride?.canCreateObjectRecords ??
-      roleDefinition.canCreateAllObjectRecords,
-    canRead:
-      objectPermissionOverride?.canReadObjectRecords ??
-      (roleDefinition.canReadAllObjectRecords ||
-        (isSystem && areSystemObjectsReadableByDefault)),
-    canUpdate:
-      objectPermissionOverride?.canUpdateObjectRecords ??
-      roleDefinition.canUpdateAllObjectRecords,
-    canSoftDelete:
-      objectPermissionOverride?.canSoftDeleteObjectRecords ??
-      roleDefinition.canSoftDeleteAllObjectRecords,
-    canDestroy:
-      objectPermissionOverride?.canDestroyObjectRecords ??
-      roleDefinition.canDestroyAllObjectRecords,
+    canCreate: resolveObjectPermissionValue({
+      objectValue: objectPermissionOverride?.canCreateObjectRecords,
+      hasAllObjectsPermission: roleDefinition.canCreateAllObjectRecords,
+      isSystemObject: isSystemObjectWritableByDefault,
+    }),
+    canRead: resolveObjectPermissionValue({
+      objectValue: objectPermissionOverride?.canReadObjectRecords,
+      hasAllObjectsPermission: roleDefinition.canReadAllObjectRecords,
+      isSystemObject: isSystem,
+    }),
+    canUpdate: resolveObjectPermissionValue({
+      objectValue: objectPermissionOverride?.canUpdateObjectRecords,
+      hasAllObjectsPermission: roleDefinition.canUpdateAllObjectRecords,
+      isSystemObject: isSystemObjectWritableByDefault,
+    }),
+    canSoftDelete: resolveObjectPermissionValue({
+      objectValue: objectPermissionOverride?.canSoftDeleteObjectRecords,
+      hasAllObjectsPermission: roleDefinition.canSoftDeleteAllObjectRecords,
+      isSystemObject: isSystemObjectWritableByDefault,
+    }),
+    canDestroy: resolveObjectPermissionValue({
+      objectValue: objectPermissionOverride?.canDestroyObjectRecords,
+      hasAllObjectsPermission: roleDefinition.canDestroyAllObjectRecords,
+      isSystemObject: isSystemObjectWritableByDefault,
+    }),
   };
 };
 

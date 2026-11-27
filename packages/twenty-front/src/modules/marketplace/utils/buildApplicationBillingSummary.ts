@@ -13,19 +13,19 @@ type BillingPrice = Pick<
 >;
 
 const getPriceLabel = ({
-  price,
+  amount,
   per,
 }: {
-  price: string;
+  amount: string;
   per: BillingPrice['per'];
 }): string => {
   switch (per) {
     case ApplicationBillingPriceUnit.CONNECTED_ACCOUNT:
-      return t`Bill your workspace ${price} per account`;
+      return t`Bill your workspace ${amount} / month per account`;
     case ApplicationBillingPriceUnit.WORKSPACE_MEMBER:
-      return t`Bill your workspace ${price} per member`;
+      return t`Bill your workspace ${amount} / month per member`;
     default:
-      return t`Bill your workspace ${price}`;
+      return t`Bill your workspace ${amount} / month`;
   }
 };
 
@@ -40,16 +40,10 @@ export const buildApplicationBillingSummary = ({
     price: Pick<BillingPrice, 'amountCents' | 'currency'>,
   ) => string;
 }): PermissionSummaryItem[] => [
-  ...billingPrices.map((billingPrice) => {
-    const amount = formatAmount(billingPrice);
-    const price = t`${amount} / month`;
-
-    return {
-      Icon: IconCreditCard,
-      label: getPriceLabel({ price, per: billingPrice.per }),
-      emphasis: price,
-    };
-  }),
+  ...billingPrices.map((price) => ({
+    Icon: IconCreditCard,
+    label: getPriceLabel({ amount: formatAmount(price), per: price.per }),
+  })),
   ...(billingPrices.some(
     ({ per }) => per === ApplicationBillingPriceUnit.CONNECTED_ACCOUNT,
   )

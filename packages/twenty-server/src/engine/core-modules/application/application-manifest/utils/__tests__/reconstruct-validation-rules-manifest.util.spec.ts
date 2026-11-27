@@ -5,49 +5,33 @@ import { ApplicationExportCoverageStatus } from 'src/engine/core-modules/applica
 import { createEmptyAllFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/constant/create-empty-all-flat-entity-maps.constant';
 import { getFlatFieldMetadataMock } from 'src/engine/metadata-modules/flat-field-metadata/__mocks__/get-flat-field-metadata.mock';
 import { getFlatObjectMetadataMock } from 'src/engine/metadata-modules/flat-object-metadata/__mocks__/get-flat-object-metadata.mock';
-import { type FlatValidationRule } from 'src/engine/metadata-modules/flat-validation-rule/types/flat-validation-rule.type';
-import { addFlatEntityToFlatEntityMapsThroughMutationOrThrow } from 'src/engine/workspace-manager/workspace-migration/utils/add-flat-entity-to-flat-entity-maps-through-mutation-or-throw.util';
 import { FieldMetadataType } from 'twenty-shared/types';
 
 const NOW = '2026-11-02T00:00:00.000Z';
 
-const readFieldTree = (fieldUniversalIdentifier: string) => ({
-  type: 'FUNCTION_CALL',
-  functionName: 'isNonEmptyString',
-  arguments: [{ type: 'FIELD', fieldUniversalIdentifier }],
-});
-
 const reconstruct = ({
   isObjectExported = true,
   isErrorFieldResolvable = true,
+  expression = 'isNonEmptyString(reference)',
   message = 'Message',
-  tree = readFieldTree('reference'),
+  bindings = { reference: 'reference' },
 }: {
   isObjectExported?: boolean;
   isErrorFieldResolvable?: boolean;
+  expression?: string;
   message?: string;
-  tree?: FlatValidationRule['tree'];
+  bindings?: Record<string, string>;
 }) => {
   const applicationAllFlatEntityMaps = createEmptyAllFlatEntityMaps();
 
-  addFlatEntityToFlatEntityMapsThroughMutationOrThrow({
-    flatEntity: getFlatObjectMetadataMock({
-      id: 'ticket-id',
-      universalIdentifier: 'ticket',
-      fieldIds: ['reference-id'],
-    }),
-    flatEntityMapsToMutate: applicationAllFlatEntityMaps.flatObjectMetadataMaps,
-  });
-  addFlatEntityToFlatEntityMapsThroughMutationOrThrow({
-    flatEntity: getFlatFieldMetadataMock({
-      id: 'reference-id',
+  applicationAllFlatEntityMaps.flatObjectMetadataMaps.byUniversalIdentifier.ticket =
+    getFlatObjectMetadataMock({ universalIdentifier: 'ticket' });
+  applicationAllFlatEntityMaps.flatFieldMetadataMaps.byUniversalIdentifier.reference =
+    getFlatFieldMetadataMock({
       universalIdentifier: 'reference',
-      name: 'reference',
       objectMetadataId: 'ticket-id',
       type: FieldMetadataType.TEXT,
-    }),
-    flatEntityMapsToMutate: applicationAllFlatEntityMaps.flatFieldMetadataMaps,
-  });
+    });
   applicationAllFlatEntityMaps.flatValidationRuleMaps.byUniversalIdentifier.rule =
     {
       id: 'rule-id',
@@ -62,7 +46,8 @@ const reconstruct = ({
       name: 'Rule',
       description: null,
       icon: null,
-      tree,
+      expression,
+      bindings,
       message,
       isActive: true,
       createdAt: NOW,
@@ -82,23 +67,18 @@ const reconstruct = ({
 };
 
 describe('reconstructValidationRulesManifest', () => {
-  it('exports a rule whose references are exported, printed with the current field names', () => {
+  it('exports a rule whose references are exported', () => {
     const { validationRules } = reconstruct({});
 
-    expect(validationRules).toMatchObject([
-      {
-        universalIdentifier: 'rule',
-        expression: 'isNonEmptyString(reference)',
-      },
-    ]);
+    expect(validationRules).toMatchObject([{ universalIdentifier: 'rule' }]);
   });
 
   it.each([
     ['object', { isObjectExported: false }],
     ['error field', { isErrorFieldResolvable: false }],
-    ['expression', { tree: null }],
+    ['expression', { expression: '' }],
     ['message', { message: ' ' }],
-    ['deleted field', { tree: readFieldTree('deleted-score') }],
+    ['deleted field', { bindings: { score: 'deleted-score' } }],
   ])('leaves out a rule whose %s cannot be exported', (_, options) => {
     const { validationRules, coverage } = reconstruct(options);
 

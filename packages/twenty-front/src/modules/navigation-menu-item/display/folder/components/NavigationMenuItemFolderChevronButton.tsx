@@ -31,7 +31,7 @@ export const NavigationMenuItemFolderChevronButton = ({
 
   return (
     <LightIconButton
-      size="xs"
+      size="sm"
       emphasis="subtle"
       aria-label={isOpen ? t`Collapse folder` : t`Expand folder`}
       onClick={onClick}

@@ -1,14 +1,16 @@
 import { HeadlessConfirmationModalEngineCommandEffect } from '@/command-menu-item/engine-command/components/HeadlessConfirmationModalEngineCommandEffect';
 import { useHeadlessCommandContextApi } from '@/command-menu-item/engine-command/hooks/useHeadlessCommandContextApi';
-import { inboxNamesByLegacyNameSelector } from '@/ai-chat/states/selectors/inboxNamesByLegacyNameSelector';
-import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import { DEFAULT_QUERY_PAGE_SIZE } from '@/object-record/constants/DefaultQueryPageSize';
 import { useIncrementalDestroyManyRecords } from '@/object-record/hooks/useIncrementalDestroyManyRecords';
 import { useRemoveSelectedRecordsFromRecordBoard } from '@/object-record/record-board/hooks/useRemoveSelectedRecordsFromRecordBoard';
 import { PLACEHOLDER_RECORD_INDEX_ID } from '@/object-record/record-index/constants/PlaceholderRecordIndexId';
 import { useResetRecordSelection } from '@/object-record/record-selection/hooks/useResetRecordSelection';
 import { useSidePanelMenu } from '@/side-panel/hooks/useSidePanelMenu';
-import { AppPath, type RecordGqlOperationFilter } from 'twenty-shared/types';
+import {
+  AppPath,
+  StandardObjectNameSingular,
+  type RecordGqlOperationFilter,
+} from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import { doNotTranslate } from 'twenty-shared/i18n';
 import { useNavigateApp } from '~/hooks/useNavigateApp';
@@ -16,9 +18,6 @@ import { useLingui } from '@lingui/react/macro';
 
 export const DestroyRecordsCommand = () => {
   const { t } = useLingui();
-  const inboxNamesByLegacyName = useAtomStateValue(
-    inboxNamesByLegacyNameSelector,
-  );
   const {
     recordIndexId,
     objectMetadataItem,
@@ -84,7 +83,8 @@ export const DestroyRecordsCommand = () => {
     if (
       !isSingleRecord ||
       isInSidePanel ||
-      objectMetadataItem.nameSingular === inboxNamesByLegacyName.agentChatThread
+      objectMetadataItem.nameSingular ===
+        StandardObjectNameSingular.AgentChatThread
     ) {
       return;
     }

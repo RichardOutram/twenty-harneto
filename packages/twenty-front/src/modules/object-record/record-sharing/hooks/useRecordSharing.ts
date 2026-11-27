@@ -5,7 +5,6 @@ import { useToast } from 'twenty-ui/components/feedback';
 
 import { getToastOptionsFromError } from '@/error-handler/utils/getToastOptionsFromError';
 import { useRefreshRecordPermissions } from '@/object-record/record-sharing/hooks/useRefreshRecordPermissions';
-import { getManageableRecordSharing } from '@/object-record/record-sharing/utils/getManageableRecordSharing';
 import {
   GetRecordSharingDocument,
   RemoveRecordShareDocument,
@@ -123,7 +122,7 @@ export const useRecordSharing = ({
     );
 
   return {
-    sharing: getManageableRecordSharing(data?.recordSharing),
+    sharing: data?.recordSharing,
     loading,
     error,
     saving: savingPrivate || savingShare || removingShare,

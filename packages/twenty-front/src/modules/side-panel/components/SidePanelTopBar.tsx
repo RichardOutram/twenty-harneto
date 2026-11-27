@@ -12,7 +12,6 @@ import { SIDE_PANEL_TOP_BAR_HEIGHT_MOBILE } from '@/side-panel/constants/SidePan
 import { useHandleSidePanelBackspace } from '@/side-panel/hooks/useHandleSidePanelBackspace';
 import { useHandleSidePanelEscape } from '@/side-panel/hooks/useHandleSidePanelEscape';
 import { useSidePanelContextChips } from '@/side-panel/hooks/useSidePanelContextChips';
-import { hasUserSelectedSidePanelListItemState } from '@/side-panel/states/hasUserSelectedSidePanelListItemState';
 import { sidePanelNavigationStackState } from '@/side-panel/states/sidePanelNavigationStackState';
 import { sidePanelSearchState } from '@/side-panel/states/sidePanelSearchState';
 import { usePushFocusItemToFocusStack } from '@/ui/utilities/focus/hooks/usePushFocusItemToFocusStack';
@@ -23,7 +22,6 @@ import { useLingui } from '@lingui/react/macro';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAtomState } from '@/ui/utilities/state/jotai/hooks/useAtomState';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
-import { useSetAtomState } from '@/ui/utilities/state/jotai/hooks/useSetAtomState';
 import { useRef } from 'react';
 import { Key } from 'ts-key-enum';
 import { SidePanelPages } from 'twenty-shared/types';
@@ -107,16 +105,12 @@ export const SidePanelTopBar = ({
 }) => {
   const [sidePanelSearch, setSidePanelSearch] =
     useAtomState(sidePanelSearchState);
-  const setHasUserSelectedSidePanelListItem = useSetAtomState(
-    hasUserSelectedSidePanelListItemState,
-  );
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { t } = useLingui();
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSidePanelSearch(event.target.value);
-    setHasUserSelectedSidePanelListItem(false);
   };
 
   const isMobile = useIsMobile();

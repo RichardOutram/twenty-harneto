@@ -15,7 +15,6 @@ const BASE_ROLE_MOCK: Role = {
   applicationId: 'application-id',
   id: '1',
   isEditable: true,
-  areRecordPermissionsEditable: true,
   label: 'Role base',
   agents: [],
   apiKeys: [],

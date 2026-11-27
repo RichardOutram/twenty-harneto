@@ -90,7 +90,6 @@ export class ListNavigationMenuItemsTool extends BaseTool<
             agentChatChannelId: item.agentChatChannelId,
             nativePageKey: item.nativePageKey,
             builtInSectionKey: item.builtInSectionKey,
-            visibleItemLimit: item.visibleItemLimit,
             isActive: item.isActive,
             workflowId: item.workflowId,
             agentId: item.agentId,

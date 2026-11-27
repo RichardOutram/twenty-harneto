@@ -37,7 +37,8 @@
     "slash": "^5.1.0",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.19.3",
-    "vite": "^8.0.0"
+    "vite": "^8.0.0",
+    "vite-plugin-dts": "^4.5.4"
   },
   "dependencies": {
     "@dagrejs/dagre": "^1.1.8",
@@ -96,13 +97,13 @@
       },
       "require": "./dist/application-runtime/index.cjs"
     },
-    "./conditional-evaluation": {
-      "types": "./dist/conditional-evaluation/index.d.ts",
+    "./conditional-availability": {
+      "types": "./dist/conditional-availability/index.d.ts",
       "import": {
-        "development": "./dist/dev/conditional-evaluation/index.mjs",
-        "default": "./dist/conditional-evaluation/index.mjs"
+        "development": "./dist/dev/conditional-availability/index.mjs",
+        "default": "./dist/conditional-availability/index.mjs"
       },
-      "require": "./dist/conditional-evaluation/index.cjs"
+      "require": "./dist/conditional-availability/index.cjs"
     },
     "./constants": {
       "types": "./dist/constants/index.d.ts",
@@ -119,14 +120,6 @@
         "default": "./dist/database-events/index.mjs"
       },
       "require": "./dist/database-events/index.cjs"
-    },
-    "./expression": {
-      "types": "./dist/expression/index.d.ts",
-      "import": {
-        "development": "./dist/dev/expression/index.mjs",
-        "default": "./dist/expression/index.mjs"
-      },
-      "require": "./dist/expression/index.cjs"
     },
     "./front-component-build": {
       "types": "./dist/front-component-build/index.d.ts",
@@ -246,10 +239,9 @@
     "ai",
     "application",
     "application-runtime",
-    "conditional-evaluation",
+    "conditional-availability",
     "constants",
     "database-events",
-    "expression",
     "front-component-build",
     "i18n",
     "logic-function",
@@ -276,17 +268,14 @@
       "application-runtime": [
         "dist/application-runtime/index.d.ts"
       ],
-      "conditional-evaluation": [
-        "dist/conditional-evaluation/index.d.ts"
+      "conditional-availability": [
+        "dist/conditional-availability/index.d.ts"
       ],
       "constants": [
         "dist/constants/index.d.ts"
       ],
       "database-events": [
         "dist/database-events/index.d.ts"
-      ],
-      "expression": [
-        "dist/expression/index.d.ts"
       ],
       "front-component-build": [
         "dist/front-component-build/index.d.ts"

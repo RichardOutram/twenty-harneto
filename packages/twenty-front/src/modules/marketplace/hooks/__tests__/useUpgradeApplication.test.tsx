@@ -86,7 +86,6 @@ describe('useUpgradeApplication', () => {
         attemptsMade: 1,
         progress: 43,
         enqueuedAt: 1,
-        scheduledAt: 1,
       });
     });
 
@@ -98,7 +97,6 @@ describe('useUpgradeApplication', () => {
         state: JobState.COMPLETED,
         attemptsMade: 1,
         enqueuedAt: 1,
-        scheduledAt: 1,
       });
     });
 
@@ -134,7 +132,6 @@ describe('useUpgradeApplication', () => {
         attemptsMade: 1,
         failedReason: 'Upgrade failed for this application.',
         enqueuedAt: 1,
-        scheduledAt: 1,
       });
     });
 

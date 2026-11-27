@@ -14,7 +14,7 @@ import { type FlatFieldMetadata } from 'src/engine/metadata-modules/flat-field-m
 import { type FlatIndexMetadata } from 'src/engine/metadata-modules/flat-index-metadata/types/flat-index-metadata.type';
 import { WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';
 import { getWorkspaceSchemaName } from 'src/engine/workspace-datasource/utils/get-workspace-schema-name.util';
-import { computeTwentyStandardApplicationAllFlatEntityMapsWithLegacyAgentChatNames } from 'src/database/commands/upgrade-version-command/2-42/utils/compute-twenty-standard-application-all-flat-entity-maps-with-legacy-agent-chat-names.util';
+import { computeTwentyStandardApplicationAllFlatEntityMaps } from 'src/engine/workspace-manager/twenty-standard-application/utils/twenty-standard-application-all-flat-entity-maps.constant';
 import { WorkspaceMigrationValidateBuildAndRunService } from 'src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service';
 import { escapeIdentifier } from 'src/engine/workspace-manager/workspace-migration/utils/remove-sql-injection.util';
 
@@ -82,13 +82,11 @@ export class LinkChatThreadsToWorkspaceMembersCommand extends ProvisionedWorkspa
         { workspaceId },
       );
     const { allFlatEntityMaps: standardAllFlatEntityMaps } =
-      computeTwentyStandardApplicationAllFlatEntityMapsWithLegacyAgentChatNames(
-        {
-          now: new Date().toISOString(),
-          workspaceId,
-          twentyStandardApplicationId: twentyStandardFlatApplication.id,
-        },
-      );
+      computeTwentyStandardApplicationAllFlatEntityMaps({
+        now: new Date().toISOString(),
+        workspaceId,
+        twentyStandardApplicationId: twentyStandardFlatApplication.id,
+      });
     const allFlatEntityOperationByMetadataName = {
       fieldMetadata: {
         flatEntityToCreate:

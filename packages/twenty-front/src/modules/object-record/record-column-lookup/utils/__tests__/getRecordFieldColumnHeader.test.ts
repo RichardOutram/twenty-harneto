@@ -35,7 +35,7 @@ describe('getRecordFieldColumnHeader', () => {
         customLabel: undefined,
       }),
     ).toMatchObject({
-      label: `${employeesField.label} · Summary`,
+      label: `${employeesField.label} · Filtered`,
       icon: employeesField.icon,
     });
   });
@@ -68,7 +68,7 @@ describe('getRecordFieldColumnHeader', () => {
         customLabel: undefined,
       }),
     ).toEqual({
-      label: `${employeesField.label} · Summary › ${companyField.label}`,
+      label: `${employeesField.label} · Filtered › ${companyField.label}`,
       icon: companyField.icon,
       description: companyField.description,
     });
@@ -98,7 +98,7 @@ describe('getRecordFieldColumnHeader', () => {
         columnKind: { kind: 'scopedRecords' },
         customLabel: null,
       }).label,
-    ).toBe(`${employeesField.label} · Summary`);
+    ).toBe(`${employeesField.label} · Filtered`);
   });
 
   it('names a summary column after its relation and its operation', () => {
@@ -155,6 +155,6 @@ describe('getRecordFieldColumnHeader', () => {
         columnKind: { kind: 'summary' },
         customLabel: undefined,
       }).label,
-    ).toBe(`${employeesField.label} · Summary`);
+    ).toBe(`${employeesField.label} · Filtered`);
   });
 });

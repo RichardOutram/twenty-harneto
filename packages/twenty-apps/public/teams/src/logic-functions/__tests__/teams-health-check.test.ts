@@ -11,10 +11,12 @@ const {
   listTeamsConnectionsMock,
   kvGetMock,
   fetchCurrentWorkspaceIdOrThrowMock,
+  releaseFlags,
 } = vi.hoisted(() => ({
   listTeamsConnectionsMock: vi.fn(),
   kvGetMock: vi.fn(),
   fetchCurrentWorkspaceIdOrThrowMock: vi.fn(),
+  releaseFlags: { IS_CHAT_ASSISTANT_RELEASED: false },
 }));
 
 vi.mock(
@@ -26,6 +28,10 @@ vi.mock(
 
 vi.mock('twenty-sdk/logic-function', () => ({
   kv: { get: kvGetMock },
+}));
+
+vi.mock('src/constants/release-flags', () => ({
+  RELEASE_FLAGS: releaseFlags,
 }));
 
 vi.mock(
@@ -46,12 +52,14 @@ const WORKSPACE_CONNECTION = {
 };
 
 const enableChat = () => {
+  releaseFlags.IS_CHAT_ASSISTANT_RELEASED = true;
   vi.stubEnv(CHAT_ENABLED_APPLICATION_VARIABLE_KEY, 'true');
 };
 
 describe('teamsHealthCheckHandler', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    releaseFlags.IS_CHAT_ASSISTANT_RELEASED = false;
     vi.stubEnv(TRANSCRIPTS_ENABLED_APPLICATION_VARIABLE_KEY, 'true');
     listTeamsConnectionsMock.mockResolvedValue([]);
     kvGetMock.mockResolvedValue(null);

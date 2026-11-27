@@ -94,7 +94,7 @@ export class ToolCallAnswerRecorderService {
     const writeResponse = async ({
       manager,
       table,
-    }: Pick<AgentHistoryStorageContext, 'manager' | 'table'>) => {
+    }: AgentHistoryStorageContext) => {
       await manager.query(
         `UPDATE ${table('agentMessagePart')} SET "toolOutput" = $2::jsonb, "updatedAt" = now() WHERE id = $1`,
         [partId, JSON.stringify(toolOutput)],

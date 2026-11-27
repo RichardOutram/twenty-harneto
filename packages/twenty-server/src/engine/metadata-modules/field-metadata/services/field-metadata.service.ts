@@ -23,7 +23,6 @@ import { resolveFlatFieldMetadataOptions } from 'src/engine/metadata-modules/fla
 import { type FlatFieldMetadata } from 'src/engine/metadata-modules/flat-field-metadata/types/flat-field-metadata.type';
 import { fromCreateFieldInputToFlatFieldMetadatasToCreate } from 'src/engine/metadata-modules/flat-field-metadata/utils/from-create-field-input-to-flat-field-metadatas-to-create.util';
 import { fromDeleteFieldInputToFlatFieldMetadatasToDelete } from 'src/engine/metadata-modules/flat-field-metadata/utils/from-delete-field-input-to-flat-field-metadatas-to-delete.util';
-import { setFormulaFieldTrees } from 'src/engine/metadata-modules/formula-field/utils/set-formula-field-trees.util';
 import { fromUpdateFieldInputToFlatFieldMetadata } from 'src/engine/metadata-modules/flat-field-metadata/utils/from-update-field-input-to-flat-field-metadata.util';
 import { throwOnFieldInputTranspilationsError } from 'src/engine/metadata-modules/flat-field-metadata/utils/throw-on-field-input-transpilations-error.util';
 import { WidgetConfigurationType } from 'src/engine/metadata-modules/page-layout-widget/enums/widget-configuration-type.type';
@@ -349,7 +348,7 @@ export class FieldMetadataService {
     }
 
     const {
-      flatFieldMetadatasToUpdate: transpiledFlatFieldMetadatasToUpdate,
+      flatFieldMetadatasToUpdate,
       flatFieldMetadatasToCreate,
       flatIndexMetadatasToUpdate,
       flatIndexMetadatasToDelete,
@@ -365,14 +364,6 @@ export class FieldMetadataService {
       flatViewsToUpdate,
       flatViewsToDelete,
     } = inputTranspilationResult.result;
-    const flatFieldMetadatasToUpdate = transpiledFlatFieldMetadatasToUpdate.map(
-      (universalFlatFieldMetadata) =>
-        setFormulaFieldTrees({
-          universalFlatFieldMetadata,
-          universalFlatObjectMetadataMaps: existingFlatObjectMetadataMaps,
-          universalFlatFieldMetadataMaps: existingFlatFieldMetadataMaps,
-        }),
-    );
 
     const validateAndBuildResult =
       await this.workspaceMigrationValidateBuildAndRunService.validateBuildAndRunWorkspaceMigration(
@@ -521,7 +512,7 @@ export class FieldMetadataService {
     );
 
     const {
-      flatFieldMetadatas: transpiledFlatFieldMetadatasToCreate,
+      flatFieldMetadatas: flatFieldMetadatasToCreate,
       indexMetadatas: flatIndexMetadatasToCreate,
     } = allTranspiledTranspilationInputs.reduce(
       (acc, { result }) => ({
@@ -532,16 +523,6 @@ export class FieldMetadataService {
         indexMetadatas: [...acc.indexMetadatas, ...result.indexMetadatas],
       }),
       { flatFieldMetadatas: [], indexMetadatas: [] },
-    );
-    const flatFieldMetadatasToCreate = transpiledFlatFieldMetadatasToCreate.map(
-      (universalFlatFieldMetadata) =>
-        setFormulaFieldTrees({
-          universalFlatFieldMetadata,
-          universalFlatObjectMetadataMaps: existingFlatObjectMetadataMaps,
-          universalFlatFieldMetadataMaps: existingFlatFieldMetadataMaps,
-          pendingUniversalFlatFieldMetadatas:
-            transpiledFlatFieldMetadatasToCreate,
-        }),
     );
 
     const validateAndBuildResult =

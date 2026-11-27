@@ -2,6 +2,7 @@ import { ViewFilterOperand } from 'twenty-shared/types';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   Index,
   JoinColumn,
@@ -11,7 +12,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { type WasRemovedInUpgrade } from 'src/engine/core-modules/upgrade/decorators/was-removed-in-upgrade.decorator';
 import { WasIntroducedInUpgrade } from 'src/engine/core-modules/upgrade/decorators/was-introduced-in-upgrade.decorator';
 import { type JsonbProperty } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/types/jsonb-property.type';
 import { FieldMetadataEntity } from 'src/engine/metadata-modules/field-metadata/field-metadata.entity';
@@ -88,14 +88,8 @@ export class ViewFilterEntity
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
 
-  @Column({
-    nullable: true,
-    type: 'timestamptz',
-    select: false,
-    insert: false,
-    update: false,
-  })
-  deletedAt: WasRemovedInUpgrade<Date> | null;
+  @DeleteDateColumn({ type: 'timestamptz' })
+  deletedAt: Date | null;
 
   @ManyToOne(() => ViewEntity, (view) => view.viewFilters, {
     onDelete: 'CASCADE',

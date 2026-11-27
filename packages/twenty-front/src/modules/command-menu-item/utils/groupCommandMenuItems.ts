@@ -1,12 +1,10 @@
 import { type CommandMenuItemFieldsFragment } from '~/generated-metadata/graphql';
 
-export const groupCommandMenuItems = <
-  TCommandMenuItem extends Pick<CommandMenuItemFieldsFragment, 'isPinned'>,
->(
-  items: TCommandMenuItem[],
+export const groupCommandMenuItems = (
+  items: CommandMenuItemFieldsFragment[],
 ) => {
-  const pinned: TCommandMenuItem[] = [];
-  const other: TCommandMenuItem[] = [];
+  const pinned: CommandMenuItemFieldsFragment[] = [];
+  const other: CommandMenuItemFieldsFragment[] = [];
 
   for (const item of items) {
     if (item.isPinned) {

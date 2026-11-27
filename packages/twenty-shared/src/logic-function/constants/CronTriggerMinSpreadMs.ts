@@ -1,1 +1,0 @@
-export const CRON_TRIGGER_MIN_SPREAD_MS = 2 * 60 * 1000;

@@ -4,6 +4,7 @@ import {
   AggregateOperations,
   ViewCalendarLayout,
   ViewType,
+  ViewVisibility,
 } from 'twenty-shared/types';
 import { isDefined, isNonEmptyArray } from 'twenty-shared/utils';
 import { z } from 'zod';
@@ -22,6 +23,7 @@ import {
   ViewException,
   ViewExceptionCode,
 } from 'src/engine/metadata-modules/view/exceptions/view.exception';
+import { resolveViewIsPrivateFromInput } from 'src/engine/metadata-modules/view/utils/resolve-view-is-private-from-input.util';
 
 const createViewInputSchema = z.object({
   name: z.string().describe('View name'),
@@ -42,12 +44,12 @@ const createViewInputSchema = z.object({
     .describe(
       'View type. Use the *_WIDGET variants (TABLE_WIDGET, KANBAN_WIDGET, LIST_WIDGET, CALENDAR_WIDGET) for views backing a dashboard widget so they stay out of record index view pickers.',
     ),
-  isPrivate: z
-    .boolean()
+  visibility: z
+    .enum([ViewVisibility.WORKSPACE, ViewVisibility.UNLISTED])
     .optional()
-    .default(false)
+    .default(ViewVisibility.WORKSPACE)
     .describe(
-      'Whether the view is private to its creator. ALWAYS prefer false (the default): shared views and any view backing a dashboard widget must be visible to everyone. Only set true for a personal view a single user explicitly asked for, AND only when a user identity is available. A private view created without a creator is invisible to everyone (e.g. its dashboard widget renders blank), so never make widget-backing views private.',
+      'View visibility. ALWAYS prefer WORKSPACE (the default) — it is the right choice for shared views and for any view backing a dashboard widget, so the view is visible to everyone. Only use UNLISTED for a private, personal view explicitly requested by a single user, AND only when a user identity is available. An UNLISTED view created without an owner becomes invisible to everyone (e.g. its dashboard widget renders blank), so never use UNLISTED for widget-backing views.',
     ),
   mainGroupByFieldName: z
     .string()
@@ -119,7 +121,9 @@ export class CreateViewTool extends BaseTool<typeof createViewInputSchema> {
     context: { workspaceId, userWorkspaceId, authContext },
   }: ToolExecuteArgs<typeof createViewInputSchema>): Promise<ToolOutput> {
     await this.viewAccessService.canUserCreateView({
-      isPrivate: input.isPrivate,
+      isPrivate:
+        resolveViewIsPrivateFromInput({ visibility: input.visibility }) ??
+        false,
       accessContext: { workspaceId, userWorkspaceId, authContext },
     });
 
@@ -221,7 +225,7 @@ export class CreateViewTool extends BaseTool<typeof createViewInputSchema> {
         objectMetadataId,
         icon: input.icon,
         type: input.type,
-        isPrivate: input.isPrivate,
+        visibility: input.visibility,
         mainGroupByFieldMetadataId,
         kanbanAggregateOperation: input.kanbanAggregateOperation,
         kanbanAggregateOperationFieldMetadataId,
@@ -230,7 +234,7 @@ export class CreateViewTool extends BaseTool<typeof createViewInputSchema> {
         calendarEndFieldMetadataId,
       },
       workspaceId,
-      authContext,
+      createdByUserWorkspaceId: userWorkspaceId,
     });
 
     if (isNonEmptyArray(fieldMetadataIds)) {
@@ -257,7 +261,7 @@ export class CreateViewTool extends BaseTool<typeof createViewInputSchema> {
         objectNameSingular: input.objectNameSingular,
         type: view.type,
         icon: view.icon,
-        isPrivate: view.isPrivate,
+        visibility: view.visibility,
       },
     };
   }

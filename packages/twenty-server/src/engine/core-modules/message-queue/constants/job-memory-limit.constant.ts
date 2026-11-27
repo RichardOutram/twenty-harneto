@@ -14,6 +14,5 @@ export const NOT_CHARGED_QUEUES: MessageQueue[] = [
   MessageQueue.accessGroupQueue,
   MessageQueue.billingQueue,
   MessageQueue.deleteCascadeQueue,
-  MessageQueue.storedFormulaFieldQueue,
   MessageQueue.workspaceDestroyQueue,
 ];

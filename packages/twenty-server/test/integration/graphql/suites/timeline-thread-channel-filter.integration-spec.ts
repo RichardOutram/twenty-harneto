@@ -8,10 +8,6 @@ import { createOneRole } from 'test/integration/metadata/suites/role/utils/creat
 import { deleteOneRole } from 'test/integration/metadata/suites/role/utils/delete-one-role.util';
 import { findOneRoleByLabel } from 'test/integration/metadata/suites/role/utils/find-one-role-by-label.util';
 import { updateWorkspaceMemberRole } from 'test/integration/metadata/suites/role/utils/update-workspace-member-role.util';
-import {
-  grantRoleWideAccessToChannelObjects,
-  revokeRoleWideAccessToChannelObjects,
-} from 'test/integration/utils/role-wide-access-to-channel-objects.util';
 import { jestExpectToBeDefined } from 'test/utils/jest-expect-to-be-defined.util.test';
 
 import { getWorkspaceSchemaName } from 'src/engine/workspace-datasource/utils/get-workspace-schema-name.util';
@@ -223,7 +219,6 @@ const requestThreads = ({
 
 describe('timeline thread channel filter (integration)', () => {
   beforeAll(async () => {
-    await grantRoleWideAccessToChannelObjects();
     await createRecord({
       objectMetadataSingularName: 'company',
       data: {
@@ -327,7 +322,6 @@ describe('timeline thread channel filter (integration)', () => {
         }),
       );
     }
-    await revokeRoleWideAccessToChannelObjects();
   });
 
   it('lists only the channels the record conversations use', async () => {
@@ -389,22 +383,16 @@ describe('timeline thread channel filter (integration)', () => {
     });
   });
 
-  it('lists no channel to a member who cannot read company records', async () => {
-    const response = await requestChannelsAsPhilWithoutReadAccessTo('company');
+  it.each(['company', 'messageThread'])(
+    'lists no channel to a member who cannot read %s records',
+    async (objectNameSingular) => {
+      const response =
+        await requestChannelsAsPhilWithoutReadAccessTo(objectNameSingular);
 
-    expect(response.body.errors).toBeUndefined();
-    expect(
-      response.body.data.getTimelineThreadChannelsFromObjectRecord,
-    ).toEqual([]);
-  });
-
-  it('lists the channel to a member whose role cannot read messageThread records, through their individual role', async () => {
-    const response =
-      await requestChannelsAsPhilWithoutReadAccessTo('messageThread');
-
-    expect(response.body.errors).toBeUndefined();
-    expect(
-      response.body.data.getTimelineThreadChannelsFromObjectRecord,
-    ).toEqual([GOOGLE_EMAIL_CHANNEL]);
-  });
+      expect(response.body.errors).toBeUndefined();
+      expect(
+        response.body.data.getTimelineThreadChannelsFromObjectRecord,
+      ).toEqual([]);
+    },
+  );
 });

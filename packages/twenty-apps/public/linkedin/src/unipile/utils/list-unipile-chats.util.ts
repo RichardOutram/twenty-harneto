@@ -5,8 +5,6 @@ import { type UnipilePage } from 'src/unipile/types/unipile-page.type';
 import { requestUnipile } from 'src/unipile/utils/request-unipile.util';
 import { getUnipileRequestOptions } from 'src/unipile/utils/get-unipile-request-options.util';
 
-const UNIPILE_LINKEDIN_CHATS_MAX_PAGE_SIZE = 25;
-
 export const listUnipileChats = async ({
   accountId,
   inboxId,
@@ -26,10 +24,7 @@ export const listUnipileChats = async ({
       new UnipileMessaging().getInboxChatsList({
         ...getUnipileRequestOptions(),
         path: { account_id: accountId, inbox_id: inboxId },
-        query: {
-          cursor,
-          limit: Math.min(limit, UNIPILE_LINKEDIN_CHATS_MAX_PAGE_SIZE),
-        },
+        query: { cursor, limit },
       }),
     { deadlineAtMs },
   );

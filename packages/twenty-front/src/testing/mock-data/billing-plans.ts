@@ -1,7 +1,7 @@
-import type { BillingPlansQuery } from '~/generated-metadata/graphql';
+import type { ListPlansQuery } from '~/generated-metadata/graphql';
 
 export const mockBillingPlans = {
-  billingPlans: [
+  listPlans: [
     {
       __typename: 'BillingPlan',
       planKey: 'PRO',
@@ -105,4 +105,4 @@ export const mockBillingPlans = {
       resourceCreditProducts: [],
     },
   ],
-} as BillingPlansQuery;
+} as ListPlansQuery;

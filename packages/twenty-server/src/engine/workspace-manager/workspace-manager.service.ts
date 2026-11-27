@@ -8,7 +8,6 @@ import { ApplicationService } from 'src/engine/core-modules/application/applicat
 import { FlatApplication } from 'src/engine/core-modules/application/types/flat-application.type';
 import { UserWorkspaceEntity } from 'src/engine/core-modules/user-workspace/user-workspace.entity';
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
-import { AgentChatChannelMetadataService } from 'src/engine/metadata-modules/agent-chat-channel/services/agent-chat-channel-metadata.service';
 import { RoleEntity } from 'src/engine/metadata-modules/role/role.entity';
 import { RoleService } from 'src/engine/metadata-modules/role/role.service';
 import { RoleAssignmentWriteService } from 'src/engine/permissions/role-assignment/role-assignment-write.service';
@@ -34,7 +33,6 @@ export class WorkspaceManagerService {
     @InjectWorkspaceScopedRepository(RoleEntity)
     private readonly roleRepository: WorkspaceScopedRepository<RoleEntity>,
     private readonly applicationService: ApplicationService,
-    private readonly agentChatChannelMetadataService: AgentChatChannelMetadataService,
   ) {}
 
   public async init({
@@ -69,10 +67,6 @@ export class WorkspaceManagerService {
       {
         workspaceId,
       },
-    );
-
-    await this.agentChatChannelMetadataService.ensureChannelViewsExist(
-      workspaceId,
     );
 
     const dataSourceMetadataCreationEnd = performance.now();

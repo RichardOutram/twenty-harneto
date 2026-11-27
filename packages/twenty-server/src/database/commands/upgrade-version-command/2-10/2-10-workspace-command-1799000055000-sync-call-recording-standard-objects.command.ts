@@ -209,7 +209,6 @@ const buildLegacyCalendarEventRecordingPreferenceFieldMetadata = ({
   relationRowLevelPermissionPredicateUniversalIdentifiers: [],
   workspaceMemberRowLevelPermissionPredicateUniversalIdentifiers: [],
   universalSettings: null,
-  formula: null,
 });
 
 @RegisteredWorkspaceCommand('2.10.0', 1799000055000)

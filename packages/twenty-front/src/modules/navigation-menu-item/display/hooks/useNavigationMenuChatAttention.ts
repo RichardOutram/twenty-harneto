@@ -3,29 +3,23 @@ import { isBuiltInSectionKey } from 'twenty-shared/utils';
 
 import { useInboxChatAttention } from '@/inbox/hooks/useInboxChatAttention';
 import { useInboxOpenThreadsSummary } from '@/inbox/hooks/useInboxOpenThreadsSummary';
-import { AI_CHAT_BUILT_IN_SECTION_KEYS } from '@/navigation-menu-item/common/constants/AiChatBuiltInSectionKeys';
+import { NAVIGATION_MENU_BUILT_IN_SECTIONS } from '@/navigation-menu-item/common/constants/NavigationMenuBuiltInSections';
 import { useNavigationMenuItemsData } from '@/navigation-menu-item/display/hooks/useNavigationMenuItemsData';
-import { useIsFeatureEnabled } from '@/workspace/hooks/useIsFeatureEnabled';
-import { FeatureFlagKey } from '~/generated-metadata/graphql';
+
+const AI_CHAT_BUILT_IN_SECTION_KEYS: BuiltInSectionKey[] =
+  NAVIGATION_MENU_BUILT_IN_SECTIONS.filter(({ isAi }) => isAi).map(
+    ({ key }) => key,
+  );
 
 export const useNavigationMenuChatAttention = () => {
   const { chatAttention } = useInboxChatAttention();
   const { unreadOpenThreadCount } = useInboxOpenThreadsSummary();
   const { workspaceNavigationMenuItems } = useNavigationMenuItemsData();
-  const isCustomizableSidebarEnabled = useIsFeatureEnabled(
-    FeatureFlagKey.IS_CUSTOMIZABLE_SIDEBAR_ENABLED,
-  );
 
-  const hasInboxSection = workspaceNavigationMenuItems.some(
-    ({ builtInSectionKey }) => builtInSectionKey === 'aiChatInbox',
-  );
-  const attentionSectionKeys: BuiltInSectionKey[] = hasInboxSection
-    ? ['aiChatInbox']
-    : AI_CHAT_BUILT_IN_SECTION_KEYS;
-  const tabIdsWithAttentionSection = new Set(
+  const tabIdsWithChatSections = new Set(
     workspaceNavigationMenuItems.flatMap((item) =>
       isBuiltInSectionKey(item.builtInSectionKey) &&
-      attentionSectionKeys.includes(item.builtInSectionKey)
+      AI_CHAT_BUILT_IN_SECTION_KEYS.includes(item.builtInSectionKey)
         ? [item.parentId ?? null]
         : [],
     ),
@@ -34,11 +28,7 @@ export const useNavigationMenuChatAttention = () => {
   return {
     chatAttention,
     unreadOpenThreadCount,
-    hasChatNeedingInput:
-      isCustomizableSidebarEnabled && chatAttention === 'needs-input',
     getTabChatAttention: (tabId: string | null) =>
-      isCustomizableSidebarEnabled && tabIdsWithAttentionSection.has(tabId)
-        ? chatAttention
-        : null,
+      tabIdsWithChatSections.has(tabId) ? chatAttention : null,
   };
 };

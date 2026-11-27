@@ -10,6 +10,7 @@ export const filterEventsAndReturnEventsToRemove = ({
   events,
   blocklist,
   excludePrivateEvents,
+  isInternalEventsFilterEnabled,
   isInternalMessagesImportEnabled,
 }: {
   primaryHandle: string;
@@ -17,6 +18,7 @@ export const filterEventsAndReturnEventsToRemove = ({
   events: FetchedCalendarEvent[];
   blocklist: string[];
   excludePrivateEvents: boolean;
+  isInternalEventsFilterEnabled: boolean;
   isInternalMessagesImportEnabled: boolean;
 }): {
   filteredEvents: FetchedCalendarEvent[];
@@ -29,7 +31,9 @@ export const filterEventsAndReturnEventsToRemove = ({
   );
 
   const shouldFilterOutInternals =
-    isWorkEmail(primaryHandle) && !isInternalMessagesImportEnabled;
+    isInternalEventsFilterEnabled &&
+    isWorkEmail(primaryHandle) &&
+    !isInternalMessagesImportEnabled;
 
   const eventsWithExternalParticipants = new Set(
     shouldFilterOutInternals

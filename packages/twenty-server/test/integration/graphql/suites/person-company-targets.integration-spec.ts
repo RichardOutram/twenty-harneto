@@ -8,10 +8,6 @@ import { findManyOperationFactory } from 'test/integration/graphql/utils/find-ma
 import { makeGraphqlApiRequest } from 'test/integration/graphql/utils/make-graphql-api-request.util';
 import { updateOneOperationFactory } from 'test/integration/graphql/utils/update-one-operation-factory.util';
 import { waitForAllJobsToFinish } from 'test/integration/utils/wait-for-all-jobs-to-finish.util';
-import {
-  grantRoleWideAccessToChannelObjects,
-  revokeRoleWideAccessToChannelObjects,
-} from 'test/integration/utils/role-wide-access-to-channel-objects.util';
 import { QUERY_MAX_RECORDS } from 'twenty-shared/constants';
 
 type Target = {
@@ -23,10 +19,6 @@ type Target = {
 };
 
 describe('communication targets after initial company assignment', () => {
-  beforeAll(async () => {
-    await grantRoleWideAccessToChannelObjects();
-  });
-
   let personId: string;
   let companyId: string;
   let otherCompanyId: string;
@@ -347,9 +339,5 @@ describe('communication targets after initial company assignment', () => {
         ]),
       );
     }
-  });
-
-  afterAll(async () => {
-    await revokeRoleWideAccessToChannelObjects();
   });
 });

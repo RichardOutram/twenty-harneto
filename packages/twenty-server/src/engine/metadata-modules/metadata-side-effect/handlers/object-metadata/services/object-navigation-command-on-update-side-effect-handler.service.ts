@@ -87,7 +87,7 @@ export class ObjectNavigationCommandOnUpdateSideEffectHandlerService extends Met
 
     if (
       !isDefined(existingNavigationFlatCommandMenuItem) ||
-      !existingNavigationFlatCommandMenuItem.isSystemSideEffect
+      existingNavigationFlatCommandMenuItem.isSystemSideEffect !== true
     ) {
       return { status: 'noop' };
     }

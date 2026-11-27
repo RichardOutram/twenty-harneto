@@ -116,9 +116,7 @@ const buildExistingFlatView = ({
     calendarFieldMetadataId: null,
     calendarFieldMetadataUniversalIdentifier: null,
     calendarEndFieldMetadataId: null,
-    listPinnedFieldMetadataId: null,
     calendarEndFieldMetadataUniversalIdentifier: null,
-    listPinnedFieldMetadataUniversalIdentifier: null,
     anyFieldFilterValue: null,
     shouldHideEmptyGroups: false,
     shouldDisplayGroupsAsTabs: false,
@@ -250,31 +248,6 @@ describe('fromUpdateViewInputToFlatViewToUpdateOrThrow', () => {
     expect(result.flatViewGroupsToDelete).toEqual([existingViewGroup]);
     expect(result.flatViewGroupsToCreate).toEqual([]);
   });
-
-  it.each([
-    { isCompact: undefined, expectedIsCompact: true },
-    { isCompact: false, expectedIsCompact: false },
-  ])(
-    'resolves Compact view when an overridden view becomes a list: %j',
-    ({ isCompact, expectedIsCompact }) => {
-      const { flatViewToUpdate } = updateView({
-        groupingOverride: COMPANY_FIELD_ID,
-        updateViewInput: {
-          mainGroupByFieldMetadataId: null,
-          type: ViewType.LIST,
-          isCompact,
-        },
-      });
-
-      expect(flatViewToUpdate.isCompact).toBe(false);
-      expect(
-        resolveEffectiveUniversalFlatEntity({
-          metadataName: 'view',
-          universalFlatEntity: flatViewToUpdate,
-        }).isCompact,
-      ).toBe(expectedIsCompact);
-    },
-  );
 
   describe('translations', () => {
     const buildI18nContext = (locale: 'en' | 'fr-FR' | 'zh-CN') => ({

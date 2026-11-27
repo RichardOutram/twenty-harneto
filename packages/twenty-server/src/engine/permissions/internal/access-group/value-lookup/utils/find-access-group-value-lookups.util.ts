@@ -15,6 +15,7 @@ import { resolveAccessGroupValueLookupKey } from 'src/engine/permissions/interna
 import { buildMemberFieldKey } from 'src/engine/permissions/internal/rls/utils/build-member-field-key.util';
 import { type RlsRule } from 'src/engine/permissions/internal/rls/utils/build-rls-record-filter.util';
 import { isRlsPredicateAtRootConjunction } from 'src/engine/permissions/internal/rls/utils/is-rls-predicate-at-root-conjunction.util';
+import { isRlsRelationHopEnabled } from 'src/engine/permissions/internal/rls/utils/is-rls-relation-hop-enabled.util';
 
 const findLookedUpMemberPredicates = ({
   rowLevelPermissionRule: { predicates, predicateGroups },
@@ -64,6 +65,9 @@ export const findAccessGroupValueLookups = ({
     ...buildRlsRuleShapeByHash({
       objectMetadataId: flatObjectMetadata.id,
       rolesPermissions: metadataMaps.rolesPermissions,
+      isRelationHopEnabled: isRlsRelationHopEnabled(
+        metadataMaps.featureFlagsMap,
+      ),
     }),
   ].flatMap(
     ([

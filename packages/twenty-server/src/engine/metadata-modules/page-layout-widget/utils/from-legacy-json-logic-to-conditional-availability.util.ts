@@ -6,9 +6,9 @@ import {
   isString,
 } from '@sniptt/guards';
 import {
-  type ConditionalEvaluationNode,
-  joinConditionalEvaluationNodes,
-} from 'twenty-shared/conditional-evaluation';
+  type ConditionalAvailabilityLogicalOperator,
+  type ConditionalAvailabilityNode,
+} from 'twenty-shared/conditional-availability';
 import { isDefined, isPlainObject } from 'twenty-shared/utils';
 
 type JsonLogicLiteral = string | number | boolean;
@@ -58,8 +58,8 @@ const toSelectedRecordsCall = ({
   functionName: 'every' | 'everyEquals' | 'includesSome';
   propertyPath: string;
   value?: JsonLogicLiteral;
-}): ConditionalEvaluationNode => {
-  const propertyArguments: ConditionalEvaluationNode[] = [
+}): ConditionalAvailabilityNode => {
+  const propertyArguments: ConditionalAvailabilityNode[] = [
     { type: 'VARIABLE', path: 'selectedRecords' },
     { type: 'LITERAL', value: propertyPath },
   ];
@@ -73,9 +73,33 @@ const toSelectedRecordsCall = ({
   };
 };
 
+const toGroupNode = ({
+  logicalOperator,
+  children,
+}: {
+  logicalOperator: ConditionalAvailabilityLogicalOperator;
+  children: ConditionalAvailabilityNode[];
+}): ConditionalAvailabilityNode => {
+  const [onlyChild] = children;
+
+  if (children.length === 1 && isDefined(onlyChild)) {
+    return onlyChild;
+  }
+
+  return {
+    type: 'GROUP',
+    logicalOperator,
+    children: children.flatMap((child) =>
+      child.type === 'GROUP' && child.logicalOperator === logicalOperator
+        ? child.children
+        : [child],
+    ),
+  };
+};
+
 const toOperandNode = (
   operand: unknown,
-): ConditionalEvaluationNode | undefined => {
+): ConditionalAvailabilityNode | undefined => {
   if (isJsonLogicLiteral(operand)) {
     return { type: 'LITERAL', value: operand };
   }
@@ -115,7 +139,7 @@ const toEqualityNode = ({
   isStrict: boolean;
   firstOperand: unknown;
   secondOperand: unknown;
-}): ConditionalEvaluationNode | undefined => {
+}): ConditionalAvailabilityNode | undefined => {
   if (
     !isStrict &&
     !isSameUnderLooseAndStrictEquality({ firstOperand, secondOperand })
@@ -155,7 +179,7 @@ const toMembershipNode = ({
 }: {
   firstOperand: unknown;
   secondOperand: unknown;
-}): ConditionalEvaluationNode | undefined => {
+}): ConditionalAvailabilityNode | undefined => {
   const containerPropertyPath =
     getFirstSelectedRecordPropertyPath(secondOperand);
 
@@ -179,9 +203,9 @@ const toMembershipNode = ({
     return undefined;
   }
 
-  return joinConditionalEvaluationNodes({
+  return toGroupNode({
     logicalOperator: 'OR',
-    nodes: secondOperand.map((value) =>
+    children: secondOperand.map((value) =>
       toSelectedRecordsCall({
         functionName: 'everyEquals',
         propertyPath: memberPropertyPath,
@@ -193,7 +217,7 @@ const toMembershipNode = ({
 
 const toVariableTruthinessNode = (
   operand: unknown,
-): ConditionalEvaluationNode | undefined => {
+): ConditionalAvailabilityNode | undefined => {
   const propertyPath = getFirstSelectedRecordPropertyPath(operand);
 
   if (isDefined(propertyPath)) {
@@ -210,8 +234,8 @@ const toVariableTruthinessNode = (
 };
 
 const toNegatedNode = (
-  child: ConditionalEvaluationNode | undefined,
-): ConditionalEvaluationNode | undefined =>
+  child: ConditionalAvailabilityNode | undefined,
+): ConditionalAvailabilityNode | undefined =>
   isDefined(child) ? { type: 'NOT', child } : undefined;
 
 const toComparisonNode = ({
@@ -220,7 +244,7 @@ const toComparisonNode = ({
 }: {
   operator: string;
   operands: unknown;
-}): ConditionalEvaluationNode | undefined => {
+}): ConditionalAvailabilityNode | undefined => {
   if (!isArray(operands) || operands.length !== 2) {
     return undefined;
   }
@@ -249,7 +273,7 @@ const toComparisonNode = ({
 
 export const fromLegacyJsonLogicToConditionalAvailability = (
   jsonLogic: unknown,
-): ConditionalEvaluationNode | undefined => {
+): ConditionalAvailabilityNode | undefined => {
   const entries = isPlainObject(jsonLogic) ? Object.entries(jsonLogic) : [];
 
   if (entries.length !== 1) {
@@ -268,9 +292,9 @@ export const fromLegacyJsonLogicToConditionalAvailability = (
     );
 
     return children.every(isDefined)
-      ? joinConditionalEvaluationNodes({
+      ? toGroupNode({
           logicalOperator: operator === 'and' ? 'AND' : 'OR',
-          nodes: children,
+          children,
         })
       : undefined;
   }

@@ -1,4 +1,4 @@
-// oxlint-disable twenty/graphql-resolvers-should-be-guarded, twenty/graphql-field-resolvers-should-declare-access, twenty/rest-api-methods-should-be-guarded
+// oxlint-disable twenty/graphql-resolvers-should-be-guarded, twenty/rest-api-methods-should-be-guarded
 import {
   type CanActivate,
   Controller,
@@ -10,13 +10,10 @@ import {
 } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import {
-  Field,
   GraphQLModule,
   GraphQLSchemaHost,
   type GraphQLSchemaHost as GraphQLSchemaHostType,
-  ObjectType,
   Query,
-  ResolveField,
   Resolver,
 } from '@nestjs/graphql';
 import { Test } from '@nestjs/testing';
@@ -26,7 +23,6 @@ import { type NextFunction, type Request, type Response } from 'express';
 import { type GraphQLSchema, graphql } from 'graphql';
 import supertest from 'supertest';
 
-import { GRAPHQL_FIELD_RESOLVER_ENHANCERS } from 'src/engine/api/graphql/graphql-config/constants/graphql-field-resolver-enhancers.constant';
 import { ExceptionHandlerService } from 'src/engine/core-modules/exception-handler/exception-handler.service';
 import { UnhandledExceptionFilter } from 'src/filters/unhandled-exception.filter';
 
@@ -35,18 +31,26 @@ const EXCEPTION_HANDLER_SERVICE_PROVIDER = {
   useValue: { captureExceptions: () => [] },
 };
 
-const runQueryOnGraphqlApp = async ({
-  resolver,
-  source,
+// real Nest + Yoga app so a guard refusal reaches the catch-all filter as in production
+export const runGuardedQuery = async ({
+  guard,
   request,
-  providers,
+  providers = [],
 }: {
-  resolver: Type<unknown>;
-  source: string;
+  guard: Type<CanActivate>;
   request: Record<string, unknown>;
-  providers: Provider[];
+  providers?: Provider[];
 }) => {
-  @Module({ providers: [resolver, ...providers] })
+  @Resolver()
+  class TestResolver {
+    @Query(() => String)
+    @UseGuards(guard)
+    guardedQuery(): string {
+      return 'ok';
+    }
+  }
+
+  @Module({ providers: [TestResolver, ...providers] })
   class FeatureModule {}
 
   @Module({
@@ -54,7 +58,6 @@ const runQueryOnGraphqlApp = async ({
       GraphQLModule.forRoot<YogaDriverConfig>({
         driver: YogaDriver,
         autoSchemaFile: true,
-        fieldResolverEnhancers: GRAPHQL_FIELD_RESOLVER_ENHANCERS,
       }),
       FeatureModule,
     ],
@@ -78,77 +81,13 @@ const runQueryOnGraphqlApp = async ({
 
   const result = await graphql({
     schema,
-    source,
+    source: '{ guardedQuery }',
     contextValue: { req: request },
   });
 
   await app.close();
 
   return result;
-};
-
-// real Nest + Yoga app so a guard refusal reaches the catch-all filter as in production
-export const runGuardedQuery = async ({
-  guard,
-  request,
-  providers = [],
-}: {
-  guard: Type<CanActivate>;
-  request: Record<string, unknown>;
-  providers?: Provider[];
-}) => {
-  @Resolver()
-  class TestResolver {
-    @Query(() => String)
-    @UseGuards(guard)
-    guardedQuery(): string {
-      return 'ok';
-    }
-  }
-
-  return runQueryOnGraphqlApp({
-    resolver: TestResolver,
-    source: '{ guardedQuery }',
-    request,
-    providers,
-  });
-};
-
-@ObjectType('GuardedParent')
-class GuardedParent {
-  @Field(() => String)
-  id: string;
-}
-
-export const runGuardedFieldQuery = async ({
-  guard,
-  request,
-  providers = [],
-}: {
-  guard: Type<CanActivate>;
-  request: Record<string, unknown>;
-  providers?: Provider[];
-}) => {
-  @Resolver(() => GuardedParent)
-  class TestResolver {
-    @Query(() => GuardedParent)
-    parent(): GuardedParent {
-      return { id: 'parent-id' };
-    }
-
-    @ResolveField(() => String)
-    @UseGuards(guard)
-    guardedField(): string {
-      return 'ok';
-    }
-  }
-
-  return runQueryOnGraphqlApp({
-    resolver: TestResolver,
-    source: '{ parent { id guardedField } }',
-    request,
-    providers,
-  });
 };
 
 export const runGuardedRestRequest = async ({

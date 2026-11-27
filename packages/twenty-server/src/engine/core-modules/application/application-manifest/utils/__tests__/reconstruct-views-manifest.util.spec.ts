@@ -18,6 +18,7 @@ import {
   ViewOpenRecordIn,
   ViewSortDirection,
   ViewType,
+  ViewVisibility,
 } from 'twenty-shared/types';
 
 import { fromViewFieldGroupManifestToUniversalFlatViewFieldGroup } from 'src/engine/core-modules/application/application-manifest/converters/from-view-field-group-manifest-to-universal-flat-view-field-group.util';
@@ -189,7 +190,6 @@ const buildFlatView = ({
   kanbanAggregateOperationFieldMetadataId: null,
   calendarFieldMetadataId: null,
   calendarEndFieldMetadataId: null,
-  listPinnedFieldMetadataId: null,
   mainGroupByFieldMetadataId: null,
   overrides: null,
   viewFieldIds: [],
@@ -344,6 +344,7 @@ const ALL_PETS_VIEW_MANIFEST: ViewManifest = {
   icon: 'IconPaw',
   position: 0,
   isCompact: false,
+  visibility: ViewVisibility.WORKSPACE,
   openRecordIn: ViewOpenRecordIn.SIDE_PANEL,
   shouldHideEmptyGroups: false,
   shouldDisplayGroupsAsTabs: false,
@@ -358,6 +359,7 @@ const ZOO_PETS_VIEW_MANIFEST: ViewManifest = {
   icon: 'IconLayoutKanban',
   position: 1,
   isCompact: true,
+  visibility: ViewVisibility.WORKSPACE,
   openRecordIn: ViewOpenRecordIn.RECORD_PAGE,
   shouldHideEmptyGroups: true,
   shouldDisplayGroupsAsTabs: false,

@@ -25,6 +25,7 @@ describe('computeValidationRuleHelperItemExamples', () => {
 
       const rootItems = computeValidationRuleHelperContext({
         textBeforeCursor: '',
+        isCursorAfterField: false,
         fields,
       }).items;
       const memberItems = fields

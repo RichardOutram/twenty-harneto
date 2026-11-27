@@ -1,7 +1,5 @@
 import gql from 'graphql-tag';
 
-import { type CalendarEventRecurrenceParams } from 'src/modules/calendar/calendar-event-creation-manager/types/calendar-event-recurrence-params.type';
-
 import { makeMetadataApiRequest } from 'test/integration/metadata/suites/utils/make-metadata-api-request.util';
 
 type CreateCalendarEventInput = {
@@ -16,7 +14,6 @@ type CreateCalendarEventInput = {
   attendees?: string;
   sendInvitations?: boolean;
   addConferencing?: boolean;
-  recurrence?: CalendarEventRecurrenceParams;
 };
 
 type CreateCalendarEventResult = {

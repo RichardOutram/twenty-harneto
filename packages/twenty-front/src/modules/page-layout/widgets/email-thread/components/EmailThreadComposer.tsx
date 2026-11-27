@@ -5,7 +5,6 @@ import { useEmailComposerState } from '@/activities/emails/hooks/useEmailCompose
 import { useAttachEmailFiles } from '@/activities/emails/hooks/useAttachEmailFiles';
 import { type ReplyContextReady } from '@/activities/emails/hooks/useReplyContext';
 import { type AppReplyTarget } from '@/activities/emails/types/AppReplyTarget';
-import { type EmailReplyMode } from '@/activities/emails/types/EmailReplyMode';
 import { type EmailDraftPrefill } from '@/activities/emails/types/EmailDraftPrefill';
 import { type WidgetCommandMenuItem } from '@/command-menu-item/types/WidgetCommandMenuItem';
 import { EmailThreadComposerCommandMenuItemsEffect } from '@/page-layout/widgets/email-thread/components/EmailThreadComposerCommandMenuItemsEffect';
@@ -16,7 +15,6 @@ import { StandardObjectNameSingular } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import {
   IconArrowBackUp,
-  IconArrowBackUpDouble,
   IconPaperclip,
   IconSend,
   IconX,
@@ -39,9 +37,7 @@ type EmailThreadComposerProps = {
   replyContext: ReplyContextReady;
   isInSidePanel: boolean;
   isComposerOpen: boolean;
-  onComposerOpen: (replyMode: EmailReplyMode) => void;
-  onComposerClose: () => void;
-  replyMode: EmailReplyMode;
+  setIsComposerOpen: (open: boolean) => void;
   draftPrefill?: EmailDraftPrefill | null;
   draftKey?: string;
   appReplyTarget?: AppReplyTarget | null;
@@ -51,9 +47,7 @@ export const EmailThreadComposer = ({
   replyContext,
   isInSidePanel,
   isComposerOpen,
-  onComposerOpen,
-  onComposerClose,
-  replyMode,
+  setIsComposerOpen,
   draftPrefill,
   draftKey,
   appReplyTarget,
@@ -63,7 +57,7 @@ export const EmailThreadComposer = ({
 
   const handleReplySent = useCallback(
     (messageThreadId: string | null) => {
-      onComposerClose();
+      setIsComposerOpen(false);
 
       if (isDefined(messageThreadId)) {
         openRecordInSidePanel({
@@ -72,17 +66,13 @@ export const EmailThreadComposer = ({
         });
       }
     },
-    [onComposerClose, openRecordInSidePanel],
+    [setIsComposerOpen, openRecordInSidePanel],
   );
-
-  const replyAllRecipients =
-    replyMode === 'replyAll' ? replyContext.replyAll : null;
 
   const composerState = useEmailComposerState({
     connectedAccountId: replyContext.connectedAccountId,
     draftPrefill,
-    defaultTo: replyAllRecipients?.to ?? replyContext.to,
-    defaultCc: replyAllRecipients?.cc,
+    defaultTo: replyContext.to,
     defaultSubject: replyContext.subject,
     defaultInReplyTo: replyContext.inReplyTo,
     appReplyTarget,
@@ -90,7 +80,7 @@ export const EmailThreadComposer = ({
     onSent: handleReplySent,
   });
 
-  const { handleSend, canSend, discardDraft } = composerState;
+  const { handleSend, canSend, canAttachFiles, discardDraft } = composerState;
 
   const {
     openAttachmentPicker,
@@ -104,29 +94,13 @@ export const EmailThreadComposer = ({
 
   const widgetCommandMenuItems = useMemo((): WidgetCommandMenuItem[] => {
     if (!isComposerOpen) {
-      const canReplyAll = isDefined(replyContext.replyAll);
-
-      const replyCommandMenuItem: WidgetCommandMenuItem = {
-        id: 'reply',
-        label: t`Reply`,
-        Icon: IconArrowBackUp,
-        isPrimaryCTA: !canReplyAll,
-        onClick: () => onComposerOpen('reply'),
-        replacedEngineComponentKey: EngineComponentKey.REPLY_TO_EMAIL_THREAD,
-      };
-
-      if (!canReplyAll) {
-        return [replyCommandMenuItem];
-      }
-
       return [
-        replyCommandMenuItem,
         {
-          id: 'reply-all',
-          label: t`Reply all`,
-          Icon: IconArrowBackUpDouble,
+          id: 'reply',
+          label: t`Reply`,
+          Icon: IconArrowBackUp,
           isPrimaryCTA: true,
-          onClick: () => onComposerOpen('replyAll'),
+          onClick: () => setIsComposerOpen(true),
           replacedEngineComponentKey: EngineComponentKey.REPLY_TO_EMAIL_THREAD,
         },
       ];
@@ -140,7 +114,7 @@ export const EmailThreadComposer = ({
       onClick: () => {
         discardPendingUploads();
         discardDraft();
-        onComposerClose();
+        setIsComposerOpen(false);
       },
       replacedEngineComponentKey: EngineComponentKey.REPLY_TO_EMAIL_THREAD,
     };
@@ -162,23 +136,26 @@ export const EmailThreadComposer = ({
 
     return [
       cancelReplyCommandMenuItem,
-      {
-        id: 'attach-files',
-        label: t`Attach files`,
-        Icon: IconPaperclip,
-        isPinned: false,
-        onClick: openAttachmentPicker,
-      },
+      ...(canAttachFiles
+        ? [
+            {
+              id: 'attach-files',
+              label: t`Attach files`,
+              Icon: IconPaperclip,
+              isPinned: false,
+              onClick: openAttachmentPicker,
+            },
+          ]
+        : []),
       sendCommandMenuItem,
     ];
   }, [
     isComposerOpen,
     isInSidePanel,
-    replyContext.replyAll,
+    canAttachFiles,
     handleSend,
     canSendReply,
-    onComposerOpen,
-    onComposerClose,
+    setIsComposerOpen,
     openAttachmentPicker,
     discardPendingUploads,
     discardDraft,
@@ -209,7 +186,11 @@ export const EmailThreadComposer = ({
           <EmailComposerFields
             composerState={composerState}
             appSender={appReplyTarget}
-            onAttachFiles={isInSidePanel ? undefined : openAttachmentPicker}
+            onAttachFiles={
+              isInSidePanel || !canAttachFiles
+                ? undefined
+                : openAttachmentPicker
+            }
           />
         </StyledComposerContainer>
       )}

@@ -287,7 +287,7 @@ export class GoogleAPIsService {
         },
       );
 
-      await this.channelVisibilityRuleSyncSchedulerService.scheduleSync(
+      await this.channelVisibilityRuleSyncSchedulerService.scheduleSyncIfEnabled(
         workspaceId,
       );
 

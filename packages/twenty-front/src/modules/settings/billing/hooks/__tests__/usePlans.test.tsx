@@ -5,20 +5,20 @@ import { type ReactNode } from 'react';
 import { isDefined } from 'twenty-shared/utils';
 
 import { usePlans } from '@/settings/billing/hooks/usePlans';
-import { BillingPlansDocument } from '~/generated-metadata/graphql';
+import { ListPlansDocument } from '~/generated-metadata/graphql';
 
-const billingPlansSuccessMock = {
-  request: { query: BillingPlansDocument },
-  result: { data: { billingPlans: [] } },
+const listPlansSuccessMock = {
+  request: { query: ListPlansDocument },
+  result: { data: { listPlans: [] } },
 };
 
-const billingPlansSlowSuccessMock = {
-  ...billingPlansSuccessMock,
+const listPlansSlowSuccessMock = {
+  ...listPlansSuccessMock,
   delay: 50,
 };
 
-const billingPlansErrorMock = {
-  request: { query: BillingPlansDocument },
+const listPlansErrorMock = {
+  request: { query: ListPlansDocument },
   result: { errors: [new GraphQLError('Internal server error')] },
 };
 
@@ -31,7 +31,7 @@ const createWrapper =
 describe('usePlans', () => {
   it('should expose the plans once the query resolves', async () => {
     const { result } = renderHook(() => usePlans(), {
-      wrapper: createWrapper([billingPlansSuccessMock]),
+      wrapper: createWrapper([listPlansSuccessMock]),
     });
 
     await waitFor(() => expect(result.current.isPlansLoaded).toBe(true));
@@ -41,7 +41,7 @@ describe('usePlans', () => {
 
   it('should surface the error and leave the plans unloaded when the query fails', async () => {
     const { result } = renderHook(() => usePlans(), {
-      wrapper: createWrapper([billingPlansErrorMock]),
+      wrapper: createWrapper([listPlansErrorMock]),
     });
 
     await waitFor(() => expect(result.current.error).toBeDefined());
@@ -62,10 +62,7 @@ describe('usePlans', () => {
         return plans;
       },
       {
-        wrapper: createWrapper([
-          billingPlansErrorMock,
-          billingPlansSlowSuccessMock,
-        ]),
+        wrapper: createWrapper([listPlansErrorMock, listPlansSlowSuccessMock]),
       },
     );
 

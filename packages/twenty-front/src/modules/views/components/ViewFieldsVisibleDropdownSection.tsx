@@ -6,7 +6,6 @@ import { useObjectOptionsForBoard } from '@/object-record/object-options-dropdow
 import { useProcessOptionDropdownDragEnd } from '@/object-record/object-options-dropdown/hooks/useProcessOptionDropdownDragEnd';
 import { ObjectOptionsDropdownContext } from '@/object-record/object-options-dropdown/states/contexts/ObjectOptionsDropdownContext';
 import { getRecordFieldColumnHeader } from '@/object-record/record-column-lookup/utils/getRecordFieldColumnHeader';
-import { ScopedRelationColumnIcon } from '@/object-record/record-column-scope/components/ScopedRelationColumnIcon';
 import { useGetRecordFieldColumnKind } from '@/object-record/record-column-scope/hooks/useGetRecordFieldColumnKind';
 import { useChangeRecordFieldVisibility } from '@/object-record/record-field/hooks/useChangeRecordFieldVisibility';
 import { visibleRecordFieldsComponentSelector } from '@/object-record/record-field/states/visibleRecordFieldsComponentSelector';
@@ -123,13 +122,11 @@ export const ViewFieldsVisibleDropdownSection = () => {
                   const { fieldMetadataItem } = getFieldMetadataItemByIdOrThrow(
                     recordField.fieldMetadataItemId,
                   );
-                  const columnKind = getRecordFieldColumnKind(recordField.id);
                   const columnHeader = getRecordFieldColumnHeader({
                     fieldMetadataItem,
-                    columnKind,
+                    columnKind: getRecordFieldColumnKind(recordField.id),
                     customLabel: recordField.label,
                   });
-                  const ColumnIcon = getIcon(columnHeader.icon);
 
                   return (
                     <DraggableItem
@@ -140,14 +137,10 @@ export const ViewFieldsVisibleDropdownSection = () => {
                         <DraggableListRow
                           key={recordField.id}
                           startIcon={
-                            'scopedRelationAlias' in columnKind ? (
-                              <ScopedRelationColumnIcon Icon={ColumnIcon} />
-                            ) : (
-                              <ApplicationStackIcon
-                                Icon={ColumnIcon}
-                                applicationId={fieldMetadataItem.applicationId}
-                              />
-                            )
+                            <ApplicationStackIcon
+                              Icon={getIcon(columnHeader.icon)}
+                              applicationId={fieldMetadataItem.applicationId}
+                            />
                           }
                           actions={
                             isCanonicalRecordField(recordField) ? (

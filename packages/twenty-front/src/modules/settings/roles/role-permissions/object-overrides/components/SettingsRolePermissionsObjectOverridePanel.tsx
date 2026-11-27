@@ -197,16 +197,15 @@ export const SettingsRolePermissionsObjectOverridePanel = ({
               )}
             </TableCell>
             <TableCell onClick={(event) => event.stopPropagation()}>
-              {!objectMetadataItem.isSystem &&
-                (key === 'canReadObjectRecords' ||
-                  key === 'canUpdateObjectRecords') && (
-                  <SettingsRolePermissionsObjectFieldsSelect
-                    roleId={roleId}
-                    objectMetadataItem={objectMetadataItem}
-                    mode={key === 'canReadObjectRecords' ? 'read' : 'update'}
-                    disabled={!isEditable || !operations.includes(key)}
-                  />
-                )}
+              {(key === 'canReadObjectRecords' ||
+                key === 'canUpdateObjectRecords') && (
+                <SettingsRolePermissionsObjectFieldsSelect
+                  roleId={roleId}
+                  objectMetadataItem={objectMetadataItem}
+                  mode={key === 'canReadObjectRecords' ? 'read' : 'update'}
+                  disabled={!isEditable || !operations.includes(key)}
+                />
+              )}
             </TableCell>
             <TableCell align="right">
               <Checkbox

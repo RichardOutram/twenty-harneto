@@ -287,7 +287,10 @@ export class ViewFieldService {
       );
     }
 
-    return fromFlatViewFieldToViewFieldDto(existingFlatViewField);
+    return fromFlatViewFieldToViewFieldDto({
+      ...existingFlatViewField,
+      deletedAt: new Date().toISOString(),
+    });
   }
 
   async findByWorkspaceId({
@@ -305,6 +308,7 @@ export class ViewFieldService {
 
     return Object.values(flatViewFieldMaps.byUniversalIdentifier)
       .filter(isDefined)
+      .filter((field) => !isDefined(field.deletedAt))
       .filter((field) =>
         isDefined(
           findFlatViewVisibleToCaller({
@@ -345,7 +349,7 @@ export class ViewFieldService {
 
     return Object.values(flatViewFieldMaps.byUniversalIdentifier)
       .filter(isDefined)
-      .filter((field) => field.viewId === viewId)
+      .filter((field) => field.viewId === viewId && !isDefined(field.deletedAt))
       .map(fromFlatViewFieldToViewFieldDto)
       .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id));
   }
@@ -370,7 +374,7 @@ export class ViewFieldService {
       flatEntityMaps: flatViewFieldMaps,
     });
 
-    if (!isDefined(flatViewField)) {
+    if (!isDefined(flatViewField) || isDefined(flatViewField.deletedAt)) {
       throw new ViewFieldException(
         generateViewFieldExceptionMessage(
           ViewFieldExceptionMessageKey.VIEW_FIELD_NOT_FOUND,

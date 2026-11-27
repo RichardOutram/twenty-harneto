@@ -6,26 +6,21 @@ import {
   IconBolt,
   IconCalendarTime,
   IconCoins,
-  IconPlayerPlay,
   IconStatusChange,
   IconSum,
   IconTextSize,
   IconTimeDuration30,
 } from 'twenty-ui/icon';
-import { Button } from 'twenty-ui/primitives/input';
 
 import { useOpenAskAiThread } from '@/ai-chat/threads/hooks/useOpenAskAiThread';
 import { CoreAgentRunConversation } from '@/object-core/agents/components/CoreAgentRunConversation';
 import { CoreAgentRunRow } from '@/object-core/agents/components/CoreAgentRunRow';
-import { useCanTestCoreAgent } from '@/object-core/agents/hooks/useCanTestCoreAgent';
-import { useOpenCoreAgentTestSidePanel } from '@/object-core/agents/hooks/useOpenCoreAgentTestSidePanel';
-import { type CoreAgent } from '@/object-core/agents/types/CoreAgent';
 import { CORE_AGENT_RUNS_GRID_TEMPLATE_COLUMNS } from '@/object-core/agents/constants/CoreAgentRunsGridTemplateColumns';
 import { type CoreAgentRun } from '@/object-core/agents/types/CoreAgentRun';
 import { groupCoreAgentRunsByConversation } from '@/object-core/agents/utils/groupCoreAgentRunsByConversation';
 import { AnimatedPlaceholder } from '@/ui/feedback/empty-state/components/AnimatedPlaceholder/AnimatedPlaceholder';
 import { EmptyState } from '@/ui/feedback/empty-state/components/EmptyState';
-import { TableSkeletonRows } from '@/ui/layout/table/components/TableSkeletonRows';
+import { SkeletonLine } from '@/ui/feedback/skeleton/components/SkeletonLine';
 import { Table } from '@/ui/layout/table/components/Table';
 import { CORE_AGENT_RUNS_POLL_INTERVAL_IN_MS } from '@/object-core/agents/constants/CoreAgentRunsPollIntervalInMs';
 import { TableHeader } from '@/ui/layout/table/components/TableHeader';
@@ -59,19 +54,19 @@ const toggleId = (ids: Set<string>, id: string): Set<string> => {
 };
 
 type CoreAgentRunsContentProps = {
-  agent: CoreAgent;
+  agentId: string;
 };
 
-export const CoreAgentRunsContent = ({ agent }: CoreAgentRunsContentProps) => {
+export const CoreAgentRunsContent = ({
+  agentId,
+}: CoreAgentRunsContentProps) => {
   const { t } = useLingui();
   const [expandedRunIds, setExpandedRunIds] = useState<Set<string>>(new Set());
   const { openAskAiThread } = useOpenAskAiThread();
-  const canTest = useCanTestCoreAgent(agent);
-  const { openCoreAgentTestSidePanel } = useOpenCoreAgentTestSidePanel();
 
   // runs start and settle outside this page, so the list refreshes while it is visible
   const { data, loading, error } = useQuery(GetAgentRunsDocument, {
-    variables: { agentId: agent.id },
+    variables: { agentId },
     pollInterval: CORE_AGENT_RUNS_POLL_INTERVAL_IN_MS,
     skipPollAttempt: () => document.hidden,
   });
@@ -115,10 +110,9 @@ export const CoreAgentRunsContent = ({ agent }: CoreAgentRunsContentProps) => {
     return (
       <Table>
         {header}
-        <TableSkeletonRows
-          gridTemplateColumns={CORE_AGENT_RUNS_GRID_TEMPLATE_COLUMNS}
-          columnCount={7}
-        />
+        {Array.from({ length: 3 }).map((_, index) => (
+          <SkeletonLine height={32} key={index} />
+        ))}
       </Table>
     );
   }
@@ -147,18 +141,9 @@ export const CoreAgentRunsContent = ({ agent }: CoreAgentRunsContentProps) => {
           <EmptyState.Content>
             <EmptyState.Title>{t`No turns yet`}</EmptyState.Title>
             <EmptyState.Description>
-              {t`Turns appear here once you test this agent, or a workflow or an app uses it`}
+              {t`Turns appear here once a workflow or an app uses this agent`}
             </EmptyState.Description>
           </EmptyState.Content>
-          {canTest && (
-            <EmptyState.Actions>
-              <Button
-                startIcon={<IconPlayerPlay />}
-                onClick={() => openCoreAgentTestSidePanel(agent.id)}
-                variant="outline"
-              >{t`Test agent`}</Button>
-            </EmptyState.Actions>
-          )}
         </EmptyState.Root>
       </StyledEmptyStateContainer>
     );

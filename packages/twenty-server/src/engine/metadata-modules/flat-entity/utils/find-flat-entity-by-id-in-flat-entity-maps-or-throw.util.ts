@@ -21,8 +21,7 @@ export const findFlatEntityByIdInFlatEntityMapsOrThrow = <
   flatEntityId,
 }: FindFlatEntityByIdInFlatEntityMapsOrThrowArgs<T>): T => {
   const universalIdentifier =
-    flatEntityMaps.universalIdentifierById[flatEntityId] ??
-    flatEntityMaps.universalIdentifierById[flatEntityId.toLowerCase()];
+    flatEntityMaps.universalIdentifierById[flatEntityId];
 
   if (!isDefined(universalIdentifier)) {
     throw new FlatEntityMapsException(

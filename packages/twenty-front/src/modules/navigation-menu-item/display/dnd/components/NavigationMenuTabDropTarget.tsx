@@ -32,9 +32,7 @@ export const NavigationMenuTabDropTarget = ({
   tabId,
   children,
 }: NavigationMenuTabDropTargetProps) => {
-  const { activeDropTargetId, forbiddenDropTargetId } = useContext(
-    NavigationDropTargetContext,
-  );
+  const { activeDropTargetId } = useContext(NavigationDropTargetContext);
 
   const droppableId = getNavigationMenuItemListDroppableId({
     parentId: tabId,
@@ -54,10 +52,7 @@ export const NavigationMenuTabDropTarget = ({
   });
 
   return (
-    <StyledTabDropTarget
-      ref={ref}
-      data-drag-over={activeDropTargetId === id && forbiddenDropTargetId !== id}
-    >
+    <StyledTabDropTarget ref={ref} data-drag-over={activeDropTargetId === id}>
       {children}
     </StyledTabDropTarget>
   );

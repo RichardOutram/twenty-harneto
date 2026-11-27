@@ -108,14 +108,16 @@ export class CoreWorkflowVersionWriteService {
 
   async getValidatedDraftCoreWorkflowVersion({
     workspaceId,
+    userWorkspaceId,
     coreWorkflowVersionId,
   }: {
     workspaceId: string;
+    userWorkspaceId: string | undefined;
     coreWorkflowVersionId: string;
   }): Promise<ValidatedDraftCoreWorkflowVersion> {
     const { coreWorkflowVersion } =
       await this.coreWorkflowAccessService.findEditableCoreWorkflowVersionOrThrow(
-        { workspaceId, coreWorkflowVersionId },
+        { workspaceId, userWorkspaceId, coreWorkflowVersionId },
       );
 
     if (coreWorkflowVersion.status !== CoreWorkflowVersionStatus.DRAFT) {
@@ -229,11 +231,6 @@ export class CoreWorkflowVersionWriteService {
             `UPDATE core."workflow" SET "updatedAt" = now() WHERE "workspaceId" = $1 AND "id" = $2`,
             [workspaceId, flatWorkflowVersion.coreWorkflowId],
           );
-
-          await this.flatEntityMapsCacheService.invalidateFlatEntityMaps({
-            workspaceId,
-            flatMapsKeys: ['flatWorkflowMaps'],
-          });
         }
       },
     );
@@ -327,6 +324,7 @@ export class CoreWorkflowVersionWriteService {
               steps: steps ?? null,
               status: CoreWorkflowVersionStatus.DRAFT,
               isSystemSideEffect: false,
+              workspaceWorkflowVersionId: null,
               applicationUniversalIdentifier:
                 workspaceCustomFlatApplication.universalIdentifier,
               createdAt,

@@ -171,7 +171,7 @@ describe('MCP view tools (integration)', () => {
       name: viewName,
       objectNameSingular: 'company',
       type: 'TABLE',
-      isPrivate: false,
+      visibility: 'WORKSPACE',
     });
 
     const viewId = createdView?.id;
@@ -551,7 +551,7 @@ describe('MCP view tools (integration)', () => {
       toolArguments: {
         name: `${VIEW_NAME_PREFIX} private companies`,
         objectNameSingular: 'company',
-        isPrivate: true,
+        visibility: 'UNLISTED',
       },
       token: APPLE_JANE_ADMIN_ACCESS_TOKEN,
     });
@@ -629,7 +629,7 @@ describe('MCP view tools (integration)', () => {
         name: `${VIEW_NAME_PREFIX} private children`,
         objectNameSingular: 'company',
         fieldNames: ['name', 'domainName'],
-        isPrivate: true,
+        visibility: 'UNLISTED',
       },
       token: APPLE_JANE_ADMIN_ACCESS_TOKEN,
     });
@@ -723,14 +723,16 @@ describe('MCP view tools (integration)', () => {
   describe('for a guest without VIEWS', () => {
     const findWorkspaceViewId = async () => {
       const result = await runViewTool<{
-        views: (ViewSummary & { isPrivate: boolean })[];
+        views: (ViewSummary & { visibility: string })[];
       }>({
         toolName: 'get_views',
         toolArguments: { objectNameSingular: 'company', limit: 100 },
         token: APPLE_PHIL_GUEST_ACCESS_TOKEN,
       });
 
-      const workspaceView = result?.views.find(({ isPrivate }) => !isPrivate);
+      const workspaceView = result?.views.find(
+        ({ visibility }) => visibility === 'WORKSPACE',
+      );
 
       jestExpectToBeDefined(workspaceView);
 
@@ -814,7 +816,7 @@ describe('MCP view tools (integration)', () => {
         toolArguments: {
           name: `${VIEW_NAME_PREFIX} guest private companies`,
           objectNameSingular: 'company',
-          isPrivate: true,
+          visibility: 'UNLISTED',
         },
         token: APPLE_PHIL_GUEST_ACCESS_TOKEN,
       });

@@ -14,6 +14,7 @@ import {
   buildRlsRecordFilter,
   type RlsRule,
 } from 'src/engine/permissions/internal/rls/utils/build-rls-record-filter.util';
+import { isRlsRelationHopEnabled } from 'src/engine/permissions/internal/rls/utils/is-rls-relation-hop-enabled.util';
 import { resolveRlsWorkspaceMember } from 'src/engine/permissions/internal/rls/utils/resolve-rls-workspace-member.util';
 import { type PermissionsPrincipalsWithRolesContext } from 'src/engine/permissions/principal/types/permissions-principals-with-roles-context.type';
 
@@ -48,6 +49,7 @@ export const buildRlsRulesRecordFilter = ({
     flatFieldMetadataMaps: metadataMaps.flatFieldMetadataMaps,
     flatFieldMetadataOptionMaps: metadataMaps.flatFieldMetadataOptionMaps,
     flatObjectMetadataMaps: metadataMaps.flatObjectMetadataMaps,
+    isRelationHopEnabled: isRlsRelationHopEnabled(metadataMaps.featureFlagsMap),
   });
 };
 

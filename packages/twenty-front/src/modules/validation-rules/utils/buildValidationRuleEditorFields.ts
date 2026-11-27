@@ -96,11 +96,9 @@ const buildScalarEditorFields = ({
 const buildCurrentValueEditorFields = ({
   objectMetadataItem,
   objectMetadataItems,
-  readableRelationTypes,
 }: {
   objectMetadataItem: ValidationRuleEditorObject;
   objectMetadataItems: ValidationRuleEditorObject[];
-  readableRelationTypes: RelationType[];
 }): ValidationRuleEditorField[] =>
   objectMetadataItem.fields
     .filter((fieldMetadataItem) => fieldMetadataItem.isActive)
@@ -119,8 +117,7 @@ const buildCurrentValueEditorFields = ({
 
       if (
         fieldMetadataItem.type !== FieldMetadataType.RELATION ||
-        !isDefined(relation) ||
-        !readableRelationTypes.includes(relation.type)
+        relation?.type !== RelationType.MANY_TO_ONE
       ) {
         return [];
       }
@@ -187,16 +184,13 @@ const buildPreviousValueEditorField = (
 export const buildValidationRuleEditorFields = ({
   objectMetadataItem,
   objectMetadataItems,
-  readableRelationTypes = [RelationType.MANY_TO_ONE],
 }: {
   objectMetadataItem: ValidationRuleEditorObject;
   objectMetadataItems: ValidationRuleEditorObject[];
-  readableRelationTypes?: RelationType[];
 }): ValidationRuleEditorField[] => {
   const currentValueFields = buildCurrentValueEditorFields({
     objectMetadataItem,
     objectMetadataItems,
-    readableRelationTypes,
   });
 
   const previousValueFields = currentValueFields

@@ -13,15 +13,16 @@ import {
   ViewFilterOperand,
   ViewSortDirection,
   ViewType,
+  type ViewVisibility,
 } from 'twenty-shared/types';
 
 export const createViewWithChildren = async ({
   name,
-  isPrivate,
+  visibility,
   token,
 }: {
   name: string;
-  isPrivate: boolean;
+  visibility: ViewVisibility;
   token?: string;
 }): Promise<{ viewId: string; childIdByChildName: Record<string, string> }> => {
   const objectMetadataId = await findObjectMetadataIdByName('opportunity');
@@ -46,7 +47,7 @@ export const createViewWithChildren = async ({
       objectMetadataId,
       icon: 'IconTable',
       type: ViewType.TABLE,
-      isPrivate,
+      visibility,
       mainGroupByFieldMetadataId: stageFieldMetadataId,
     },
   });

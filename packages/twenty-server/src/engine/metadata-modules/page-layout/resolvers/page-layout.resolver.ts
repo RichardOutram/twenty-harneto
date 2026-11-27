@@ -37,7 +37,6 @@ import { AuthGraphqlApiExceptionFilter } from 'src/engine/core-modules/auth/filt
 import { PAGE_LAYOUT_READ_ACCESS_POLICY } from 'src/engine/metadata-modules/page-layout/constants/page-layout-read-access-policy.constant';
 import { PAGE_LAYOUT_WRITE_ACCESS_POLICY } from 'src/engine/metadata-modules/page-layout/constants/page-layout-write-access-policy.constant';
 import { AccessPolicyGuard } from 'src/engine/guards/access-policy.guard';
-import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 
 @MetadataResolver(() => PageLayoutDTO)
 @UseInterceptors(WorkspaceMigrationGraphqlApiExceptionInterceptor)
@@ -52,7 +51,6 @@ export class PageLayoutResolver {
   ) {}
 
   @ResolveField(() => String)
-  @UseGuards(NoPermissionGuard)
   async name(
     @Parent() pageLayout: PageLayoutDTO,
     @Context() context: { loaders: IDataloaders } & I18nContext,

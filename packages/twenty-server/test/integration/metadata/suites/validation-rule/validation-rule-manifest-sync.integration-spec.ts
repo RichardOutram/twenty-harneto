@@ -91,17 +91,11 @@ const buildManifest = ({
     },
   });
 
-const READ_REFERENCE_FIELD_TREE = {
-  type: 'FUNCTION_CALL',
-  functionName: 'isNonEmptyString',
-  arguments: [{ type: 'FIELD', fieldUniversalIdentifier: REFERENCE_FIELD_ID }],
-};
-
 const findValidationRuleRow = async (
   validationRuleId: string = VALIDATION_RULE_ID,
 ) => {
   const rows = await globalThis.testDataSource.query(
-    `SELECT vr.name, vr.tree, vr.message, vr."isActive",
+    `SELECT vr.name, vr.expression, vr.bindings, vr.message, vr."isActive",
        errorField."universalIdentifier" AS "errorFieldUniversalIdentifier",
        app."universalIdentifier" AS "applicationUniversalIdentifier"
      FROM core."validationRule" vr
@@ -148,7 +142,7 @@ describe('Validation rules declared in an application manifest', () => {
     });
   });
 
-  it('should create the rule with a tree reading fields by identifier', async () => {
+  it('should create the rule with bindings compiled from the expression', async () => {
     const { errors } = await syncApplication({
       manifest: buildManifest(),
       expectToFail: false,
@@ -157,7 +151,8 @@ describe('Validation rules declared in an application manifest', () => {
     expect(errors).toBeUndefined();
     expect(await findValidationRuleRow()).toEqual({
       name: 'Ticket has a reference',
-      tree: READ_REFERENCE_FIELD_TREE,
+      expression: 'isNonEmptyString(reference)',
+      bindings: { reference: REFERENCE_FIELD_ID },
       message: 'A ticket needs a reference',
       isActive: true,
       errorFieldUniversalIdentifier: REFERENCE_FIELD_ID,
@@ -180,7 +175,8 @@ describe('Validation rules declared in an application manifest', () => {
 
     expect(errors).toBeUndefined();
     expect(await findValidationRuleRow()).toMatchObject({
-      tree: READ_REFERENCE_FIELD_TREE,
+      expression: 'isNonEmptyString(code)',
+      bindings: { code: REFERENCE_FIELD_ID },
       isActive: true,
     });
   }, 60000);
@@ -200,7 +196,7 @@ describe('Validation rules declared in an application manifest', () => {
 
     expect(errors?.[0]?.message).toContain('Unknown field "reference"');
     expect(await findValidationRuleRow()).toMatchObject({
-      tree: READ_REFERENCE_FIELD_TREE,
+      expression: 'isNonEmptyString(code)',
     });
   }, 60000);
 

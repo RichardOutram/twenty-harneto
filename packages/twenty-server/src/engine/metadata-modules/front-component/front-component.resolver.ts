@@ -12,7 +12,6 @@ import { type GraphQLResolveInfo } from 'graphql';
 import { type ApplicationCapability } from 'twenty-shared/application';
 import { PermissionFlagType } from 'twenty-shared/constants';
 import { type IframeMediaPermission } from 'twenty-shared/types';
-import { isDefined } from 'twenty-shared/utils';
 
 import { MetadataResolver } from 'src/engine/api/graphql/graphql-config/decorators/metadata-resolver.decorator';
 import { UUIDScalarType } from 'src/engine/api/graphql/workspace-schema-builder/graphql-types/scalars';
@@ -25,7 +24,6 @@ import { type FlatApplication } from 'src/engine/core-modules/application/types/
 import { canCallerReachApplication } from 'src/engine/core-modules/application/utils/can-caller-reach-application.util';
 import { ApplicationTokenService } from 'src/engine/core-modules/auth/token/services/application-token.service';
 import { type AuthContextUser } from 'src/engine/core-modules/auth/types/auth-context.type';
-import { WorkspaceDomainsService } from 'src/engine/core-modules/domain/workspace-domains/services/workspace-domains.service';
 import { IframeMediaPermissionDTO } from 'src/engine/core-modules/workspace/dtos/iframe-media-permission.dto';
 import { AuthGraphqlApiExceptionFilter } from 'src/engine/core-modules/auth/filters/auth-graphql-api-exception.filter';
 import { type WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
@@ -46,7 +44,6 @@ import { FRONT_COMPONENT_READ_ACCESS_POLICY } from 'src/engine/metadata-modules/
 import { AccessPolicyGuard } from 'src/engine/guards/access-policy.guard';
 import { type AccessPolicy } from 'src/engine/guards/types/access-policy.type';
 import { getGraphqlFieldSelections } from 'src/engine/api/graphql/workspace-resolver-builder/utils/get-graphql-field-selections.util';
-import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 
 const FRONT_COMPONENT_USER_SESSION_ACCESS_POLICY: AccessPolicy = {
   authPrincipals: {
@@ -94,11 +91,9 @@ export class FrontComponentResolver {
     private readonly userApplicationVariableValueService: UserApplicationVariableValueService,
     private readonly workspaceCacheService: WorkspaceCacheService,
     private readonly applicationService: ApplicationService,
-    private readonly workspaceDomainsService: WorkspaceDomainsService,
   ) {}
 
   @ResolveField(() => String, { nullable: true })
-  @UseGuards(NoPermissionGuard)
   async frontComponentSharedDependenciesChecksum(
     @Parent() frontComponent: FrontComponentDTO,
     @AuthWorkspace() workspace: WorkspaceEntity,
@@ -115,34 +110,6 @@ export class FrontComponentResolver {
   }
 
   @ResolveField(() => String, { nullable: true })
-  @UseGuards(NoPermissionGuard)
-  async applicationFunctionsBaseUrl(
-    @Parent() frontComponent: FrontComponentDTO,
-    @AuthWorkspace() workspace: WorkspaceEntity,
-  ): Promise<string | null> {
-    const { flatApplicationMaps } =
-      await this.workspaceCacheService.getOrRecompute(workspace.id, [
-        'flatApplicationMaps',
-      ]);
-
-    const flatApplication =
-      flatApplicationMaps.byId[frontComponent.applicationId];
-
-    if (!isDefined(flatApplication)) {
-      return null;
-    }
-
-    const functionsBaseUrl =
-      await this.workspaceDomainsService.buildApplicationFunctionsBaseUrl({
-        workspace,
-        flatApplication,
-      });
-
-    return functionsBaseUrl ?? null;
-  }
-
-  @ResolveField(() => String, { nullable: true })
-  @UseGuards(NoPermissionGuard)
   async applicationName(
     @Parent() frontComponent: FrontComponentDTO,
     @AuthWorkspace() workspace: WorkspaceEntity,
@@ -156,7 +123,6 @@ export class FrontComponentResolver {
   }
 
   @ResolveField(() => [String], { nullable: true })
-  @UseGuards(NoPermissionGuard)
   async applicationGrantedCapabilities(
     @Parent() frontComponent: FrontComponentDTO,
     @AuthWorkspace() workspace: WorkspaceEntity,
@@ -173,7 +139,6 @@ export class FrontComponentResolver {
   }
 
   @ResolveField(() => [IframeMediaPermissionDTO], { nullable: true })
-  @UseGuards(NoPermissionGuard)
   async applicationGrantedIframeMediaPermissions(
     @Parent() frontComponent: FrontComponentDTO,
     @AuthWorkspace()

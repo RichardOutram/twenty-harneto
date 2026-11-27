@@ -1,3 +1,4 @@
+import { CoreApiClient } from 'twenty-client-sdk/core';
 import { defineLogicFunction } from 'twenty-sdk/define';
 
 import {
@@ -13,8 +14,8 @@ import { findCallRecordingsByFilter } from 'src/logic-functions/data/find-call-r
 import { CallRecordingRequestStatus } from 'src/logic-functions/constants/call-recording-request-status';
 import { CallRecordingStatus } from 'src/logic-functions/constants/call-recording-status';
 import { NON_TERMINAL_CALL_RECORDING_STATUSES } from 'src/logic-functions/constants/non-terminal-call-recording-statuses';
-import { createCoreApiClientRunningAsApplication } from 'src/logic-functions/utils/create-core-api-client-running-as-application.util';
 import { isCalendarBotSchedulingEnabled } from 'src/logic-functions/utils/is-calendar-bot-scheduling-enabled.util';
+import { fetchWithRateLimitRetry } from 'src/logic-functions/utils/fetch-with-rate-limit-retry.util';
 
 export type SyncCalendarBotSchedulingResult =
   | { outcome: 'sweep-enqueued' }
@@ -35,7 +36,7 @@ export const syncCalendarBotSchedulingHandler =
       return { outcome: 'sweep-enqueued' };
     }
 
-    const client = createCoreApiClientRunningAsApplication();
+    const client = new CoreApiClient({ fetch: fetchWithRateLimitRetry });
     // Include unfinished cancellations so a retry after an enqueue failure does not lose them.
     const callRecordings = await findCallRecordingsByFilter(client, {
       or: [

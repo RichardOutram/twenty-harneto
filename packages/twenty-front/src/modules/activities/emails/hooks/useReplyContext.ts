@@ -5,7 +5,6 @@ import {
   type ReplyContext,
   type ReplyContextReady,
 } from '@/activities/emails/types/ReplyContext';
-import { getReplyAllRecipients } from '@/activities/emails/utils/getReplyAllRecipients';
 import { getReplyToRecipients } from '@/activities/emails/utils/getReplyToRecipients';
 import { isDefined } from 'twenty-shared/utils';
 import { doNotTranslate } from 'twenty-shared/i18n';
@@ -48,7 +47,6 @@ export const useReplyContext = (
       return {
         loading: false,
         to: '',
-        replyAll: null,
         subject: '',
         inReplyTo: '',
         connectedAccountId,
@@ -70,10 +68,6 @@ export const useReplyContext = (
     return {
       loading: false,
       to: replyTo,
-      replyAll: getReplyAllRecipients({
-        message: lastSentMessage,
-        connectedAccountHandle,
-      }),
       subject,
       inReplyTo: lastSentMessage.headerMessageId ?? '',
       connectedAccountId,

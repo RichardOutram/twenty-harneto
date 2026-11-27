@@ -96,11 +96,6 @@ msgstr ": اليوم{timeZoneAbbreviationSuffix}"
 msgid "· FREE"
 msgstr "· مجانًا"
 
-#. js-lingui-id: eNVoMO
-#: src/modules/validation-rules/utils/getValidationRuleErrorMessage.ts
-msgid "\"{fieldName}\" has many records: read it inside count(), sum(), avg(), min() or max()"
-msgstr "يحتوي \"{fieldName}\" على العديد من السجلات: اقرأه داخل count() أو sum() أو avg() أو min() أو max()"
-
 #. js-lingui-id: Y/jWkl
 #: src/modules/validation-rules/utils/getValidationRuleErrorMessage.ts
 msgid "\"{fieldName}\" is not a to-one relation"
@@ -116,40 +111,20 @@ msgstr "\"{path}\" يتعمق أكثر مما يسمح به الحقل \"{fieldN
 msgid "\"{path}\" goes more than one relation deep"
 msgstr "\"{path}\" يتعمق عبر أكثر من علاقة واحدة"
 
-#. js-lingui-id: WsA0r3
-#: src/modules/validation-rules/utils/getValidationRuleErrorMessage.ts
-msgid "\"{path}\" has several parts: read one of them, such as {path}.{subfieldName}"
-msgstr "يحتوي \"{path}\" على عدة أجزاء: اقرأ أحدها، مثل {path}.{subfieldName}"
-
 #. js-lingui-id: Qs5qiW
 #: src/modules/validation-rules/utils/getValidationRuleErrorMessage.ts
 msgid "\"{path}\" is not a value"
 msgstr "\"{path}\" ليست قيمة"
-
-#. js-lingui-id: LWKWNY
-#: src/modules/validation-rules/utils/getValidationRuleErrorMessage.ts
-msgid "\"{path}\" reads a previous value, which a formula cannot use"
-msgstr "يقرأ \"{path}\" قيمة سابقة، لا يمكن للصيغة استخدامها"
 
 #. js-lingui-id: ZIIOJj
 #: src/modules/validation-rules/utils/getValidationRuleErrorMessage.ts
 msgid "\"{path}\" reads a relation, but previous values only cover this record's own fields"
 msgstr "يقرأ \"{path}\" علاقة، لكن القيم السابقة لا تغطي سوى الحقول الخاصة بهذا السجل"
 
-#. js-lingui-id: bkN3QG
-#: src/modules/command-menu-item/display/components/CommandMenuAskAiFallbackItem.tsx
-msgid "“{prompt}”"
-msgstr "«{prompt}»"
-
 #. js-lingui-id: sh7E5k
 #: src/modules/validation-rules/utils/getValidationRuleErrorMessage.ts
 msgid "\"{subfieldName}\" is not a subfield of \"{fieldName}\""
 msgstr "\"{subfieldName}\" ليس حقلاً فرعياً لـ \"{fieldName}\""
-
-#. js-lingui-id: caVje7
-#: src/modules/settings/billing/components/SettingsBillingSubscriptionInfo.tsx
-msgid "({applicationsCount} {applicationCountLabel})"
-msgstr "({applicationsCount} {applicationCountLabel})"
 
 #. js-lingui-id: J3dohc
 #: src/modules/settings/billing/components/SettingsBillingSubscriptionInfo.tsx
@@ -360,12 +335,6 @@ msgstr "{0, plural, zero {لا أرصدة/فترة} one {رصيد/فترة} two 
 #: src/modules/onboarding/hooks/useOnboardingFreeCreditsTooltipContent.ts
 msgid "{0, plural, one {Earn {formattedInviteTeamCreditsRewardPerUser} free credit per teammate who joins} other {Earn {formattedInviteTeamCreditsRewardPerUser} free credits per teammate who joins}}"
 msgstr "{0, plural, zero {اكسب {formattedInviteTeamCreditsRewardPerUser} من الأرصدة المجانية لكل زميل ينضم} one {اكسب {formattedInviteTeamCreditsRewardPerUser} من الرصيد المجاني لكل زميل ينضم} two {اكسب {formattedInviteTeamCreditsRewardPerUser} من الرصيدين المجانيين لكل زميل ينضم} few {اكسب {formattedInviteTeamCreditsRewardPerUser} من الأرصدة المجانية لكل زميل ينضم} many {اكسب {formattedInviteTeamCreditsRewardPerUser} من الرصيد المجاني لكل زميل ينضم} other {اكسب {formattedInviteTeamCreditsRewardPerUser} من الرصيد المجاني لكل زميل ينضم}}"
-
-#. js-lingui-id: ywXd/t
-#. placeholder {0}: end.occurrenceCount
-#: src/modules/activities/calendar/components/CalendarEventComposerRecurrenceFields.tsx
-msgid "{0, plural, one {occurrence} other {occurrences}}"
-msgstr "{0, plural, zero {حالات ظهور} one {حالة ظهور} two {حالتا ظهور} few {حالات ظهور} many {حالة ظهور} other {حالة ظهور}}"
 
 #. js-lingui-id: AkeiJW
 #. placeholder {0}: item.quantity
@@ -595,12 +564,6 @@ msgstr "{0} بدون بريد إلكتروني"
 msgid "{0} workspace members"
 msgstr "{0} من أعضاء مساحة العمل"
 
-#. js-lingui-id: vZ4SMq
-#. placeholder {0}: entry.label
-#: src/modules/side-panel/pages/edit-column/components/SidePanelEditColumnShowSelect.tsx
-msgid "{0}, back"
-msgstr "{0}، رجوع"
-
 #. js-lingui-id: stF+5U
 #. placeholder {0}: fieldMetadataItem.label
 #. placeholder {0}: relationFieldMetadataItem.label
@@ -652,11 +615,6 @@ msgstr "{allowedFieldCount} من {fieldCount}"
 msgid "{allowedFieldCount} of {fieldCount} fields"
 msgstr "{allowedFieldCount} من أصل {fieldCount} حقول"
 
-#. js-lingui-id: QbSIWf
-#: src/modules/marketplace/utils/buildApplicationBillingSummary.ts
-msgid "{amount} / month"
-msgstr "{amount} / شهر"
-
 #. js-lingui-id: WhHyQh
 #: src/modules/settings/roles/role-settings/components/SettingsRoleSettingsDeleteRoleConfirmationModalSubtitle.tsx
 msgid "{apiKeyCount, plural, one {{apiKeyCount} API key} other {{apiKeyCount} API keys}}"
@@ -686,16 +644,6 @@ msgstr "لم يعد بإمكان {applicationName} الوصول إلى حساب�
 #: src/modules/settings/app-preferences/hooks/useAccountGroupApplicationSettingsTabs.ts
 msgid "{applicationName}: {settingsMenuItemTitle}"
 msgstr "{applicationName} : {settingsMenuItemTitle}"
-
-#. js-lingui-id: 041Z1f
-#: src/modules/settings/billing/components/SettingsBillingApplicationsSection.tsx
-msgid "{applicationsCount} paid app"
-msgstr "{applicationsCount} تطبيق مدفوع"
-
-#. js-lingui-id: tkQrFL
-#: src/modules/settings/billing/components/SettingsBillingApplicationsSection.tsx
-msgid "{applicationsCount} paid apps"
-msgstr "{applicationsCount} تطبيقات مدفوعة"
 
 #. js-lingui-id: ST9xGf
 #: src/pages/settings/accounts/SettingsApplicationPreferencesDetail.tsx
@@ -923,31 +871,6 @@ msgstr "فشل {formattedFailedRunCount} من أصل {formattedRunCount} عمل�
 msgid "{formattedPercentage}% used, {formattedConversationSize} of {formattedContextWindow} tokens"
 msgstr "تم استخدام {formattedPercentage}%، {formattedConversationSize} من أصل {formattedContextWindow} رمزًا مميزًا"
 
-#. js-lingui-id: d3NhPx
-#: src/modules/validation-rules/utils/getValidationRuleErrorMessage.ts
-msgid "{functionName} takes {minimumArgumentCount} argument(s), but got {argumentCount}"
-msgstr "تأخذ {functionName} ‏{minimumArgumentCount} وسيطة (وسيطات)، ولكن تلقت {argumentCount}"
-
-#. js-lingui-id: KeR/79
-#: src/modules/validation-rules/utils/getValidationRuleErrorMessage.ts
-msgid "{functionName} takes at least {minimumArgumentCount} argument(s), but got {argumentCount}"
-msgstr "تأخذ {functionName} ما لا يقل عن {minimumArgumentCount} وسيطة (وسيطات)، ولكن تلقت {argumentCount}"
-
-#. js-lingui-id: aGSMaz
-#: src/modules/validation-rules/utils/getValidationRuleErrorMessage.ts
-msgid "{functionName}() cannot contain another aggregate"
-msgstr "لا يمكن أن يحتوي {functionName}() على تجميع آخر"
-
-#. js-lingui-id: gT6Kkm
-#: src/modules/validation-rules/utils/getValidationRuleErrorMessage.ts
-msgid "{functionName}() needs a relation, for example count(tasks) or sum(deals.amount)"
-msgstr "يتطلب {functionName}() علاقة، على سبيل المثال count(tasks) أو sum(deals.amount)"
-
-#. js-lingui-id: vN+0eR
-#: src/modules/validation-rules/utils/getValidationRuleErrorMessage.ts
-msgid "{functionName}() reads related records, which only a formula can do"
-msgstr "تقرأ {functionName}() السجلات المرتبطة، وهو ما لا يمكن إلا للصيغة القيام به"
-
 #. js-lingui-id: NHstiz
 #: src/modules/onboarding/components/free-credits/OnboardingFreeCreditsProgress.tsx
 msgid "{goalCredits, plural, one {free credit} other {free credits}}"
@@ -1000,26 +923,6 @@ msgstr "{importContactsCallRecordingHours, plural, zero {{formattedImportContact
 msgid "{installCount, plural, one {{0} install} other {{1} installs}}"
 msgstr "{installCount, plural, zero {{0} عملية تثبيت} one {{0} عملية تثبيت} two {{0} عمليتا تثبيت} few {{0} عمليات تثبيت} many {{0} عملية تثبيت} other {{1} عملية تثبيت}}"
 
-#. js-lingui-id: UON5Ro
-#: src/modules/activities/calendar/utils/getCalendarEventRecurrenceIntervalUnitLabel.ts
-msgid "{interval, plural, one {day} other {days}}"
-msgstr "{interval, plural, zero {لا أيام} one {يوم واحد} two {يومان} few {# أيام} many {# يومًا} other {# يوم}}"
-
-#. js-lingui-id: UGYVsx
-#: src/modules/activities/calendar/utils/getCalendarEventRecurrenceIntervalUnitLabel.ts
-msgid "{interval, plural, one {month} other {months}}"
-msgstr "{interval, plural, zero {لا أشهر} one {شهر واحد} two {شهران} few {# أشهر} many {# شهرًا} other {# شهر}}"
-
-#. js-lingui-id: RxZ6VS
-#: src/modules/activities/calendar/utils/getCalendarEventRecurrenceIntervalUnitLabel.ts
-msgid "{interval, plural, one {week} other {weeks}}"
-msgstr "{interval, plural, zero {لا أسابيع} one {أسبوع واحد} two {أسبوعان} few {# أسابيع} many {# أسبوعًا} other {# أسبوع}}"
-
-#. js-lingui-id: qB4ocR
-#: src/modules/activities/calendar/utils/getCalendarEventRecurrenceIntervalUnitLabel.ts
-msgid "{interval, plural, one {year} other {years}}"
-msgstr "{interval, plural, zero {لا سنوات} one {سنة واحدة} two {سنتان} few {# سنوات} many {# سنة} other {# سنة}}"
-
 #. js-lingui-id: Z4Vsx1
 #: src/modules/workspace/components/WorkspaceInviteTeam.tsx
 msgid "{invitationCount} invitations sent"
@@ -1069,11 +972,6 @@ msgstr "{label}، {statusLabel}"
 #: src/modules/navigation/components/MainNavigationDrawerTabSwitcher.tsx
 msgid "{label}, {unreadOpenThreadCount} unread"
 msgstr "{label}، {unreadOpenThreadCount} غير مقروء"
-
-#. js-lingui-id: B+e4L5
-#: src/modules/navigation-menu-item/edit/components/NavigationMenuSectionMenuContent.tsx
-msgid "{limit, plural, one {# item} other {# items}}"
-msgstr ""
 
 #. js-lingui-id: 1DrH/j
 #: src/modules/settings/roles/role-settings/components/SettingsRoleSettingsDeleteRoleConfirmationModalSubtitle.tsx
@@ -1190,26 +1088,6 @@ msgstr "تمت تعبئة {prefilledCount} من أصل {fieldCount} حقول م�
 #: src/modules/settings/applications/components/SettingsApplicationConnectionProviderSection.tsx
 msgid "{providerDisplayName} OAuth is not yet set up by your server administrator. They need to fill in the OAuth client ID and secret on the application registration before you can add a connection."
 msgstr "لم يتم إعداد OAuth لـ {providerDisplayName} بعد بواسطة مسؤول الخادم. يجب على مسؤول الخادم إدخال معرّف عميل OAuth والسر في تسجيل التطبيق قبل أن تتمكن من إضافة اتصال."
-
-#. js-lingui-id: VLLE21
-#: src/modules/settings/billing/components/SettingsBillingApplicationsSection.tsx
-msgid "{quantity} account"
-msgstr "{quantity} حساب"
-
-#. js-lingui-id: XYE5Zk
-#: src/modules/settings/billing/components/SettingsBillingApplicationsSection.tsx
-msgid "{quantity} accounts"
-msgstr "{quantity} حسابات"
-
-#. js-lingui-id: 6sLwwC
-#: src/modules/settings/billing/components/SettingsBillingApplicationsSection.tsx
-msgid "{quantity} member"
-msgstr "{quantity} عضو"
-
-#. js-lingui-id: k/jGvO
-#: src/modules/settings/billing/components/SettingsBillingApplicationsSection.tsx
-msgid "{quantity} members"
-msgstr "{quantity} أعضاء"
 
 #. js-lingui-id: 2V2T+0
 #. placeholder {0}: formatNumber(queuedCount)
@@ -1417,12 +1295,12 @@ msgstr "{storedToolName} (غير متاح لك)"
 #. js-lingui-id: VfeUjs
 #: src/modules/navigation-menu-item/display/hooks/useGetNavigationMenuTabAttentionLabel.ts
 msgid "{tabName}, needs your input"
-msgstr "{tabName}، يحتاج إلى إدخالك"
+msgstr ""
 
 #. js-lingui-id: REc4fO
 #: src/modules/navigation-menu-item/display/hooks/useGetNavigationMenuTabAttentionLabel.ts
 msgid "{tabName}, unread"
-msgstr "{tabName}، غير مقروء"
+msgstr ""
 
 #. js-lingui-id: RIjnws
 #: src/modules/settings/mcp-servers/utils/getMcpServerStatus.ts
@@ -1854,11 +1732,6 @@ msgstr "يُفتح نموذج للشخص الذي يبدأ سير العمل و�
 msgid "A form opens for the person who launches the workflow and is filled in on the spot. With this trigger, it only shows in the workflow run. To ask someone for an answer or an approval in their inbox, use a Send to Inbox step instead."
 msgstr "يُفتح نموذج للشخص الذي يبدأ سير العمل ويُملأ في الحال. مع هذا المشغّل، لا يظهر إلا في تشغيل سير العمل. لطلب إجابة أو موافقة من شخص ما في صندوق الوارد لديه، استخدم خطوة الإرسال إلى صندوق الوارد بدلًا من ذلك."
 
-#. js-lingui-id: QbGaDs
-#: src/modules/validation-rules/utils/getValidationRuleErrorMessage.ts
-msgid "A formula that aggregates related records is stored, so it cannot read \"{path}\". Aggregate in this field and read it from another formula."
-msgstr "يتم تخزين صيغة تجمع السجلات المرتبطة، لذا لا يمكنها قراءة \"{path}\". أجرِ التجميع في هذا الحقل واقرأه من صيغة أخرى."
-
 #. js-lingui-id: 8fNMpo
 #: src/modules/activities/emails/components/ChatThreadComposer.tsx
 msgid "A message can have up to {maxAttachmentCount} files"
@@ -1898,11 +1771,6 @@ msgstr "الدور مطلوب"
 #: src/pages/settings/developers/api-keys/SettingsDevelopersApiKeyDetail.tsx
 msgid "A role must be selected for the API key"
 msgstr "يجب اختيار دور لمفتاح API"
-
-#. js-lingui-id: /852Zy
-#: src/modules/validation-rules/utils/getValidationRuleErrorMessage.ts
-msgid "A stored formula cannot read \"{path}\""
-msgstr "لا يمكن لصيغة مخزنة قراءة \"{path}\""
 
 #. js-lingui-id: yfuxL8
 #: src/modules/page-layout/widgets/call-recording/utils/getCallRecordingStatusDisplayConfiguration.ts
@@ -1998,6 +1866,11 @@ msgstr "اتفاقيات معالجة البيانات (DPA) المقبولة و
 #: src/modules/settings/security/components/SettingsSecurityIframeMediaPermissionsTable.tsx
 msgid "Access"
 msgstr "الوصول"
+
+#. js-lingui-id: 7T2MJI
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Access groups"
+msgstr "مجموعات الوصول"
 
 #. js-lingui-id: pNW+Rt
 #: src/pages/settings/admin-panel/SettingsAdminNewAiProvider.tsx
@@ -2258,7 +2131,7 @@ msgstr "أضف بطاقة أدناه لتحديث تفاصيل الفوترة و
 #. js-lingui-id: vzJ7AQ
 #: src/modules/settings/data-model/fields/forms/select/components/SettingsDataModelFieldSelectFormOptionDescriptionInput.tsx
 msgid "Add a description"
-msgstr "أضف وصفًا"
+msgstr ""
 
 #. js-lingui-id: uXkGAw
 #: src/modules/advanced-text-editor/extensions/variable-tag/TemplateVariableWithFallbackChip.tsx
@@ -2498,7 +2371,7 @@ msgstr "إضافة مزود مخصص"
 #. js-lingui-id: PGPGsL
 #: src/modules/settings/data-model/fields/forms/select/components/SettingsDataModelFieldSelectFormOptionRow.tsx
 msgid "Add description"
-msgstr "أضف وصفًا"
+msgstr ""
 
 #. js-lingui-id: 094J9M
 #: src/modules/activities/calendar/components/CalendarEventComposerFields.tsx
@@ -2519,6 +2392,11 @@ msgstr "إضافة قناة بريد إلكتروني"
 #: src/modules/settings/security/components/SettingsSecurityIframeMediaPermissionForm.tsx
 msgid "Add embedded website"
 msgstr "إضافة موقع ويب مضمن"
+
+#. js-lingui-id: 6kC3KJ
+#: src/modules/ai-chat/tool-calls/components/AiChatToolCallApprovalCardLayout.tsx
+msgid "Add feedback"
+msgstr "إضافة ملاحظات"
 
 #. js-lingui-id: Va3xJe
 #: src/modules/object-record/record-table/record-table-header/components/RecordTableHeaderLabelIdentifierCellPlusButton.tsx
@@ -2598,17 +2476,12 @@ msgstr "إضافة عنصر"
 #. js-lingui-id: 1e37Dl
 #: src/modules/navigation-menu-item/edit/components/NavigationMenuItemActions.tsx
 msgid "Add item after"
-msgstr "إضافة عنصر بعده"
+msgstr ""
 
 #. js-lingui-id: w7mkyz
 #: src/modules/navigation-menu-item/edit/components/NavigationMenuItemActions.tsx
 msgid "Add item before"
-msgstr "إضافة عنصر قبله"
-
-#. js-lingui-id: /kLKYB
-#: src/modules/navigation/components/MainNavigationDrawerContextMenuContent.tsx
-msgid "Add item to {targetSectionName}"
-msgstr "إضافة عنصر إلى {targetSectionName}"
+msgstr ""
 
 #. js-lingui-id: VzGJRl
 #: src/modules/advanced-text-editor/components/EditLinkDropdown.tsx
@@ -2768,8 +2641,6 @@ msgstr "إضافة مجموعة قواعد"
 
 #. js-lingui-id: RxFV0G
 #: src/modules/navigation-menu-item/edit/components/NavigationMenuAddSectionButton.tsx
-#: src/modules/navigation-menu-item/edit/components/NavigationMenuAddSectionButton.tsx
-#: src/modules/navigation/components/MainNavigationDrawerContextMenuContent.tsx
 msgid "Add section"
 msgstr "إضافة قسم"
 
@@ -2786,11 +2657,6 @@ msgstr "أضف ترتيبًا"
 #: src/modules/settings/security/components/sso/SettingsSsoIdentitiesProvidersListCardWrapper.tsx
 msgid "Add SSO Identity Provider"
 msgstr "إضافة موفر هوية الدخول الأحادي SSO"
-
-#. js-lingui-id: iC/d3X
-#: src/modules/object-record/record-column-scope/components/RecordTableScopedRelationColumnSelectMenu.tsx
-msgid "Add summary column"
-msgstr "إضافة عمود ملخص"
 
 #. js-lingui-id: hjO0Mq
 #: src/modules/navigation/components/MainNavigationDrawerAddTabButton.tsx
@@ -2857,6 +2723,11 @@ msgstr "إضافة إلى القائمة السوداء"
 #: src/modules/views/view-picker/components/ViewPickerOptionDropdown.tsx
 msgid "Add to Favorite"
 msgstr "إضافة إلى المفضلة"
+
+#. js-lingui-id: pBsoKL
+#: src/modules/inbox/components/NavigationDrawerInboxChannelActionsDropdown.tsx
+msgid "Add to favorites"
+msgstr "إضافة إلى المفضلات"
 
 #. js-lingui-id: A7duaz
 #: src/modules/side-panel/hooks/useOpenAddToMessageListInSidePanel.ts
@@ -3038,11 +2909,6 @@ msgstr "مسؤول"
 msgid "Admin & Member"
 msgstr "مسؤول وعضو"
 
-#. js-lingui-id: ZHWySn
-#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
-msgid "Admin channel write access"
-msgstr "صلاحية الكتابة في قناة المسؤول"
-
 #. js-lingui-id: SsHJsm
 #: src/modules/settings/admin-panel/components/SettingsAdminServerAdminAccess.tsx
 #: src/modules/settings/admin-panel/components/SettingsAdminServerAdmins.tsx
@@ -3133,11 +2999,6 @@ msgstr "خيارات متقدمة"
 #: src/modules/localization/hooks/useLocaleOptions.ts
 msgid "Afrikaans"
 msgstr "الأفريكانية"
-
-#. js-lingui-id: NawEr2
-#: src/modules/activities/calendar/components/CalendarEventComposerRecurrenceFields.tsx
-msgid "After"
-msgstr "بعد"
 
 #. js-lingui-id: WlItll
 #: src/modules/settings/admin-panel/constants/CreditGrantExpiryOptions.ts
@@ -3626,11 +3487,6 @@ msgstr "كل المجموعات"
 msgid "All it takes is their email."
 msgstr "كل ما يلزم هو بريدهم الإلكتروني."
 
-#. js-lingui-id: J3EsIX
-#: src/modules/navigation-menu-item/edit/components/NavigationMenuSectionMenuContent.tsx
-msgid "All items"
-msgstr ""
-
 #. js-lingui-id: 623MHa
 #: src/modules/settings/data-model/fields/forms/components/text/constants/TextDataModelSelectOptions.ts
 msgid "All lines"
@@ -3904,7 +3760,7 @@ msgstr "موجود بالفعل في الشريط الجانبي"
 #. js-lingui-id: CaKZeT
 #: src/modules/navigation-menu-item/edit/components/NavigationMenuItemSelectableItem.tsx
 msgid "Already in this section"
-msgstr "موجود بالفعل في هذا القسم"
+msgstr ""
 
 #. js-lingui-id: u/DP73
 #: src/modules/advanced-text-editor/constants/AdvancedTextEditorBlockCatalog.ts
@@ -4234,11 +4090,6 @@ msgstr "قِيَم API"
 msgid "Apostrophe and dot"
 msgstr "الفاصلة العليا والنقطة"
 
-#. js-lingui-id: sRXyRZ
-#: src/modules/settings/billing/components/SettingsBillingSubscriptionInfo.tsx
-msgid "app"
-msgstr "التطبيق"
-
 #. js-lingui-id: LMUw1U
 #: src/modules/log-console/constants/LogConsoleApplicationLogAppColumn.tsx
 #: src/modules/log-console/constants/LogConsoleApplicationLogFilterFields.tsx
@@ -4340,6 +4191,11 @@ msgstr "تم تثبيت التطبيق بنجاح."
 #: src/modules/settings/event-logs/components/EventLogTableSelector.tsx
 msgid "Application Logs"
 msgstr "سجلات التطبيق"
+
+#. js-lingui-id: UiH6l9
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Application price billing"
+msgstr "فوترة أسعار التطبيق"
 
 #. js-lingui-id: Ko+Gd2
 #: src/pages/settings/admin-panel/SettingsAdminApplicationRegistrationDetail.tsx
@@ -4454,17 +4310,10 @@ msgstr "تمت الموافقة ولكنها فشلت"
 msgid "Approved Domains"
 msgstr "النطاقات المعتمدة"
 
-#. js-lingui-id: at3eOk
-#: src/modules/settings/billing/components/SettingsBillingSubscriptionInfo.tsx
-msgid "apps"
-msgstr "التطبيقات"
-
 #. js-lingui-id: VDvaN2
 #: src/modules/settings/admin-panel/hooks/useSettingsAdminTabs.ts
 #: src/modules/settings/app-preferences/components/SettingsAppPreferencesAppsSection.tsx
 #: src/modules/settings/applications/components/SettingsApplicationContentPageLayout.tsx
-#: src/modules/settings/billing/components/internal/SettingsBillingSubscriptionInfoCard.tsx
-#: src/modules/settings/billing/components/SettingsBillingApplicationsSection.tsx
 #: src/modules/settings/billing/constants/UsageLimitResourceTypeLabels.ts
 #: src/modules/settings/domains/components/SettingPublicDomain.tsx
 #: src/modules/settings/hooks/useSettingsNavigationItems.tsx
@@ -4689,6 +4538,11 @@ msgstr "تصاعدي"
 msgid "Asia Pacific"
 msgstr "آسيا والمحيط الهادئ"
 
+#. js-lingui-id: 4mdmhg
+#: src/modules/command-menu-item/display/components/SidePanelCommandMenuItemDisplayPage.tsx
+msgid "Ask & find"
+msgstr "اسأل واعثر"
+
 #. js-lingui-id: 2pXVeV
 #: src/modules/activities/calendar/components/CalendarEventComposerFields.tsx
 msgid "Ask a workspace admin for the User Apps permission to connect a calendar account."
@@ -4703,7 +4557,6 @@ msgstr "اطلب من مسؤول مساحة العمل الحصول على إذ�
 
 #. js-lingui-id: xWEvuo
 #: src/modules/command-menu-item/display/components/CommandMenuAskAiFallbackItem.tsx
-#: src/modules/command-menu-item/display/components/SidePanelCommandMenuItemDisplayPage.tsx
 #: src/modules/command-menu-item/engine-command/constants/EngineComponentKeyHeadlessComponentMap.tsx
 #: src/modules/settings/roles/role-permissions/permission-flags/hooks/useActionRolePermissionFlagConfig.ts
 #: src/modules/side-panel/components/SidePanelAskAiInfo.tsx
@@ -4931,8 +4784,6 @@ msgstr "إرفاق ملف"
 #: src/modules/activities/emails/components/ChatThreadComposer.tsx
 #: src/modules/activities/emails/components/EmailComposerFields.tsx
 #: src/modules/ai-chat/composer/components/AiChatAddMenu.tsx
-#: src/modules/ai-chat/composer/components/AiChatAttachFileButton.tsx
-#: src/modules/ai-chat/composer/components/AiChatAttachFileButton.tsx
 #: src/modules/page-layout/widgets/email-thread/components/EmailThreadComposer.tsx
 #: src/modules/side-panel/pages/compose-email/components/SidePanelComposeEmailPage.tsx
 msgid "Attach files"
@@ -5371,11 +5222,6 @@ msgstr "السلوك"
 msgid "Behind"
 msgstr "متأخر"
 
-#. js-lingui-id: +68Gui
-#: src/modules/object-record/record-table/record-table-header/components/RecordTableHeaderPlusButtonContent.tsx
-msgid "Belongs to"
-msgstr "ينتمي إلى"
-
 #. js-lingui-id: Fg77nJ
 #: src/modules/settings/data-model/constants/RelationTypes.ts
 msgid "Belongs to one"
@@ -5411,20 +5257,10 @@ msgstr "بين {startOrdinal} و {endOrdinal} من الشهر"
 msgid "Bill credits to your workspace"
 msgstr "احتسب الأرصدة على مساحة العمل الخاصة بك"
 
-#. js-lingui-id: XJj77g
-#: src/modules/marketplace/utils/buildApplicationBillingSummary.ts
-msgid "Bill your workspace {price}"
-msgstr "فوترة مساحة عملك بمبلغ {price}"
-
-#. js-lingui-id: mZbez3
-#: src/modules/marketplace/utils/buildApplicationBillingSummary.ts
-msgid "Bill your workspace {price} per account"
-msgstr "فوترة مساحة عملك بمبلغ {price} لكل حساب"
-
-#. js-lingui-id: oy0GSN
-#: src/modules/marketplace/utils/buildApplicationBillingSummary.ts
-msgid "Bill your workspace {price} per member"
-msgstr "فوترة مساحة العمل الخاصة بك بمبلغ {price} لكل عضو"
+#. js-lingui-id: jKtUV8
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Bill the prices declared by installed apps on the workspace subscription. The price is not shown before install yet."
+msgstr "افرض رسوم الأسعار التي تعلنها التطبيقات المثبتة على اشتراك مساحة العمل. لا يظهر السعر قبل التثبيت بعد."
 
 #. js-lingui-id: aIkeAd
 #: src/modules/settings/billing/components/internal/SettingsBillingPlanComparisonTable.tsx
@@ -5450,11 +5286,6 @@ msgstr "الفوترة"
 #: src/utils/title-utils.ts
 msgid "Billing - Settings"
 msgstr "الفوترة - الإعدادات"
-
-#. js-lingui-id: arWQGP
-#: src/modules/settings/billing/components/internal/SettingsBillingSubscriptionInfoCard.tsx
-msgid "Billing email"
-msgstr "البريد الإلكتروني للفوترة"
 
 #. js-lingui-id: dSjFxR
 #: src/pages/settings/enterprise/SettingsEnterprise.tsx
@@ -5486,6 +5317,11 @@ msgstr "خطأ في جلسة بوابة الفوترة. يُرجى المحاو�
 #: src/modules/settings/billing/hooks/useBillingSubscriptionChangeWording.ts
 msgid "Billing stays {upcomingIntervalAdjective}. To switch to {selectedIntervalAdjective} billing, confirm this change first, then switch the billing interval as a second step."
 msgstr "ستبقى الفوترة {upcomingIntervalAdjective}. للتبديل إلى الفوترة {selectedIntervalAdjective}، أكّد هذا التغيير أولًا، ثم بدّل فترة الفوترة كخطوة ثانية."
+
+#. js-lingui-id: 75WIQJ
+#: src/modules/settings/applications/components/SettingsApplicationAboutSidebar.tsx
+msgid "Bills credits"
+msgstr "يحتسب الأرصدة"
 
 #. js-lingui-id: 8kIU+G
 #: src/modules/advanced-text-editor/constants/AdvancedTextEditorBlockCatalog.ts
@@ -5699,11 +5535,6 @@ msgstr "المجموع الاختباري للبناء"
 #: src/modules/settings/data-model/fields/forms/morph-relation/components/SettingsDataModelFieldRelationJunctionForm.tsx
 msgid "Build many-to-many relations"
 msgstr "إنشاء علاقات متعدد-إلى-متعدد"
-
-#. js-lingui-id: Hz2eHF
-#: src/modules/object-record/record-column-scope/utils/getScopedRelationColumnDescription.ts
-msgid "Built in this view from {relationLabel}. Can't be sorted or filtered."
-msgstr "مضمّن في هذا العرض من {relationLabel}. لا يمكن فرزه أو تصفيته."
 
 #. js-lingui-id: yDcuP6
 #: src/modules/settings/privacy/components/SettingsPrivacyCompliance.tsx
@@ -6187,7 +6018,6 @@ msgstr "تم الإلغاء في"
 
 #. js-lingui-id: vv7kpg
 #: src/modules/ai-chat/threads/constants/AiChatThreadReasons.ts
-#: src/modules/ai-chat/tool-calls/components/AiChatToolCallApprovalStatusRenderer.tsx
 #: src/modules/object-core/agents/utils/getCoreAgentRunStatusLabelAndColor.ts
 msgid "Cancelled"
 msgstr "ملغى"
@@ -6345,11 +6175,6 @@ msgstr "تغيير المُعين"
 msgid "Change avatar"
 msgstr "تغيير الصورة الرمزية"
 
-#. js-lingui-id: Y1obaF
-#: src/modules/settings/billing/components/internal/SettingsBillingSubscriptionInfoCard.tsx
-msgid "Change billing email"
-msgstr "تغيير البريد الإلكتروني للفوترة"
-
 #. js-lingui-id: feCRNv
 #: src/modules/auth/sign-in-up/components/EmailVerificationSent.tsx
 msgid "Change email"
@@ -6456,6 +6281,11 @@ msgstr "دور القناة"
 msgid "Channel visibility on API keys"
 msgstr "ظهور القنوات في مفاتيح API"
 
+#. js-lingui-id: Kjphnm
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Channel visibility through rules"
+msgstr "إمكانية ظهور القناة من خلال القواعد"
+
 #. js-lingui-id: lfFsZ4
 #: src/modules/inbox/components/NavigationDrawerInboxChannelsSection.tsx
 #: src/modules/navigation-menu-item/common/constants/NavigationMenuBuiltInSections.ts
@@ -6550,6 +6380,11 @@ msgstr "قائمة تحقق"
 msgid "Check recent runs"
 msgstr "التحقق من عمليات التشغيل الأخيرة"
 
+#. js-lingui-id: 1rduS8
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Check the create permission on its own when creating records, rather than the update permission."
+msgstr "تحقق من إذن الإنشاء بمفرده عند إنشاء السجلات، بدلاً من إذن التحديث."
+
 #. js-lingui-id: JslvtK
 #: src/modules/activities/calendar/components/CalendarEventComposerFields.tsx
 msgid "Check the event dates"
@@ -6569,11 +6404,6 @@ msgstr "تحقق من عمليات التشغيل الأخيرة لسير الع
 #: src/modules/settings/emailing-domains/components/SettingsEmailingDomainVerifyButton.tsx
 msgid "Check verification"
 msgstr "تحقق من التوثيق"
-
-#. js-lingui-id: fbu0qc
-#: src/modules/activities/calendar/components/CalendarEventComposerFields.tsx
-msgid "Check when the event stops repeating"
-msgstr "تحقق من وقت توقف تكرار الحدث"
 
 #. js-lingui-id: AwAGI4
 #: src/modules/auth/sign-in-up/components/EmailVerificationSent.tsx
@@ -7130,11 +6960,6 @@ msgstr "إغلاق الصفحة"
 msgid "Close preview"
 msgstr "إغلاق المعاينة"
 
-#. js-lingui-id: QBOwbf
-#: src/modules/navigation/components/NavigationDrawerCloseSettingsButton.tsx
-msgid "Close settings"
-msgstr "إغلاق الإعدادات"
-
 #. js-lingui-id: saip/v
 #: src/modules/side-panel/components/SidePanelCloseButton.tsx
 msgid "Close side panel"
@@ -7258,16 +7083,6 @@ msgstr "طي"
 #: src/modules/workflow/workflow-steps/workflow-actions/mcp-tool-action/components/McpToolTestResult.tsx
 msgid "Collapse"
 msgstr "طي"
-
-#. js-lingui-id: 9prKyv
-#: src/modules/command-menu-item/display/components/CommandMenuItemCollapsibleSectionHeading.tsx
-msgid "Collapse {heading}"
-msgstr "طي {heading}"
-
-#. js-lingui-id: LeVkuA
-#: src/modules/navigation/components/MainNavigationDrawerContextMenuContent.tsx
-msgid "Collapse all sections"
-msgstr "طي جميع الأقسام"
 
 #. js-lingui-id: kBUgVh
 #: src/modules/object-record/record-board/record-board-card/components/RecordBoardCardHeader.tsx
@@ -7556,25 +7371,10 @@ msgstr "معاينة المكوّن باستخدام بيانات نموذجية
 msgid "Compose email"
 msgstr "إنشاء بريد إلكتروني"
 
-#. js-lingui-id: LzmTuU
-#: src/modules/settings/data-model/fields/forms/formula/components/SettingsDataModelFieldFormulaSection.tsx
-msgid "Compute the amount from other fields, in micros: 1 unit is 1,000,000. Leave empty to enter values by hand."
-msgstr "احسب المبلغ من الحقول الأخرى، بالميكرو: وحدة واحدة تساوي 1,000,000. اتركه فارغًا لإدخال القيم يدويًا."
-
-#. js-lingui-id: Y+aLgd
-#: src/modules/settings/data-model/fields/forms/formula/components/SettingsDataModelFieldFormulaSection.tsx
-msgid "Compute this field from other fields. Leave empty to enter values by hand."
-msgstr "احسب هذا الحقل من الحقول الأخرى. اتركه فارغًا لإدخال القيم يدويًا."
-
-#. js-lingui-id: 5uQ2yY
-#: src/modules/settings/data-model/fields/forms/formula/components/SettingsDataModelFieldFormulaSection.tsx
-msgid "Compute this field from other fields. The formula must return a number from 1 to 5. Leave empty to rate by hand."
-msgstr "احسب هذا الحقل من الحقول الأخرى. يجب أن تُرجع الصيغة رقمًا من 1 إلى 5. اتركه فارغًا للتقييم يدويًا."
-
-#. js-lingui-id: egFQhc
-#: src/modules/settings/data-model/fields/forms/formula/components/SettingsDataModelFieldFormulaSection.tsx
-msgid "Compute this field from other fields. The formula must return one of the option values, in quotes. Leave empty to pick values by hand."
-msgstr "احسب هذا الحقل من الحقول الأخرى. يجب أن تُرجع الصيغة إحدى قيم الخيارات، بين علامتي اقتباس. اتركه فارغًا لاختيار القيم يدويًا."
+#. js-lingui-id: xwW7YT
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Compute the access groups that record listings will use for row-level permissions. Enable after the workspace upgrade completes."
+msgstr "احسب مجموعات الوصول التي ستستخدمها قوائم السجلات لأذونات على مستوى الصف. فعّلها بعد اكتمال ترقية مساحة العمل."
 
 #. js-lingui-id: BglnOD
 #: src/modules/settings/admin-panel/health-status/components/SettingsAdminWorkspacesStatusSummaryCard.tsx
@@ -7636,7 +7436,6 @@ msgid "Configurable search fields"
 msgstr "حقول بحث قابلة للتكوين"
 
 #. js-lingui-id: ywFj2D
-#: src/modules/settings/applications/components/SettingsApplicationConfigurationSection.tsx
 #: src/modules/workflow/workflow-steps/workflow-actions/http-request-action/components/WorkflowEditActionHttpRequest.tsx
 msgid "Configuration"
 msgstr "التكوين"
@@ -8348,7 +8147,6 @@ msgid "Copy to clipboard"
 msgstr "نسخ إلى الحافظة"
 
 #. js-lingui-id: RTxUjI
-#: src/modules/chat/components/ChatMessageCopyAction.tsx
 #: src/modules/ui/input/components/LightCopyIconButton.tsx
 msgid "Copy to Clipboard"
 msgstr "نسخ إلى الحافظة"
@@ -8700,11 +8498,6 @@ msgstr "عدد (صحيح)"
 msgid "Count unique values"
 msgstr "عدّ القيم الفريدة"
 
-#. js-lingui-id: wGiHe7
-#: src/modules/object-record/record-column-scope/components/RecordTableScopedRelationColumnSelectMenu.tsx
-msgid "Count, total, list"
-msgstr "العدد، الإجمالي، القائمة"
-
 #. js-lingui-id: tKTq/b
 #: src/modules/side-panel/pages/send-campaign/components/SendCampaignForm.tsx
 msgid "Counting recipients..."
@@ -8933,6 +8726,11 @@ msgstr "إنشاء سجل"
 #: src/modules/workflow/workflow-steps/workflow-actions/constants/actions/CreateRecordAction.ts
 msgid "Create Record"
 msgstr "إنشاء سجل"
+
+#. js-lingui-id: frmOeu
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Create records permission"
+msgstr "إذن إنشاء السجلات"
 
 #. js-lingui-id: fRYkDa
 #: src/modules/page-layout/widgets/timeline/components/WidgetActionTimelineCreateRelated.tsx
@@ -9641,7 +9439,7 @@ msgid "Customize record page"
 msgstr "تخصيص صفحة السجل"
 
 #. js-lingui-id: hxjpaE
-#: src/modules/navigation-menu-item/edit/components/NavigationMenuCustomizeSidebarMenuContent.tsx
+#: src/modules/navigation/components/MainNavigationDrawerContextMenu.tsx
 #: src/modules/navigation/components/MainNavigationDrawerEditButton.tsx
 #: src/modules/navigation/components/MainNavigationDrawerEditButton.tsx
 msgid "Customize sidebar"
@@ -9678,7 +9476,6 @@ msgid "Czech"
 msgstr "التشيكية"
 
 #. js-lingui-id: U0sC6H
-#: src/modules/activities/calendar/components/CalendarEventComposerRecurrenceFields.tsx
 #: src/modules/settings/billing/constants/UsageLimitPeriodNameLabels.ts
 msgid "Daily"
 msgstr "يوميًا"
@@ -10051,6 +9848,7 @@ msgstr "تقليل القيمة"
 #: src/modules/settings/experience/components/UiScalePicker.tsx
 #: src/pages/settings/ai/constants/SettingsAiAssistantFaceLabels.ts
 #: src/pages/settings/layout/SettingsLayoutPageLayoutDetail.tsx
+#: src/pages/settings/layout/SettingsLayoutViewDetail.tsx
 msgid "Default"
 msgstr "الإعداد الافتراضي"
 
@@ -10111,6 +9909,11 @@ msgstr "حدد اسم ووصف كائنك"
 #: src/pages/settings/ai/components/SettingsSkillFormContent.tsx
 msgid "Define the name and instructions for this skill"
 msgstr "حدد الاسم والإرشادات لهذه المهارة."
+
+#. js-lingui-id: zDccHY
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Define the relations along which a record's permissions extend to related records."
+msgstr "حدّد العلاقات التي تمتد على طولها أذونات السجل إلى السجلات المرتبطة."
 
 #. js-lingui-id: Ntu10D
 #: src/modules/settings/roles/role-permissions/permission-flags/hooks/useSettingsRolePermissionFlagConfig.ts
@@ -10472,11 +10275,6 @@ msgstr "حذف المهارة"
 msgid "Delete some {objectLabelPlural} · {throughRules}"
 msgstr "حذف بعض {objectLabelPlural} · {throughRules}"
 
-#. js-lingui-id: x6UH+z
-#: src/modules/object-record/record-table/record-table-header/components/RecordTableColumnHeadDropdownMenu.tsx
-msgid "Delete summary column"
-msgstr "حذف عمود الملخص"
-
 #. js-lingui-id: drg4t8
 #: src/modules/navigation-menu-item/edit/components/NavigationMenuTabMenuContent.tsx
 msgid "Delete tab"
@@ -10663,11 +10461,6 @@ msgstr "تنازلي"
 #: src/modules/workflow/workflow-steps/workflow-actions/find-records-action/components/WorkflowFindRecordsSorts.tsx
 msgid "Descending"
 msgstr "تنازلي"
-
-#. js-lingui-id: 8Y0+ya
-#: src/modules/object-core/agents/utils/getCoreAgentTestHint.ts
-msgid "Describe a {objectLabel} and what changed on it"
-msgstr "صِف {objectLabel} وما الذي تغيّر فيه"
 
 #. js-lingui-id: 3QTkmB
 #: src/modules/workflow/workflow-steps/workflow-actions/ai-agent-action/components/WorkflowAiAgentGenerateStepPromptTab.tsx
@@ -10891,6 +10684,11 @@ msgstr "الرسائل المباشرة"
 msgid "Direct messages and mentions"
 msgstr "الرسائل المباشرة والإشارات"
 
+#. js-lingui-id: Rz4s9r
+#: src/modules/ai-chat/composer/hooks/useOpenNewAiChatAsDirectMessage.ts
+msgid "Direct messages don't support attachments."
+msgstr "الرسائل المباشرة لا تدعم المرفقات."
+
 #. js-lingui-id: +ILAOG
 #: src/modules/settings/experience/components/InboxNotificationPreferences.tsx
 msgid "Direct messages, mentions and chats assigned to you"
@@ -11078,11 +10876,6 @@ msgstr "عدم الاستيراد"
 msgid "Do you want to unsubscribe?"
 msgstr "هل تريد إلغاء الاشتراك؟"
 
-#. js-lingui-id: oc+pOk
-#: src/modules/object-core/agents/utils/getCoreAgentTestHint.ts
-msgid "Do your scheduled task now"
-msgstr "نفّذ مهمتك المجدولة الآن"
-
 #. js-lingui-id: TbjyhA
 #: src/modules/settings/mcp/utils/buildMcpSetupCategories.tsx
 #: src/modules/settings/mcp/utils/buildMcpSetupCategories.tsx
@@ -11107,11 +10900,6 @@ msgstr "المستند"
 #: src/pages/settings/developers/SettingsDevelopers.tsx
 msgid "Documentation"
 msgstr "التوثيق"
-
-#. js-lingui-id: 7xJ6D1
-#: src/modules/activities/calendar/components/CalendarEventComposerRecurrenceFields.tsx
-msgid "Does not repeat"
-msgstr "لا يتكرر"
 
 #. js-lingui-id: U9q4zF
 #: src/modules/object-record/object-filter-dropdown/utils/getOperandLabel.ts
@@ -11562,6 +11350,7 @@ msgid "Edit all records"
 msgstr "تعديل جميع السجلات"
 
 #. js-lingui-id: QM4RhQ
+#: src/modules/object-record/record-table/record-table-header/components/RecordTableColumnHeadDropdownMenu.tsx
 #: src/modules/side-panel/hooks/useOpenEditColumnInSidePanel.ts
 msgid "Edit column"
 msgstr "تحرير العمود"
@@ -11574,7 +11363,7 @@ msgstr "تحرير هيكل البيانات والحقول"
 #. js-lingui-id: O32mmL
 #: src/modules/settings/data-model/fields/forms/select/components/SettingsDataModelFieldSelectFormOptionRow.tsx
 msgid "Edit description"
-msgstr "عدّل الوصف"
+msgstr ""
 
 #. js-lingui-id: ZwR0Vd
 #: src/modules/side-panel/pages/email-block-settings/components/EmailBoxSidesInput.tsx
@@ -11717,11 +11506,6 @@ msgstr "تعديل التسميات المشتركة"
 #: src/modules/settings/roles/role-permissions/object-overrides/components/SettingsRolePermissionsObjectOverridePanel.tsx
 msgid "Edit some {objectLabelPlural} · {throughRules}"
 msgstr "تعديل بعض {objectLabelPlural} · {throughRules}"
-
-#. js-lingui-id: 0Ou9Le
-#: src/modules/object-record/record-table/record-table-header/components/RecordTableColumnHeadDropdownMenu.tsx
-msgid "Edit summary column…"
-msgstr "تحرير عمود الملخص…"
 
 #. js-lingui-id: xE9ptR
 #: src/modules/page-layout/components/PageLayoutTabMenuItemSelectAvatar.tsx
@@ -12237,7 +12021,6 @@ msgstr "عنوان URL للواجهة النهائية"
 #. js-lingui-id: x/6eQ0
 #: src/modules/activities/calendar/components/CalendarEventComposerFields.tsx
 #: src/modules/activities/calendar/components/CalendarEventComposerFields.tsx
-#: src/modules/activities/calendar/components/CalendarEventComposerRecurrenceFields.tsx
 #: src/modules/settings/admin-panel/components/SettingsAdminWorkspaceBillingArrangementDetailsModal.tsx
 #: src/modules/settings/admin-panel/components/SettingsAdminWorkspaceBillingArrangementModal.tsx
 #: src/modules/settings/admin-panel/components/SettingsAdminWorkspaceBillingArrangementsSection.tsx
@@ -12470,7 +12253,6 @@ msgid "Enter JSON array"
 msgstr "أدخل مصفوفة JSON"
 
 #. js-lingui-id: uV9utd
-#: src/modules/side-panel/pages/edit-column/components/SidePanelEditColumnForm.tsx
 #: src/modules/workflow/workflow-steps/workflow-actions/find-records-action/components/WorkflowEditActionFindRecords.tsx
 msgid "Enter limit"
 msgstr "أدخل الحد"
@@ -12917,11 +12699,6 @@ msgstr "رؤية الحدث"
 msgid "Events"
 msgstr "الأحداث"
 
-#. js-lingui-id: CRsuq4
-#: src/modules/activities/calendar/components/CalendarEventComposerRecurrenceFields.tsx
-msgid "Every"
-msgstr "كل"
-
 #. js-lingui-id: lbS/kF
 #: src/utils/cron-to-human/descriptors/getDayOfWeekDescription.ts
 msgid "every {stepNum} days"
@@ -13216,16 +12993,6 @@ msgstr "الخروج من عملية الاستيراد"
 #: src/modules/workflow/workflow-steps/workflow-actions/mcp-tool-action/components/McpToolTestResult.tsx
 msgid "Expand"
 msgstr "توسيع"
-
-#. js-lingui-id: AgpQjB
-#: src/modules/command-menu-item/display/components/CommandMenuItemCollapsibleSectionHeading.tsx
-msgid "Expand {heading}"
-msgstr "توسيع {heading}"
-
-#. js-lingui-id: m2n9ZO
-#: src/modules/navigation/components/MainNavigationDrawerContextMenuContent.tsx
-msgid "Expand all sections"
-msgstr "توسيع جميع الأقسام"
 
 #. js-lingui-id: JjrOSL
 #: src/modules/object-record/record-board/record-board-card/components/RecordBoardCardHeader.tsx
@@ -13945,11 +13712,6 @@ msgstr "فشلت مزامنة الأدوات"
 msgid "Failed to synchronize the marketplace catalog."
 msgstr "فشل في مزامنة كتالوج السوق."
 
-#. js-lingui-id: UUsjVV
-#: src/modules/object-core/agents/hooks/useTestCoreAgent.ts
-msgid "Failed to test agent"
-msgstr "فشل اختبار الوكيل"
-
 #. js-lingui-id: LVcnN8
 #: src/pages/settings/admin-panel/SettingsAdminApplicationRegistrationDangerZone.tsx
 msgid "Failed to transfer ownership. Check that the subdomain is correct."
@@ -14091,6 +13853,7 @@ msgid "Failure Rate"
 msgstr "معدل الفشل"
 
 #. js-lingui-id: 8wngZM
+#: src/modules/command-menu-item/display/components/SidePanelCommandMenuItemDisplayPage.tsx
 #: src/modules/settings/applications/constants/ApplicationContentTypeConfigs.ts
 msgid "Fallback"
 msgstr "احتياطي"
@@ -14150,6 +13913,12 @@ msgstr "الميزات"
 #: src/pages/settings/enterprise/SettingsEnterprise.tsx
 msgid "Features active until"
 msgstr "الميزات نشطة حتى"
+
+#. js-lingui-id: YirHq7
+#: src/modules/ai-chat/tool-calls/components/AiChatToolCallApprovalFeedbackInput.tsx
+#: src/modules/workflow/workflow-variables/utils/generate/computeStepOutputSchema.ts
+msgid "Feedback"
+msgstr "التغذية الراجعة"
 
 #. js-lingui-id: 2lOBKV
 #: src/modules/metadata-error-handler/hooks/useMetadataErrorHandler.ts
@@ -14259,7 +14028,6 @@ msgstr "أذونات على مستوى الحقل"
 #: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownCustomView.tsx
 #: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownDefaultView.tsx
 #: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownFieldsContent.tsx
-#: src/modules/object-record/record-table/record-table-header/components/RecordTableHeaderPlusButtonContent.tsx
 #: src/modules/page-layout/hooks/useCreatePendingFieldsWidgetViews.ts
 #: src/modules/page-layout/utils/createDefaultFieldsWidget.ts
 #: src/modules/settings/applications/constants/ApplicationContentTypeConfigs.ts
@@ -14531,6 +14299,11 @@ msgstr "تصفية الجدول الزمني"
 msgid "Filter workflows"
 msgstr "تصفية سير العمل"
 
+#. js-lingui-id: 03Qqf9
+#: src/modules/object-record/record-column-lookup/utils/getRecordFieldColumnHeader.ts
+msgid "Filtered"
+msgstr "مُصفّى"
+
 #. js-lingui-id: YrBWVK
 #: src/modules/object-record/record-index/utils/getNonReadableViewFieldSubTitle.ts
 msgid "filtering"
@@ -14578,11 +14351,6 @@ msgstr "أنهِ تحرير التخطيط لفتح صندوق الوارد"
 #: src/modules/navigation/components/MainNavigationDrawerTabSwitcher.tsx
 msgid "Finish editing the layout to open Settings"
 msgstr "أنهِ تحرير التخطيط لفتح الإعدادات"
-
-#. js-lingui-id: aFsDUw
-#: src/modules/navigation/components/MultiWorkspaceDropdown/MultiWorkspaceDropdownButton.tsx
-msgid "Finish editing the layout to open this menu"
-msgstr ""
 
 #. js-lingui-id: SNdnlf
 #: src/modules/spreadsheet-import/steps/components/ValidationStep/ValidationStep.tsx
@@ -14638,11 +14406,6 @@ msgstr "أول سطرين"
 #: src/modules/settings/data-model/fields/forms/components/text/constants/TextDataModelSelectOptions.ts
 msgid "First 5 lines"
 msgstr "أول 5 خطوط"
-
-#. js-lingui-id: idQLQP
-#: src/modules/activities/calendar/components/CalendarEventRecurrenceDaysOfWeekInput.tsx
-msgid "First event"
-msgstr "الحدث الأول"
 
 #. js-lingui-id: V1EGGU
 #: src/modules/activities/emails/hooks/useCampaignEmailEditorVariables.ts
@@ -14832,24 +14595,6 @@ msgstr "عضو سابق"
 #: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowEditActionFormBuilder.tsx
 msgid "Forms are meant for manual triggers"
 msgstr "النماذج مخصصة للمشغلات اليدوية"
-
-#. js-lingui-id: lpxWKi
-#: src/modules/settings/data-model/fields/forms/formula/components/SettingsDataModelFieldFormulaSection.tsx
-#: src/modules/settings/data-model/fields/forms/formula/components/SettingsDataModelFieldFormulaSection.tsx
-#: src/modules/settings/data-model/object-details/components/SettingsObjectFieldItemTableRow.tsx
-msgid "Formula"
-msgstr "الصيغة"
-
-#. js-lingui-id: 2eN5Wv
-#: src/modules/settings/data-model/fields/forms/formula/components/SettingsDataModelFieldFormulaSection.tsx
-#: src/modules/settings/data-model/fields/forms/formula/components/SettingsDataModelFieldFormulaSection.tsx
-msgid "Formula currency"
-msgstr "عملة الصيغة"
-
-#. js-lingui-id: k7mCp1
-#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
-msgid "Formula fields"
-msgstr "حقول الصيغ"
 
 #. js-lingui-id: nm91BR
 #: src/pages/settings/communications/SettingsWorkspaceCommunicationGroupChannelDetail.tsx
@@ -15129,6 +14874,7 @@ msgstr "Gemini CLI"
 #: src/pages/settings/accounts/SettingsBuiltInAccountApp.tsx
 #: src/pages/settings/admin-panel/SettingsAdminApplicationRegistrationDetail.tsx
 #: src/pages/settings/applications/components/SettingsApplicationRegistrationGeneralInfo.tsx
+#: src/pages/settings/applications/SettingsApplicationDetails.tsx
 #: src/pages/settings/applications/SettingsApplicationRegistrationDetails.tsx
 #: src/pages/settings/general/SettingsGeneral.tsx
 #: src/pages/settings/general/SettingsGeneral.tsx
@@ -15267,6 +15013,7 @@ msgstr "يحصل على هذا السجل فقط: لا يمكن لدوره ال�
 #: src/modules/getting-started/components/GettingStartedOpenedSection.tsx
 #: src/modules/getting-started/components/GettingStartedSidebarCard.tsx
 #: src/modules/getting-started/components/GettingStartedSidebarCard.tsx
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
 #: src/pages/getting-started/GettingStartedPage.tsx
 #: src/pages/getting-started/GettingStartedPage.tsx
 msgid "Getting started"
@@ -15618,7 +15365,6 @@ msgid "Has attachments"
 msgstr "يحتوي على مرفقات"
 
 #. js-lingui-id: MvwlmR
-#: src/modules/object-record/record-table/record-table-header/components/RecordTableHeaderPlusButtonContent.tsx
 #: src/modules/settings/data-model/constants/RelationTypes.ts
 msgid "Has many"
 msgstr "له عدة عناصر"
@@ -16404,6 +16150,11 @@ msgstr "استيراد رسائل البريد الإلكتروني الجديد
 msgid "Import new events from this account"
 msgstr "استيراد الأحداث الجديدة من هذا الحساب"
 
+#. js-lingui-id: 4Ljmum
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Import occurrences of recurring Google Calendar meetings up to 90 days ahead only, and import later occurrences as they come within 90 days."
+msgstr "استورد تكرارات اجتماعات Google Calendar المتكررة حتى 90 يوماً مقدماً فقط، واستورد التكرارات اللاحقة عندما تصبح ضمن 90 يوماً."
+
 #. js-lingui-id: D5QSQM
 #: src/modules/settings/accounts/components/SettingsAccountsMessageFolderCard.tsx
 msgid "Import only selected folders/labels"
@@ -16413,6 +16164,11 @@ msgstr "استيراد المجلدات/التسميات المحددة فقط"
 #: src/modules/settings/mcp/utils/buildMcpSetupCategories.tsx
 msgid "Import or add the MCP configuration from JetBrains settings."
 msgstr "استورد أو أضف تهيئة MCP من إعدادات JetBrains."
+
+#. js-lingui-id: 8zGGat
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Import recurring meetings 90 days ahead"
+msgstr "استورد الاجتماعات المتكررة حتى 90 يوماً مقدماً"
 
 #. js-lingui-id: LHHO6e
 #: src/modules/getting-started/constants/GettingStartedImportPrompt.ts
@@ -16470,6 +16226,11 @@ msgstr "خلال أقل من يوم"
 msgid "In progress"
 msgstr "قيد التقدم"
 
+#. js-lingui-id: q6UzTa
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "In progress: enforce message and calendar channel visibility with record-level permission rules. Needs relation hops and related record paths."
+msgstr "قيد التنفيذ: فرض إمكانية رؤية قنوات الرسائل والتقويم باستخدام قواعد الأذونات على مستوى السجل. يتطلب تنقلات عبر العلاقات ومسارات السجلات ذات الصلة."
+
 #. js-lingui-id: 0Nl1Pt
 #: src/modules/side-panel/pages/send-campaign/components/SendCampaignRecipientsCard.tsx
 msgid "In the list"
@@ -16511,8 +16272,6 @@ msgid "Inactive Skill Options"
 msgstr "خيارات المهارة غير النشطة"
 
 #. js-lingui-id: Gp4Yi6
-#: src/modules/navigation-menu-item/common/constants/NavigationMenuBuiltInSections.ts
-#: src/modules/navigation/hooks/useMobileNavigationBarItems.ts
 #: src/modules/navigation/hooks/useNavigationDrawerTabs.ts
 #: src/modules/views/types/ViewType.ts
 msgid "Inbox"
@@ -16521,7 +16280,7 @@ msgstr "صندوق الوارد"
 #. js-lingui-id: UXZcgx
 #: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
 msgid "Inbox object names"
-msgstr "أسماء كائنات صندوق الوارد"
+msgstr ""
 
 #. js-lingui-id: j8Bj7e
 #: src/modules/settings/workspace/components/SettingsWorkspaceEmailSyncSection.tsx
@@ -17371,7 +17130,6 @@ msgstr "john.doe@example.com"
 
 #. js-lingui-id: fSPjtl
 #: src/pages/auth/SignInUp.tsx
-#: src/pages/auth/SignInUp.tsx
 msgid "Join {workspaceName} team"
 msgstr "انضم إلى فريق {workspaceName}"
 
@@ -18053,20 +17811,15 @@ msgstr "دع كل عضو يقرر بنفسه"
 msgid "Let grouped table and list views show their groups as tabs, one group at a time. Enable after the instance upgrade completes."
 msgstr "اسمح لطرق عرض الجداول والقوائم المجمعة بإظهار مجموعاتها كعلامات تبويب، مجموعة واحدة في كل مرة. فعّلها بعد اكتمال ترقية المثيل."
 
-#. js-lingui-id: livXRh
-#: src/modules/marketplace/utils/buildApplicationBillingSummary.ts
-msgid "Let members connect their own accounts"
-msgstr "اسمح للأعضاء بربط حساباتهم الخاصة"
-
 #. js-lingui-id: 3OsDiZ
 #: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
 msgid "Let people restrict and share individual records."
 msgstr "السماح للأشخاص بتقييد السجلات الفردية ومشاركتها."
 
-#. js-lingui-id: oKfDGp
+#. js-lingui-id: b3MaZQ
 #: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
-msgid "Let text, number, boolean and date fields compute their value from an expression over the record and its related records."
-msgstr "اسمح لحقول النص والأرقام والقيم المنطقية والتواريخ بحساب قيمتها من تعبير يعتمد على السجل وسجلاته المرتبطة."
+msgid "Let record-level permission rules compare a field of a related record."
+msgstr "السماح لقواعد الأذونات على مستوى السجل بمقارنة حقل من سجل ذي صلة."
 
 #. js-lingui-id: HRo4g8
 #: src/modules/settings/members/components/MemberTwoFactorAuthenticationRecoverySection.tsx
@@ -19400,7 +19153,6 @@ msgstr "جارٍ الدمج..."
 #: src/modules/activities/emails/components/ChatThreadComposer.tsx
 #: src/modules/log-console/components/LogConsoleDetailPanel.tsx
 #: src/modules/log-console/constants/LogConsoleApplicationLogColumns.tsx
-#: src/modules/object-core/agents/components/CoreAgentTestForm.tsx
 #: src/modules/settings/event-logs/utils/getColumnsForEventLogTable.tsx
 #: src/modules/validation-rules/components/SettingsValidationRuleForm.tsx
 #: src/modules/workflow/workflow-steps/workflow-actions/send-chat-message-action/components/WorkflowEditActionSendChatMessage.tsx
@@ -19412,10 +19164,10 @@ msgstr "رسالة"
 msgid "Message {recipientName}"
 msgstr "مراسلة {recipientName}"
 
-#. js-lingui-id: +nYs0G
-#: src/modules/chat/components/ChatMessageFloatingActions.tsx
-msgid "Message actions"
-msgstr "إجراءات الرسالة"
+#. js-lingui-id: 6H0up8
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Message attachments"
+msgstr "مرفقات الرسائل"
 
 #. js-lingui-id: U15XwX
 #: src/modules/activities/timeline-activities/rows/message/components/EventCardMessage.tsx
@@ -19763,11 +19515,6 @@ msgstr "شهري"
 msgid "Monthly"
 msgstr "شهري"
 
-#. js-lingui-id: WHc/gS
-#: src/modules/activities/calendar/components/CalendarEventComposerRecurrenceFields.tsx
-msgid "Monthly on day {startDayOfMonth}"
-msgstr "شهريًا في اليوم {startDayOfMonth}"
-
 #. js-lingui-id: 6jefe3
 #: src/modules/side-panel/pages/page-layout/utils/getDateGranularityPluralLabel.ts
 #: src/modules/side-panel/pages/page-layout/utils/getDateGranularityPluralLabel.ts
@@ -19958,11 +19705,6 @@ msgstr "ادفع العمل قدمًا عبر الفرق والوكلاء"
 #: src/modules/log-console/constants/LogConsoleRecordActions.ts
 msgid "Moved to trash"
 msgstr "تم النقل إلى سلة المهملات"
-
-#. js-lingui-id: B9k2wp
-#: src/modules/settings/admin-panel/components/SettingsAdminWorkspaceBillingArrangementModal.tsx
-msgid "Moves the end of a running trial to this date. Adding one again replaces the current extension."
-msgstr "ينقل نهاية الفترة التجريبية الجارية إلى هذا التاريخ. تؤدي إضافتها مرة أخرى إلى استبدال التمديد الحالي."
 
 #. js-lingui-id: TpHstq
 #: src/modules/settings/billing/constants/UsageLimitUnitLabels.ts
@@ -20245,7 +19987,6 @@ msgid "Network error"
 msgstr "خطأ في الشبكة"
 
 #. js-lingui-id: qqeAJM
-#: src/modules/activities/calendar/components/CalendarEventComposerRecurrenceFields.tsx
 #: src/modules/settings/admin-panel/components/SettingsAdminWorkspaceCreditGrantsTable.tsx
 #: src/modules/settings/admin-panel/components/SettingsAdminWorkspaceUsageLimitsSection.tsx
 #: src/modules/settings/admin-panel/constants/CreditGrantExpiryOptions.ts
@@ -20279,7 +20020,6 @@ msgstr "أبدًا، لا بواسطة Twenty ولا بواسطة الموفّر
 
 #. js-lingui-id: isRobC
 #: src/modules/ai-chat/messages/components/AiChatMessage.tsx
-#: src/modules/chat/components/ChatMessageDaySeparator.tsx
 #: src/modules/object-record/record-board/record-board-column/components/RecordBoardColumnNewRecordButton.tsx
 #: src/modules/settings/developers/components/SettingsDevelopersWebhookForm.tsx
 #: src/modules/settings/mcp-servers/components/SettingsMcpServerNewForm.tsx
@@ -20318,6 +20058,7 @@ msgid "New Agent"
 msgstr "وكيل جديد"
 
 #. js-lingui-id: JLx7YM
+#: src/modules/navigation/components/MainNavigationDrawerFixedRows.tsx
 #: src/modules/navigation/hooks/useMobileNavigationBarItems.ts
 msgid "New AI chat"
 msgstr "دردشة ذكاء اصطناعي جديدة"
@@ -20656,7 +20397,7 @@ msgid "Next record"
 msgstr "السجل التالي"
 
 #. js-lingui-id: +VXdSO
-#: src/modules/ai-chat/tool-calls/components/AiChatPendingToolCallRequests.tsx
+#: src/modules/ai-chat/tool-calls/components/AiChatPendingAskGate.tsx
 msgid "Next request"
 msgstr "الطلب التالي"
 
@@ -21417,7 +21158,6 @@ msgstr "لم يتم تحديد أي سجل"
 
 #. js-lingui-id: EqGTpW
 #: src/modules/ai-chat/composer/components/AiChatAddMenuRecordsPage.tsx
-#: src/modules/command-menu-item/display/components/SidePanelCommandMenuItemDisplayPage.tsx
 #: src/modules/object-record/record-index/components/RecordIndexEmptyState.tsx
 #: src/modules/object-record/record-picker/components/RecordPickerNoRecordFoundMenuItem.tsx
 #: src/modules/object-record/record-picker/multiple-record-picker/components/MultipleRecordPickerMenuItems.tsx
@@ -21487,7 +21227,6 @@ msgstr "لا توجد استجابة من الخادم"
 #: src/modules/object-record/record-table/record-table-header/components/RecordTableHeaderPlusButtonContent.tsx
 #: src/modules/object-record/select/components/MultipleSelectDropdown.tsx
 #: src/modules/page-layout/widgets/timeline/components/WidgetActionTimelineFilter.tsx
-#: src/modules/side-panel/pages/edit-column/components/SidePanelEditColumnShowSelect.tsx
 #: src/modules/ui/input/components/internal/country/components/CountrySelect.tsx
 #: src/modules/ui/input/components/internal/currency/components/CurrencyPickerDropdownButton.tsx
 #: src/modules/ui/input/components/internal/phone/components/PhoneCountryPickerDropdownButton.tsx
@@ -21815,8 +21554,6 @@ msgstr "إعدادات العقدة"
 #: src/modules/inbox/components/InboxThreadDetailsDropdown.tsx
 #: src/modules/inbox/components/InboxThreadDetailsDropdown.tsx
 #: src/modules/inbox/components/InboxThreadDetailsDropdown.tsx
-#: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownLayoutContent.tsx
-#: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownListPinnedFieldContent.tsx
 #: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownRecordGroupFieldsContent.tsx
 #: src/modules/object-record/record-table/record-table-footer/components/RecordTableColumnAggregateFooterAggregateOperationMenuItems.tsx
 #: src/modules/object-record/record-table/record-table-footer/components/RecordTableColumnAggregateFooterMenuContent.tsx
@@ -22125,11 +21862,6 @@ msgstr "عدد الأيام للاحتفاظ بالسجلات ({minEventLogReten
 msgid "Number of decimals"
 msgstr "عدد الكسور العشرية"
 
-#. js-lingui-id: Dh3U6L
-#: src/modules/activities/calendar/components/CalendarEventComposerRecurrenceFields.tsx
-msgid "Number of occurrences"
-msgstr "عدد مرات التكرار"
-
 #. js-lingui-id: n49P/Y
 #: src/modules/workflow/workflow-steps/workflow-actions/find-records-action/components/WorkflowEditActionFindRecords.tsx
 msgid "Number of records to skip. Combine with Limit to page through results."
@@ -22333,11 +22065,6 @@ msgstr ""
 msgid "Omit zero values"
 msgstr "تجاهل القيم الصفرية"
 
-#. js-lingui-id: Z5HWHd
-#: src/modules/activities/calendar/components/CalendarEventComposerRecurrenceFields.tsx
-msgid "On"
-msgstr "في"
-
 #. js-lingui-id: 7kr775
 #: src/utils/cron-to-human/descriptors/getDayOfWeekDescription.ts
 msgid "on {dayName}"
@@ -22352,11 +22079,6 @@ msgstr "في {remainingDays} و {lastDay}"
 #: src/modules/workflow/constants/WorkflowStepDefaultNames.ts
 msgid "On a schedule"
 msgstr "وفق جدول زمني"
-
-#. js-lingui-id: RuEWFx
-#: src/modules/activities/calendar/components/CalendarEventComposerRecurrenceFields.tsx
-msgid "On date"
-msgstr "في تاريخ"
 
 #. js-lingui-id: gzokj+
 #: src/pages/settings/applications/components/SettingsApplicationRegistrationInstallStats.tsx
@@ -22588,19 +22310,14 @@ msgid "Only you will be able to see your emails and events"
 msgstr "أنت فقط من سيتمكن من رؤية رسائلك الإلكترونية وأحداثك"
 
 #. js-lingui-id: 1TNIig
+#: src/modules/inbox/components/AiChatThreadStatusField.tsx
+#: src/modules/inbox/constants/InboxChannelNavigationItems.ts
+#: src/modules/inbox/constants/InboxThreadPresetFilterLabels.ts
 #: src/modules/log-console/components/LogConsole.tsx
 #: src/modules/settings/data-model/objects/forms/components/SettingsDataModelObjectAboutForm.tsx
 #: src/modules/settings/mcp/utils/buildMcpSetupCategories.tsx
 #: src/pages/settings/admin-panel/SettingsAdminNewAiProvider.tsx
 #: src/pages/settings/members/tabs/SettingsWorkspaceMembersTeamTab.tsx
-msgid "Open"
-msgstr "افتح"
-
-#. js-lingui-id: zzFeSa
-#: src/modules/inbox/components/AiChatThreadStatusField.tsx
-#: src/modules/inbox/constants/InboxChannelNavigationItems.ts
-#: src/modules/inbox/constants/InboxThreadPresetFilterLabels.ts
-msgctxt "Inbox thread status"
 msgid "Open"
 msgstr "افتح"
 
@@ -23022,7 +22739,7 @@ msgstr "تم تفعيل ترخيص المؤسسة بنجاح"
 #. js-lingui-id: 50DOI7
 #: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
 msgid "Organize the sidebar in tabs and sections, including built-in sections for favorites, chats and agents, and customize it in place."
-msgstr "نظّم الشريط الجانبي ضمن علامات تبويب وأقسام، بما في ذلك أقسام مضمّنة للمفضلة والدردشات والوكلاء، وخصّصه مباشرةً في مكانه."
+msgstr ""
 
 #. js-lingui-id: G5RhpL
 #: src/modules/ai-chat/tool-calls/components/AiChatSchedulingPreferences.tsx
@@ -23197,7 +22914,6 @@ msgstr "التجاوزات"
 #: src/modules/object-core/agents/components/CoreAgentFormContent.tsx
 #: src/modules/object-core/workflows/components/CoreWorkflowShowPageTabList.tsx
 #: src/modules/settings/ai/utils/getSettingsAiTabs.ts
-#: src/pages/settings/applications/SettingsApplicationDetails.tsx
 #: src/pages/settings/data-model/SettingsObjectOverview.tsx
 #: src/pages/settings/layout/SettingsLayout.tsx
 msgid "Overview"
@@ -23344,16 +23060,6 @@ msgstr "مشاهدات الصفحات"
 #: src/modules/settings/layout/components/SettingsLayoutItemsStats.tsx
 msgid "Pages"
 msgstr "الصفحات"
-
-#. js-lingui-id: wl6crM
-#: src/modules/settings/applications/components/SettingsApplicationAboutSidebar.tsx
-msgid "Paid app"
-msgstr "تطبيق مدفوع"
-
-#. js-lingui-id: CQnFBr
-#: src/modules/settings/billing/components/SettingsBillingApplicationsSection.tsx
-msgid "Paid apps installed in this workspace. Prices are added to your invoice"
-msgstr "تطبيقات مدفوعة مثبّتة في مساحة العمل هذه. تُضاف الأسعار إلى فاتورتك"
 
 #. js-lingui-id: ijBN4V
 #: src/modules/advanced-text-editor/extensions/slash-command/DefaultSlashCommands.ts
@@ -23535,7 +23241,7 @@ msgid "Pending"
 msgstr "قيد الانتظار"
 
 #. js-lingui-id: 2B0V9T
-#: src/modules/ai-chat/tool-calls/components/AiChatPendingToolCallRequests.tsx
+#: src/modules/ai-chat/tool-calls/components/AiChatPendingAskGate.tsx
 msgid "Pending requests"
 msgstr "الطلبات المعلقة"
 
@@ -23576,11 +23282,6 @@ msgstr "لكل"
 #: src/modules/settings/billing/constants/SettingsBillingPersonalAiUsageComparisonRow.ts
 msgid "per member"
 msgstr "لكل عضو"
-
-#. js-lingui-id: JxgXH1
-#: src/modules/settings/billing/components/SettingsBillingApplicationsSection.tsx
-msgid "Per month"
-msgstr "شهريًا"
 
 #. js-lingui-id: qMTN0w
 #: src/pages/settings/ai/SettingsAiUsageUserDetail.tsx
@@ -23841,12 +23542,6 @@ msgstr "وردي"
 #: src/pages/settings/applications/tabs/SettingsApplicationCommandMenuItemSettingsTab.tsx
 msgid "Pinned"
 msgstr "مثبّت"
-
-#. js-lingui-id: eLzh58
-#: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownLayoutContent.tsx
-#: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownListPinnedFieldContent.tsx
-msgid "Pinned field"
-msgstr "حقل مثبّت"
 
 #. js-lingui-id: OFY07S
 #: src/modules/page-layout/components/PageLayoutRecordIdentifierBar.tsx
@@ -24189,7 +23884,7 @@ msgid "Previous record"
 msgstr "السجل السابق"
 
 #. js-lingui-id: ToM1t/
-#: src/modules/ai-chat/tool-calls/components/AiChatPendingToolCallRequests.tsx
+#: src/modules/ai-chat/tool-calls/components/AiChatPendingAskGate.tsx
 msgid "Previous request"
 msgstr "الطلب السابق"
 
@@ -24730,7 +24425,7 @@ msgstr "اقرأ موجهات النظام لفهم كيفية عمل الذكا
 #. js-lingui-id: SIPs3V
 #: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
 msgid "Read the visibility rule of page layout widgets from its tree form only. Enabled after the workspace upgrade copies the stored rules."
-msgstr "اقرأ قاعدة ظهور عناصر واجهة تخطيط الصفحة من تمثيلها الشجري فقط. يتم تفعيلها بعد أن تقوم ترقية مساحة العمل بنسخ القواعد المخزنة."
+msgstr ""
 
 #. js-lingui-id: afMuDE
 #: src/modules/applications/constants/OAuthScopeLabels.ts
@@ -24762,11 +24457,6 @@ msgstr "قراءة {target} وكتابته وحذفه"
 #: src/modules/settings/billing/constants/SettingsBillingPlanComparisonRows.ts
 msgid "Read/Edit/Delete permissions"
 msgstr "أذونات قراءة/تحرير/حذف"
-
-#. js-lingui-id: +a9H8X
-#: src/modules/settings/data-model/fields/forms/formula/components/SettingsDataModelFieldFormulaForm.tsx
-msgid "Reads related records, so the value is stored and updated in the background a few seconds after they change."
-msgstr "تقرأ السجلات المرتبطة، لذا تُخزَّن القيمة وتُحدَّث في الخلفية بعد بضع ثوانٍ من تغييرها."
 
 #. js-lingui-id: VJScHU
 #: src/modules/settings/admin-panel/components/SettingsAdminWorkspaceBillingArrangementDetailsModal.tsx
@@ -25045,6 +24735,11 @@ msgstr "صفحة السجل"
 msgid "Record page widget"
 msgstr "أداة صفحة السجل"
 
+#. js-lingui-id: fHTWNa
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Record rules through relations"
+msgstr "قواعد السجل عبر العلاقات"
+
 #. js-lingui-id: pVTJSR
 #: src/modules/command-menu-item/edit/components/CommandMenuItemEditRecordSelectionDropdown.tsx
 msgid "Record selection"
@@ -25281,6 +24976,11 @@ msgstr "مرفوض"
 msgid "related record path"
 msgstr "مسار السجل المرتبط"
 
+#. js-lingui-id: l3qF/i
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Related record paths"
+msgstr "مسارات السجلات المرتبطة"
+
 #. js-lingui-id: uGfOFe
 #: src/modules/settings/data-model/object-details/components/tabs/ObjectSettings.tsx
 #: src/modules/side-panel/pages/page-layout/components/SidePanelPageLayoutRecordPageWidgetTypeSelect.tsx
@@ -25500,6 +25200,7 @@ msgid "Remove from blocklist"
 msgstr "إزالة من قائمة الحظر"
 
 #. js-lingui-id: T/pF0Z
+#: src/modules/inbox/components/NavigationDrawerInboxChannelActionsDropdown.tsx
 #: src/modules/navigation-menu-item/display/folder/components/NavigationMenuItemFolderContent.tsx
 #: src/modules/navigation-menu-item/display/folder/components/NavigationMenuItemFolderDnd.tsx
 #: src/modules/navigation-menu-item/display/sections/favorites/components/FavoritesSection.tsx
@@ -25635,10 +25336,10 @@ msgstr "إزالة الترتيب"
 msgid "Remove sorting?"
 msgstr "إزالة الترتيب؟"
 
-#. js-lingui-id: koiY9C
+#. js-lingui-id: J8gtSc
 #: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
-msgid "Remove the message and calendar access of API keys on roles assignable to users. While off, those API keys read them as a member who doesn't own the channel would, and keep their role's write access to them."
-msgstr "أزل صلاحية الوصول إلى الرسائل والتقويم لمفاتيح API في الأدوار التي يمكن تعيينها للمستخدمين. عند إيقافها، تقرأ مفاتيح API تلك الرسائل والتقويم كما يقرأها عضو لا يملك القناة، وتحتفظ بصلاحية الكتابة الخاصة بدورها عليها."
+msgid "Remove the message and calendar access of API keys on roles assignable to users. While off, those API keys read them as a member who doesn't own the channel would."
+msgstr "إزالة إمكانية وصول مفاتيح API إلى الرسائل والتقويم من الأدوار القابلة للتعيين للمستخدمين. عند إيقافه، تقرأ مفاتيح API تلك الرسائل والتقويم كما لو كان عضوًا لا يملك القناة."
 
 #. js-lingui-id: yBC05U
 #: src/pages/settings/admin-panel/SettingsAdminAiProviderDetail.tsx
@@ -25721,22 +25422,6 @@ msgstr "إعادة ترتيب الحقل"
 msgid "Reorder options"
 msgstr "إعادة ترتيب الخيارات"
 
-#. js-lingui-id: BwWIp2
-#: src/modules/activities/calendar/components/CalendarEventComposerRecurrenceFields.tsx
-msgid "Repeat"
-msgstr "تكرار"
-
-#. js-lingui-id: X9KmrM
-#: src/modules/activities/calendar/components/CalendarEventComposerRecurrenceFields.tsx
-msgid "Repeat interval"
-msgstr "فاصل التكرار"
-
-#. js-lingui-id: KR6sNP
-#: src/modules/activities/calendar/components/CalendarEventRecurrenceDaysOfWeekInput.tsx
-#: src/modules/activities/calendar/components/CalendarEventRecurrenceDaysOfWeekInput.tsx
-msgid "Repeat on"
-msgstr "التكرار في"
-
 #. js-lingui-id: q8Id6J
 #: src/modules/side-panel/pages/page-layout/components/WidgetSettingsManageSection.tsx
 msgid "Replace widget"
@@ -25766,11 +25451,6 @@ msgstr "تتطلّب روابط تثبيت Replit عنوان MCP URL عبر HTTP
 msgid "Reply"
 msgstr "الرد"
 
-#. js-lingui-id: 5ykMJ1
-#: src/modules/page-layout/widgets/email-thread/components/EmailThreadComposer.tsx
-msgid "Reply all"
-msgstr "الرد على الكل"
-
 #. js-lingui-id: VKsaTi
 #: src/modules/ai-chat/composer/components/AiChatComposerQuotePreview.tsx
 msgid "Replying to"
@@ -25792,7 +25472,7 @@ msgid "Request"
 msgstr "الطلب"
 
 #. js-lingui-id: tZ7Xci
-#: src/modules/ai-chat/tool-calls/components/AiChatPendingToolCallRequests.tsx
+#: src/modules/ai-chat/tool-calls/components/AiChatPendingAskGate.tsx
 msgid "Request {requestNumber} of {requestCount}"
 msgstr "الطلب {requestNumber} من {requestCount}"
 
@@ -26053,6 +25733,11 @@ msgstr "مقيّد"
 #: src/modules/workflow/workflow-steps/workflow-actions/mcp-tool-action/components/McpToolTestResult.tsx
 msgid "Result"
 msgstr "النتيجة"
+
+#. js-lingui-id: kx0s+n
+#: src/modules/side-panel/pages/search/components/SidePanelSearchRecordsPage.tsx
+msgid "Results"
+msgstr "النتائج"
 
 #. js-lingui-id: v39wLo
 #: src/modules/log-console/components/LogConsoleResults.tsx
@@ -26417,11 +26102,6 @@ msgstr "تشغيل الشيفرة لتحليل الملفات والبيانات
 msgid "Run Function"
 msgstr "تشغيل الوظيفة"
 
-#. js-lingui-id: gdJPPW
-#: src/modules/object-core/agents/components/CoreAgentTestForm.tsx
-msgid "Run test"
-msgstr "تشغيل الاختبار"
-
 #. js-lingui-id: scFhaW
 #: src/modules/workflow/workflow-steps/workflow-actions/mcp-tool-action/components/WorkflowEditActionMcpTool.tsx
 msgid "Run this tool for real?"
@@ -26739,11 +26419,9 @@ msgid "SDK"
 msgstr "SDK"
 
 #. js-lingui-id: A1taO8
-#: src/modules/command-menu-item/display/components/SidePanelCommandMenuItemDisplayPage.tsx
-#: src/modules/command-menu-item/display/components/SidePanelCommandMenuItemDisplayPage.tsx
 #: src/modules/command-menu-item/engine-command/constants/EngineComponentKeyHeadlessComponentMap.tsx
 #: src/modules/command-menu-item/engine-command/constants/EngineComponentKeyHeadlessComponentMap.tsx
-#: src/modules/navigation/components/MainNavigationDrawerSearchField.tsx
+#: src/modules/navigation/components/MainNavigationDrawerFixedRows.tsx
 #: src/modules/navigation/components/MultiWorkspaceDropdown/internal/MultiWorkspaceDropdownWorkspacesListComponents.tsx
 #: src/modules/navigation/components/MultiWorkspaceDropdown/internal/MultiWorkspaceDropdownWorkspacesListComponents.tsx
 #: src/modules/navigation/components/NavigationDrawerHeader.tsx
@@ -26764,8 +26442,6 @@ msgstr "SDK"
 #: src/modules/side-panel/components/SidePanelObjectFilterDropdownContent.tsx
 #: src/modules/side-panel/components/SidePanelTopBar.tsx
 #: src/modules/side-panel/hooks/useOpenRecordsSearchPageInSidePanel.ts
-#: src/modules/side-panel/pages/edit-column/components/SidePanelEditColumnShowSelect.tsx
-#: src/modules/side-panel/pages/edit-column/components/SidePanelEditColumnShowSelect.tsx
 #: src/modules/spreadsheet-import/steps/components/MatchColumnsStep/components/SubMatchingSelectInput.tsx
 #: src/modules/spreadsheet-import/steps/components/MatchColumnsStep/components/SubMatchingSelectInput.tsx
 #: src/modules/ui/field/input/components/MultiSelectInput.tsx
@@ -26985,7 +26661,6 @@ msgstr "البحث في البيانات الوصفية للحقل"
 #: src/modules/object-record/advanced-filter/components/AdvancedFilterFieldSelectMenu.tsx
 #: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownCalendarFieldsContent.tsx
 #: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownFieldsContent.tsx
-#: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownListPinnedFieldContent.tsx
 #: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownRecordGroupFieldsContent.tsx
 #: src/modules/object-record/object-sort-dropdown/components/ObjectSortDropdownButton.tsx
 #: src/modules/object-record/object-sort-dropdown/components/ObjectSortDropdownButton.tsx
@@ -27074,11 +26749,6 @@ msgstr "ابحث عن العمليات"
 msgid "Search options"
 msgstr "ابحث في الخيارات"
 
-#. js-lingui-id: WDcoYK
-#: src/modules/navigation/components/MainNavigationDrawerSearchField.tsx
-msgid "Search or ask..."
-msgstr "ابحث أو اطرح سؤالًا..."
-
 #. js-lingui-id: IMeaSJ
 #: src/modules/ai-chat/composer/components/AiChatAddMenuRecordsPage.tsx
 #: src/modules/ai-chat/composer/components/AiChatAddMenuRecordsPage.tsx
@@ -27131,7 +26801,6 @@ msgstr "البحث عن أعضاء مساحة العمل"
 
 #. js-lingui-id: YIix5Y
 #: src/modules/navigation-menu-item/edit/components/NavigationMenuItemAddDropdownContent.tsx
-#: src/modules/navigation/components/MainNavigationDrawerSearchField.tsx
 #: src/modules/settings/developers/components/WebhookEntitySelect.tsx
 msgid "Search..."
 msgstr "بحث..."
@@ -27178,11 +26847,6 @@ msgstr "جارٍ البحث عن {objectLabel}"
 #: src/modules/side-panel/pages/search-ai-chats/components/SidePanelAiChatPickerSearchResults.tsx
 msgid "Searching chats..."
 msgstr "جارٍ البحث في المحادثات..."
-
-#. js-lingui-id: xrtPMt
-#: src/modules/command-menu-item/display/components/SidePanelCommandMenuItemDisplayPage.tsx
-msgid "Searching records..."
-msgstr "جارٍ البحث في السجلات..."
 
 #. js-lingui-id: KhCAL1
 #: src/modules/ai/constants/ActionToolStatusLabels.ts
@@ -27352,18 +27016,14 @@ msgstr "عرض إعدادات نموذج البيانات"
 msgid "See function"
 msgstr "عرض الدالة"
 
-#. js-lingui-id: kuQBTx
-#: src/modules/command-menu-item/display/components/SidePanelCommandMenuItemDisplayPage.tsx
-msgid "See in search results"
-msgstr "عرض في نتائج البحث"
-
 #. js-lingui-id: 1HzZ+y
 #: src/pages/settings/applications/SettingsApplicationDetails.tsx
 msgid "See installed applications"
 msgstr "عرض التطبيقات المثبتة"
 
 #. js-lingui-id: uPo3PQ
-#: src/modules/navigation-menu-item/display/sections/components/NavigationMenuSectionSeeMore.tsx
+#: src/modules/navigation-menu-item/display/built-in-sections/components/NavigationMenuAiChatRecentsSection.tsx
+#: src/modules/navigation-menu-item/display/containers/components/NavigationMenuSection.tsx
 msgid "See less"
 msgstr "عرض أقل"
 
@@ -27373,7 +27033,8 @@ msgid "See matching {objectLabelPlural}"
 msgstr "عرض {objectLabelPlural} المطابقة"
 
 #. js-lingui-id: V1fa9u
-#: src/modules/navigation-menu-item/display/sections/components/NavigationMenuSectionSeeMore.tsx
+#: src/modules/navigation-menu-item/display/built-in-sections/components/NavigationMenuAiChatRecentsSection.tsx
+#: src/modules/navigation-menu-item/display/containers/components/NavigationMenuSection.tsx
 #: src/modules/settings/applications/components/SettingsApplicationContentSummarySection.tsx
 msgid "See more"
 msgstr "عرض المزيد"
@@ -28139,11 +27800,6 @@ msgstr "عيّن متغيرات الخادم المطلوبة"
 msgid "Set the required server variables: {missingVariableKeys}"
 msgstr "عيّن متغيرات الخادم المطلوبة: {missingVariableKeys}"
 
-#. js-lingui-id: L/hdCR
-#: src/modules/settings/applications/components/SettingsApplicationConfigurationSection.tsx
-msgid "Set up {applicationName} for your workspace"
-msgstr "أعِدّ {applicationName} لمساحة العمل الخاصة بك"
-
 #. js-lingui-id: tG3Y2G
 #: src/modules/views/view-picker/components/ViewPickerContentCreateMode.tsx
 msgid "Set up a Date field on {objectLabel} to create a Calendar"
@@ -28202,7 +27858,6 @@ msgstr "جارٍ إعداد <0>قاعدة البيانات</0> الخاصة بك
 #. js-lingui-id: Tz0i8g
 #: src/modules/ai-chat/tool-calls/components/AiChatApprovalMergeReviewContent.tsx
 #: src/modules/ai-chat/usage/components/AiChatUserCreditsExhaustedBanner.tsx
-#: src/modules/command-menu-item/utils/getCommandMenuItemSubtitle.ts
 #: src/modules/navigation/components/MultiWorkspaceDropdown/internal/MultiWorkspaceDropdownDefaultComponents.tsx
 #: src/modules/navigation/components/MultiWorkspaceDropdown/internal/MultiWorkspaceDropdownDefaultComponents.tsx
 #: src/modules/navigation/hooks/useNavigationDrawerTabs.ts
@@ -28287,6 +27942,11 @@ msgstr "الشكل واللون والوجه"
 #: src/modules/side-panel/hooks/useOpenShareRecordInSidePanel.ts
 msgid "Share"
 msgstr "شارك"
+
+#. js-lingui-id: nmXzns
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Share calendar events across channels"
+msgstr "مشاركة أحداث التقويم عبر القنوات"
 
 #. js-lingui-id: S1jlER
 #: src/modules/settings/privacy/components/SettingsPrivacySharingWithTwenty.tsx
@@ -28392,8 +28052,6 @@ msgid "Should changing the label also change the API name?"
 msgstr "هل ينبغي أن يؤدي تغيير التسمية أيضًا إلى تغيير اسم واجهة برمجة التطبيقات؟"
 
 #. js-lingui-id: 8vETh9
-#: src/modules/navigation-menu-item/edit/components/NavigationMenuSectionMenuContent.tsx
-#: src/modules/navigation-menu-item/edit/components/NavigationMenuSectionMenuContent.tsx
 #: src/modules/side-panel/pages/edit-column/components/SidePanelEditColumnForm.tsx
 msgid "Show"
 msgstr "إظهار"
@@ -28511,6 +28169,11 @@ msgstr "إظهار في"
 msgid "Show only rows with errors"
 msgstr "اعرض الصفوف التي تحتوي على أخطاء فقط"
 
+#. js-lingui-id: 9u2I/P
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Show the Getting started page and sidebar card, and open it on landing during the trial."
+msgstr "إظهار صفحة البدء وبطاقة الشريط الجانبي، وفتحها عند الوصول أثناء الفترة التجريبية."
+
 #. js-lingui-id: fTPKt5
 #: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
 msgid "Show the Privacy tab and enforce its AI data policy and data sharing settings. Turning this off lifts any stored policy. Enable after the instance upgrade completes."
@@ -28562,7 +28225,7 @@ msgstr "لوحة جانبية"
 #. js-lingui-id: QWUT9V
 #: src/modules/navigation/components/MainNavigationDrawerContextMenu.tsx
 msgid "Sidebar actions"
-msgstr "إجراءات الشريط الجانبي"
+msgstr ""
 
 #. js-lingui-id: 9k9PMD
 #: src/modules/settings/layout/components/SettingsLayoutItemsStats.tsx
@@ -28749,10 +28412,20 @@ msgstr "تخطى"
 msgid "Skip anyway"
 msgstr "تخطي على أي حال"
 
+#. js-lingui-id: 5jWe/6
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Skip calendar events with no participant outside the workspace domain, unless internal import is turned on."
+msgstr "تخطي أحداث التقويم التي لا تضم مشاركًا من خارج نطاق مساحة العمل، ما لم يتم تفعيل الاستيراد الداخلي."
+
 #. js-lingui-id: TyudBs
 #: src/modules/settings/data-model/objects/forms/components/SettingsDataModelObjectAboutForm.tsx
 msgid "Skip creating a Name field "
 msgstr "تخطي إنشاء حقل الاسم "
+
+#. js-lingui-id: pmVASU
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Skip internal meetings"
+msgstr "تخطي الاجتماعات الداخلية"
 
 #. js-lingui-id: PlF+NA
 #: src/modules/settings/data-model/fields/forms/morph-relation/components/SettingsDataModelFieldRelationJunctionForm.tsx
@@ -28761,6 +28434,7 @@ msgstr "تخطي عنصر الربط (مشابه لعلاقات متعدد إل�
 
 #. js-lingui-id: 9NyAH9
 #: src/modules/ai-chat/tool-calls/components/AiChatApprovalOutcome.tsx
+#: src/modules/ai-chat/tool-calls/components/AiChatToolCallApprovalStatusRenderer.tsx
 #: src/modules/settings/admin-panel/components/SettingsAdminChatAskQuestionsPart.tsx
 msgid "Skipped"
 msgstr "تم تخطيه"
@@ -29399,6 +29073,16 @@ msgstr "جارٍ الإيقاف"
 msgid "Storage"
 msgstr "التخزين"
 
+#. js-lingui-id: vrUVo4
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Store a meeting synced by several calendars of the same provider once, instead of once per calendar."
+msgstr "خزّن اجتماعًا تمت مزامنته بواسطة عدة تقاويم من الموفر نفسه مرة واحدة، بدلًا من مرة لكل تقويم."
+
+#. js-lingui-id: YbaJNn
+#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
+msgid "Store and show files attached to messages. Enabled after the workspace upgrade completes."
+msgstr "تخزين الملفات المرفقة بالرسائل وعرضها. يتم تمكينها بعد اكتمال ترقية مساحة العمل."
+
 #. js-lingui-id: juzGVI
 #: src/modules/settings/data-model/fields/forms/components/SettingsDataModelFieldLinksVariantForm.tsx
 msgid "Store the full URL or just the domain"
@@ -29717,21 +29401,6 @@ msgstr "لخص هذا السجل ونشاطه الأخير."
 msgid "Summarize this view"
 msgstr "لخص هذا العرض"
 
-#. js-lingui-id: mLm1b0
-#: src/modules/object-core/agents/components/CoreAgentTestForm.tsx
-msgid "Summarize what changed on Acme this week"
-msgstr "لخّص ما تغيّر في Acme هذا الأسبوع"
-
-#. js-lingui-id: dXoieq
-#: src/modules/object-record/record-column-lookup/utils/getRecordFieldColumnHeader.ts
-msgid "Summary"
-msgstr "ملخص"
-
-#. js-lingui-id: 4W6uNO
-#: src/modules/side-panel/pages/edit-column/components/SidePanelEditColumnForm.tsx
-msgid "Summary columns can't be sorted or filtered."
-msgstr "لا يمكن فرز أعمدة الملخص أو تصفيتها."
-
 #. js-lingui-id: gKAccC
 #: src/modules/page-layout/widgets/call-recording-summary/components/WidgetActionCallRecordingSummary.tsx
 msgid "Summary copied to clipboard"
@@ -29996,7 +29665,6 @@ msgid "System skills"
 msgstr "مهارات النظام"
 
 #. js-lingui-id: HuA3RU
-#: src/modules/navigation-menu-item/display/hooks/useGetNavigationMenuTabLabel.ts
 #: src/modules/navigation-menu-item/edit/components/NavigationMenuItemTypeTooltip.tsx
 #: src/modules/side-panel/components/hooks/usePageLayoutHeaderInfo.ts
 msgid "Tab"
@@ -30147,6 +29815,11 @@ msgstr "زملاء الفريق"
 msgid "Teammates see who you talk to, not what you write."
 msgstr "يرى زملاء الفريق الأشخاص الذين تتحدث إليهم، وليس ما تكتبه."
 
+#. js-lingui-id: XpPpz7
+#: src/modules/ai-chat/tool-calls/components/AiChatToolCallApprovalFeedbackInput.tsx
+msgid "Tell the agent what to change"
+msgstr "أخبر الوكيل بما يجب تغييره"
+
 #. js-lingui-id: lKXcJz
 #: src/modules/settings/emailing-domains/utils/getEmailingDomainStatusDisplay.ts
 msgid "Temporary Failure"
@@ -30164,7 +29837,6 @@ msgid "Terms of Service"
 msgstr "شروط الخدمة"
 
 #. js-lingui-id: NnH3pK
-#: src/modules/object-core/agents/components/CoreAgentFormContent.tsx
 #: src/modules/settings/logic-functions/components/tabs/SettingsLogicFunctionCodeEditorTab.tsx
 #: src/modules/workflow/workflow-steps/workflow-actions/code-action/components/WorkflowEditActionCode.tsx
 #: src/modules/workflow/workflow-steps/workflow-actions/code-action/components/WorkflowEditActionCode.tsx
@@ -30177,19 +29849,6 @@ msgstr "شروط الخدمة"
 #: src/pages/settings/logic-functions/SettingsLogicFunctionDetail.tsx
 msgid "Test"
 msgstr "تجربة"
-
-#. js-lingui-id: jra4Ko
-#: src/modules/object-core/agents/components/CoreAgentRunsContent.tsx
-#: src/modules/object-core/agents/hooks/useOpenCoreAgentTestSidePanel.ts
-msgid "Test agent"
-msgstr "اختبار الوكيل"
-
-#. js-lingui-id: AriIhI
-#: src/modules/object-core/agents/components/CoreAgentFormContent.tsx
-#: src/modules/object-core/commands/hooks/useCoreAgentPageCommands.ts
-#: src/modules/object-core/commands/hooks/useCoreAgentsSelectionCommands.ts
-msgid "Test Agent"
-msgstr "اختبار الوكيل"
 
 #. js-lingui-id: 1QHjf8
 #. placeholder {0}: params.toAddress
@@ -30261,7 +29920,6 @@ msgid "Text Colors"
 msgstr "ألوان النص"
 
 #. js-lingui-id: lyaiTc
-#: src/modules/chat/components/ChatMessageCopyAction.tsx
 #: src/modules/ui/input/components/LightCopyIconButton.tsx
 msgid "Text copied to clipboard"
 msgstr "تم نسخ النص إلى الحافظة"
@@ -30311,11 +29969,6 @@ msgstr "تعذر تحميل الوكيل الذي تشغّله هذه الخطو
 msgid "The API endpoint for your OpenAI-compatible provider"
 msgstr "نقطة نهاية واجهة برمجة التطبيقات لمزودك المتوافق مع OpenAI"
 
-#. js-lingui-id: UIpkEz
-#: src/modules/settings/data-model/fields/forms/formula/constants/FormulaAggregateFunctionDefinitions.ts
-msgid "The average of a number field over the related records, or over those matching the condition."
-msgstr "متوسط حقل رقمي عبر السجلات المرتبطة، أو عبر السجلات التي تطابق الشرط."
-
 #. js-lingui-id: qjNojw
 #: src/pages/settings/admin-panel/SettingsAdminNewAiProvider.tsx
 msgid "The AWS region for Bedrock"
@@ -30356,20 +30009,10 @@ msgstr "يسمح الرمز لـ {memberName} بتسجيل الدخول إلى �
 msgid "The code of the Twenty partner who referred you"
 msgstr "رمز شريك Twenty الذي أحالك"
 
-#. js-lingui-id: h7Af0y
-#: src/modules/validation-rules/utils/getValidationRuleErrorMessage.ts
-msgid "The condition of {functionName}() cannot read \"{relationFieldName}\""
-msgstr "لا يمكن لشرط {functionName}() قراءة \"{relationFieldName}\""
-
 #. js-lingui-id: aXzQ65
 #: src/modules/ai-chat/messages/components/AiChatCompactionIndicator.tsx
 msgid "The conversation has been compacted"
 msgstr "تم ضغط المحادثة"
-
-#. js-lingui-id: Ah78wz
-#: src/modules/settings/data-model/fields/forms/formula/components/SettingsDataModelFieldFormulaSection.tsx
-msgid "The currency of the computed amount: a code in quotes such as \"USD\", or the currency code of another field."
-msgstr "عملة المبلغ المحسوب: رمز بين علامتي اقتباس مثل \"USD\"، أو رمز عملة حقل آخر."
 
 #. js-lingui-id: /kfzmx
 #: src/pages/settings/legal/SettingsLegalDpa.tsx
@@ -30421,11 +30064,6 @@ msgstr "البريد الإلكتروني المرتبط بهذا الحساب"
 msgid "The email associated to your account"
 msgstr "البريد الإلكتروني المرتبط بحسابك"
 
-#. js-lingui-id: pJahAY
-#: src/modules/activities/calendar/components/CalendarEventComposerFields.tsx
-msgid "The end date can't be before the first event."
-msgstr "لا يمكن أن يكون تاريخ الانتهاء قبل الحدث الأول."
-
 #. js-lingui-id: WGfnFh
 #: src/modules/activities/calendar/components/CalendarEventComposerFields.tsx
 msgid "The end date must be later than the start date."
@@ -30465,11 +30103,6 @@ msgstr "الاتفاقية الكاملة مع الحقول المُفسَّرة
 #: src/modules/workflow/workflow-trigger/components/WorkflowEditTriggerManual.tsx
 msgid "The icon your workflow trigger will display in the command menu"
 msgstr "الأيقونة التي سيعرضها مشغل سير العمل الخاص بك في قائمة الأوامر"
-
-#. js-lingui-id: hP+z/5
-#: src/modules/settings/data-model/fields/forms/formula/constants/FormulaAggregateFunctionDefinitions.ts
-msgid "The largest number or latest date among the related records. With plain values, such as max(a, b), the largest of them."
-msgstr "أكبر رقم أو أحدث تاريخ بين السجلات المرتبطة. وباستخدام قيم بسيطة، مثل max(a, b)، تكون أكبرها."
 
 #. js-lingui-id: Qp6vM+
 #: src/modules/validation-rules/constants/ValidationRuleFunctionDescriptions.ts
@@ -30553,11 +30186,6 @@ msgstr "الاسم الذي يراه المستلمون بجانب عنوانك.
 msgid "The number of items in the list, or 0 when it is not a list."
 msgstr "عدد العناصر في القائمة، أو 0 عندما لا تكون قائمة."
 
-#. js-lingui-id: vXwRDS
-#: src/modules/settings/data-model/fields/forms/formula/constants/FormulaAggregateFunctionDefinitions.ts
-msgid "The number of related records, or of those matching the condition. For example count(tasks, tasks.status == \"TODO\")."
-msgstr "عدد السجلات المرتبطة، أو السجلات التي تطابق الشرط. على سبيل المثال count(tasks, tasks.status == \"TODO\")."
-
 #. js-lingui-id: SpoTRx
 #: src/modules/validation-rules/constants/ValidationRuleFunctionDescriptions.ts
 msgid "The number of whole units from the first date to the second, negative when the second is earlier. Minutes and hours are elapsed time; longer units count calendar days and months, in UTC."
@@ -30628,11 +30256,6 @@ msgstr "سيتم تمرير السجلات المحددة (حتى {maxRecordsFor
 msgid "The shared email you want to use."
 msgstr "البريد الإلكتروني المشترك الذي تريد استخدامه."
 
-#. js-lingui-id: q2NONu
-#: src/modules/settings/data-model/fields/forms/formula/constants/FormulaAggregateFunctionDefinitions.ts
-msgid "The smallest number or earliest date among the related records. With plain values, such as min(a, b), the smallest of them."
-msgstr "أصغر رقم أو أقدم تاريخ بين السجلات المرتبطة. وباستخدام قيم بسيطة، مثل min(a, b)، تكون أصغرها."
-
 #. js-lingui-id: CZF2sj
 #: src/modules/validation-rules/constants/ValidationRuleFunctionDescriptions.ts
 msgid "The smallest of the numbers. Values that are not numbers are ignored."
@@ -30675,11 +30298,6 @@ msgstr "تم تشغيل الأداة لكنها لم تُرجع أي حقول، 
 msgid "The tool runs without arguments."
 msgstr "تعمل الأداة دون وسيطات."
 
-#. js-lingui-id: 6XWxWG
-#: src/modules/settings/data-model/fields/forms/formula/constants/FormulaAggregateFunctionDefinitions.ts
-msgid "The total of a number field over the related records, or over those matching the condition."
-msgstr "إجمالي حقل رقمي عبر السجلات المرتبطة، أو عبر السجلات التي تطابق الشرط."
-
 #. js-lingui-id: 9q0gnf
 #: src/modules/page-layout/widgets/call-recording/utils/getCallRecordingStatusDisplayConfiguration.ts
 msgid "The transcript could not be generated."
@@ -30694,11 +30312,6 @@ msgstr "انتهت صلاحية النص المفرّغ قبل أن يمكن ا�
 #: src/modules/page-layout/widgets/call-recording/utils/getCallRecordingStatusDisplayConfiguration.ts
 msgid "The transcript is being prepared…"
 msgstr "يجري إعداد نص التفريغ…"
-
-#. js-lingui-id: nQjBTv
-#: src/modules/settings/admin-panel/components/SettingsAdminWorkspaceBillingArrangementsSection.tsx
-msgid "The trial ends now: workspaces with a card are charged right away, the others are suspended until they add one."
-msgstr "تنتهي الفترة التجريبية الآن: تُفرض الرسوم على مساحات العمل التي تحتوي على بطاقة فورًا، وتُعلَّق المساحات الأخرى حتى تضيف بطاقة."
 
 #. js-lingui-id: qMTT4Z
 #: src/modules/settings/billing/components/SettingsBillingLimitForm.tsx
@@ -30918,16 +30531,6 @@ msgstr "هذا الوكيل يأتي من تطبيق، لذا لا يمكن تغ
 msgid "This agent comes from an app, so its tools can't be changed here."
 msgstr "هذا الوكيل يأتي من تطبيق، لذا لا يمكن تغيير أدواته هنا."
 
-#. js-lingui-id: h1DyDq
-#: src/modules/object-core/agents/utils/getCoreAgentTestHint.ts
-msgid "This agent normally runs {details}, without a message. Ask it to do its scheduled task now."
-msgstr "يعمل هذا الوكيل عادةً {details}، من دون رسالة. اطلب منه تنفيذ مهمته المجدولة الآن."
-
-#. js-lingui-id: qC+xo7
-#: src/modules/object-core/agents/utils/getCoreAgentTestHint.ts
-msgid "This agent normally starts on “{label}” for {details}, with that record. Describe one to see how it handles it."
-msgstr "يبدأ هذا الوكيل عادةً عند “{label}” لـ {details}، باستخدام ذلك السجل. صِف واحدًا لمعرفة كيفية تعامله معه."
-
 #. js-lingui-id: PGt3yj
 #: src/modules/object-core/agents/components/CoreAgentTriggersSection.tsx
 msgid "This agent only runs when a workflow, an app or the API calls it."
@@ -31051,11 +30654,6 @@ msgstr "تعذر فتح هذه المحادثة. حاول تحديدها مرة 
 #: src/modules/side-panel/pages/search-ai-chats/components/SidePanelAiChatPickerList.tsx
 msgid "This chat is no longer available."
 msgstr "هذه المحادثة لم تعد متاحة."
-
-#. js-lingui-id: GsXQeq
-#: src/modules/side-panel/pages/edit-column/components/SidePanelEditColumnForm.tsx
-msgid "This column can show up to {QUERY_MAX_RECORDS_FROM_RELATION} records."
-msgstr "يمكن أن يعرض هذا العمود حتى {QUERY_MAX_RECORDS_FROM_RELATION} سجل."
 
 #. js-lingui-id: WCa/7U
 #: src/pages/settings/applications/tabs/SettingsApplicationFrontComponentPreviewTab.tsx
@@ -31266,7 +30864,6 @@ msgstr "هذا الموفّر مدمج. عيّن مفتاح API الخاص به 
 
 #. js-lingui-id: qfpz3J
 #: src/modules/side-panel/pages/page-layout/components/SidePanelPageLayoutRecordPageWidgetTypeSelect.tsx
-#: src/modules/views/utils/computeRelationFilterDisplayValue.ts
 msgid "This record"
 msgstr "هذا السجل"
 
@@ -31596,7 +31193,6 @@ msgid "To"
 msgstr "إلى"
 
 #. js-lingui-id: ecUA8p
-#: src/modules/chat/utils/getChatMessageDayLabel.ts
 #: src/modules/inbox/utils/groupInboxThreadsByDate.ts
 #: src/modules/localization/utils/formatDateISOStringToRelativeDate.ts
 #: src/modules/log-console/components/LogConsoleTimeRangeDropdown.tsx
@@ -31922,6 +31518,7 @@ msgstr "الترجمات"
 
 #. js-lingui-id: R3UKip
 #: src/modules/inbox/components/NavigationDrawerInboxTriageSection.tsx
+#: src/modules/navigation-menu-item/common/constants/NavigationMenuBuiltInSections.ts
 msgid "Triage"
 msgstr "الفرز"
 
@@ -32156,11 +31753,6 @@ msgstr "التركية"
 msgid "Turn into"
 msgstr "تحويل إلى"
 
-#. js-lingui-id: rjkNOe
-#: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
-msgid "Turn on for a workspace that reported broken links, merges or deletes. Gives the Admin role back its write access to messages and calendar events, without letting it see more of them."
-msgstr "فعّل هذا لمساحة عمل أبلغت عن روابط أو عمليات دمج أو حذف معطّلة. يعيد ذلك إلى دور المسؤول صلاحية الكتابة على الرسائل وأحداث التقويم، من دون السماح له برؤية المزيد منها."
-
 #. js-lingui-id: Njwcqh
 #: src/modules/settings/experience/components/BrowserNotificationSetupDialog.tsx
 msgid "Turn on notifications"
@@ -32176,10 +31768,10 @@ msgstr "حوّل علامة تبويب الذكاء الاصطناعي إلى ص
 msgid "Turns"
 msgstr "الجولات"
 
-#. js-lingui-id: m4IiWF
+#. js-lingui-id: ZKeDcZ
 #: src/modules/object-core/agents/components/CoreAgentRunsContent.tsx
-msgid "Turns appear here once you test this agent, or a workflow or an app uses it"
-msgstr "تظهر التفاعلات هنا بمجرد اختبار هذا الوكيل، أو عند استخدامه بواسطة سير عمل أو تطبيق"
+msgid "Turns appear here once a workflow or an app uses this agent"
+msgstr "تظهر الجولات هنا بمجرد أن يستخدم سير عمل أو تطبيق هذا الوكيل"
 
 #. js-lingui-id: 2JBBhG
 #: src/modules/validation-rules/constants/ValidationRuleKeywords.ts
@@ -33418,6 +33010,11 @@ msgstr "أحداث الاستخدام"
 msgid "Usage period"
 msgstr "فترة الاستخدام"
 
+#. js-lingui-id: js4Y6w
+#: src/modules/command-menu-item/display/components/SidePanelCommandMenuItemDisplayPage.tsx
+msgid "Use ‘{trimmedSidePanelSearch}’ with..."
+msgstr "استخدم ‘{trimmedSidePanelSearch}’ مع..."
+
 #. js-lingui-id: jFGgyP
 #: src/modules/settings/two-factor-authentication/components/TwoFactorAuthenticationBackupCodesSection.tsx
 msgid "Use a backup code to sign in if you lose access to your authenticator app. Each code works once."
@@ -33481,7 +33078,7 @@ msgstr "استخدم واجهة برمجة التطبيقات لدينا أو أ
 #. js-lingui-id: TTyUsT
 #: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
 msgid "Use the inbox names for the chat thread and message objects. Turned on by the workspace upgrade that renames them, so don't toggle it by hand."
-msgstr "استخدم أسماء صندوق الوارد لكائنات سلسلة الدردشة والرسالة. يتم تفعيله بواسطة ترقية مساحة العمل التي تعيد تسميتها، لذا لا تبدّله يدويًا."
+msgstr ""
 
 #. js-lingui-id: z1f4Op
 #: src/modules/workflow/workflow-variables/utils/getWorkflowVariableSpecialItems.ts
@@ -34023,6 +33620,7 @@ msgstr "بنفسجي"
 #: src/modules/settings/unsubscribe-topics/components/SettingsWorkspaceUnsubscribeTopicSection.tsx
 #: src/pages/settings/communications/SettingsWorkspaceNewUnsubscribeTopic.tsx
 #: src/pages/settings/communications/SettingsWorkspaceUnsubscribeTopicDetail.tsx
+#: src/pages/settings/layout/SettingsLayoutViewDetail.tsx
 msgid "Visibility"
 msgstr "الرؤية"
 
@@ -34086,7 +33684,6 @@ msgid "Wait for Event"
 msgstr "انتظار حدث"
 
 #. js-lingui-id: 3wIkaN
-#: src/modules/ai-chat/composer/hooks/useOpenNewAiChatAsDirectMessage.ts
 #: src/modules/ai-chat/composer/hooks/useSendAiChatMessage.ts
 msgid "Wait for the attachments to finish uploading."
 msgstr "انتظر حتى تنتهي المرفقات من الرفع."
@@ -34429,7 +34026,6 @@ msgid "Week"
 msgstr "أسبوع"
 
 #. js-lingui-id: 4XSc4l
-#: src/modules/activities/calendar/components/CalendarEventComposerRecurrenceFields.tsx
 #: src/modules/settings/billing/constants/UsageLimitPeriodNameLabels.ts
 msgid "Weekly"
 msgstr "أسبوعيًا"
@@ -34679,7 +34275,7 @@ msgstr "إعدادات الأداة"
 #. js-lingui-id: 0LuHF2
 #: src/modules/settings/admin-panel/constants/SettingsAdminFeatureFlagMetadata.ts
 msgid "Widget visibility rule tree"
-msgstr "شجرة قواعد ظهور عنصر الواجهة"
+msgstr ""
 
 #. js-lingui-id: tL6W2K
 #: src/modules/settings/applications/constants/ApplicationContentTypeConfigs.ts
@@ -35232,11 +34828,6 @@ msgstr "عام"
 msgid "Yearly"
 msgstr "سنوي"
 
-#. js-lingui-id: 1+9d+F
-#: src/modules/activities/calendar/components/CalendarEventComposerRecurrenceFields.tsx
-msgid "Yearly on {startMonthAndDay}"
-msgstr "سنويًا في {startMonthAndDay}"
-
 #. js-lingui-id: +BGee5
 #: src/modules/side-panel/pages/page-layout/utils/getDateGranularityPluralLabel.ts
 msgid "years"
@@ -35283,7 +34874,6 @@ msgid "Yes, I saw it"
 msgstr "نعم، رأيته"
 
 #. js-lingui-id: y/0uwd
-#: src/modules/chat/utils/getChatMessageDayLabel.ts
 #: src/modules/inbox/utils/groupInboxThreadsByDate.ts
 #: src/modules/localization/utils/formatDateISOStringToRelativeDate.ts
 #: src/modules/log-console/components/LogConsoleTimeRangeDropdown.tsx

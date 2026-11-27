@@ -3,10 +3,6 @@ import { createOneOperation } from 'test/integration/graphql/utils/create-one-op
 import { destroyOneOperationFactory } from 'test/integration/graphql/utils/destroy-one-operation-factory.util';
 import { makeGraphqlApiRequest } from 'test/integration/graphql/utils/make-graphql-api-request.util';
 import { deleteRecordsByIds } from 'test/integration/utils/delete-records-by-ids';
-import {
-  grantRoleWideAccessToChannelObjects,
-  revokeRoleWideAccessToChannelObjects,
-} from 'test/integration/utils/role-wide-access-to-channel-objects.util';
 import { isDefined } from 'twenty-shared/utils';
 
 import { CALENDAR_CHANNEL_DATA_SEED_IDS } from 'src/engine/workspace-manager/dev-seeder/core/constants/calendar-channel-seed-ids.constant';
@@ -122,7 +118,6 @@ const searchTimelineCalendarEvents = async (searchInput?: string) => {
 
 describe('searchTimelineCalendarEvents (integration)', () => {
   beforeAll(async () => {
-    await grantRoleWideAccessToChannelObjects();
     await createRecord({
       objectMetadataSingularName: 'company',
       input: {
@@ -180,7 +175,6 @@ describe('searchTimelineCalendarEvents (integration)', () => {
     }
 
     await destroyRecord('company', COMPANY_ID);
-    await revokeRoleWideAccessToChannelObjects();
   });
 
   it('should list the record events without fallback when there is no search input', async () => {

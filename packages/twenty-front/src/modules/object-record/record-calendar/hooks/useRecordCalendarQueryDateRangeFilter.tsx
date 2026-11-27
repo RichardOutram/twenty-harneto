@@ -10,7 +10,6 @@ import { currentRecordFiltersComponentState } from '@/object-record/record-filte
 import { useUserTimezone } from '@/ui/input/components/internal/date/hooks/useUserTimezone';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
-import { useCurrentViewPresetFilterAsRecordGqlOperationFilter } from '@/views/hooks/useCurrentViewPresetFilterAsRecordGqlOperationFilter';
 import { type Temporal } from 'temporal-polyfill';
 import {
   combineFilters,
@@ -54,17 +53,12 @@ export const useRecordCalendarQueryDateRangeFilter = (
     anyFieldFilterValueComponentState,
     viewBarInstanceId,
   );
-  const currentViewPresetFilterAsRecordGqlOperationFilter =
-    useCurrentViewPresetFilterAsRecordGqlOperationFilter();
   const calendarFieldMetadataItem = objectMetadataItem.fields.find(
     (field) => field.id === recordIndexCalendarFieldMetadataId,
   );
 
   if (!isDefined(calendarFieldMetadataItem)) {
-    return {
-      dateRangeFilter: {},
-      dateRangeFilterWithoutViewPresetFilter: {},
-    };
+    return { dateRangeFilter: {} };
   }
 
   const nextDay = lastDay.add({ days: 1 });
@@ -96,18 +90,12 @@ export const useRecordCalendarQueryDateRangeFilter = (
       filterValue: anyFieldFilterValue,
     });
 
-  const dateRangeFilterWithoutViewPresetFilter = combineFilters([
-    dateRangeFilterAfter,
-    dateRangeFilterBefore,
-    viewFilter,
-    anyFieldFilter,
-  ]);
-
   return {
     dateRangeFilter: combineFilters([
-      dateRangeFilterWithoutViewPresetFilter,
-      currentViewPresetFilterAsRecordGqlOperationFilter,
+      dateRangeFilterAfter,
+      dateRangeFilterBefore,
+      viewFilter,
+      anyFieldFilter,
     ]),
-    dateRangeFilterWithoutViewPresetFilter,
   };
 };

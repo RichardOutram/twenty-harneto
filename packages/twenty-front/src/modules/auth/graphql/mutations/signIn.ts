@@ -6,6 +6,9 @@ export const SIGN_IN = gql`
       availableWorkspaces {
         ...AvailableWorkspacesFragment
       }
+      tokens {
+        ...AuthTokenPairFragment
+      }
     }
   }
 `;

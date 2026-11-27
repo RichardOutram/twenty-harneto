@@ -2,6 +2,7 @@ import { currentUserState } from '@/auth/states/currentUserState';
 import { OnboardingLayout } from '@/onboarding/components/OnboardingLayout';
 import { OnboardingTransitionOutlet } from '@/onboarding/components/OnboardingTransitionOutlet';
 import { OnboardingHeaderFreeCredits } from '@/onboarding/components/free-credits/OnboardingHeaderFreeCredits';
+import { PrefetchBookCallStepEffect } from '@/onboarding/effect-components/PrefetchBookCallStepEffect';
 import { PrefetchPlanRequiredStepEffect } from '@/onboarding/effect-components/PrefetchPlanRequiredStepEffect';
 import { useGoBackToPreviousOnboardingStep } from '@/onboarding/hooks/useGoBackToPreviousOnboardingStep';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
@@ -45,6 +46,7 @@ export const OnboardingStepLayout = () => {
         </ErrorBoundary>
       }
     >
+      <PrefetchBookCallStepEffect />
       <PrefetchPlanRequiredStepEffect />
       <OnboardingTransitionOutlet />
     </OnboardingLayout>

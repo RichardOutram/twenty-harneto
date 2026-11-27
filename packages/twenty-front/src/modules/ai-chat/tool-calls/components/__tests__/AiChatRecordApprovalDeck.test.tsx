@@ -4,6 +4,7 @@ import { I18nProvider } from '@lingui/react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createStore, Provider } from 'jotai';
+import { useState } from 'react';
 
 import { AiChatRecordApprovalDeck } from '@/ai-chat/tool-calls/components/AiChatRecordApprovalDeck';
 import { AiChatTestInstance } from '@/ai-chat/testing/AiChatTestInstance';
@@ -42,12 +43,26 @@ const buildRecordCreation = (
 
 const RECORD_CREATIONS = ['Ada', 'Grace', 'Joan'].map(buildRecordCreation);
 
+const Deck = () => {
+  const [answeringToolCallIds, setAnsweringToolCallIds] = useState<string[]>(
+    [],
+  );
+
+  return (
+    <AiChatRecordApprovalDeck
+      recordApprovals={RECORD_CREATIONS}
+      answeringToolCallIds={answeringToolCallIds}
+      onAnsweringToolCallIdsChange={setAnsweringToolCallIds}
+    />
+  );
+};
+
 const renderDeck = (store = createStore()) =>
   render(
     <I18nProvider i18n={i18n}>
       <Provider store={store}>
         <AiChatTestInstance>
-          <AiChatRecordApprovalDeck recordApprovals={RECORD_CREATIONS} />
+          <Deck />
         </AiChatTestInstance>
       </Provider>
     </I18nProvider>,

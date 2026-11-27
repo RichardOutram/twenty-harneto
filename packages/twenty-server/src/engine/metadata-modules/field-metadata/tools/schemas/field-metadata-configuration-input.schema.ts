@@ -1,10 +1,5 @@
 import { z } from 'zod';
 
-import {
-  FORMULA_CURRENCY_CODE_EXPRESSION_DESCRIPTION,
-  FORMULA_DESCRIPTION,
-  FORMULA_EXPRESSION_DESCRIPTION,
-} from 'src/engine/metadata-modules/field-metadata/tools/constants/formula-description.constant';
 import { SELECT_OPTIONS_DESCRIPTION } from 'src/engine/metadata-modules/field-metadata/tools/constants/select-options-description.constant';
 
 const fieldMetadataOptionInputSchema = z.looseObject({
@@ -37,19 +32,6 @@ export const fieldMetadataOptionsInputSchema = z
   .meta({ type: ['array', 'null'] })
   .optional()
   .describe(SELECT_OPTIONS_DESCRIPTION);
-
-export const fieldMetadataFormulaInputSchema = z
-  .object({
-    expression: z.string().describe(FORMULA_EXPRESSION_DESCRIPTION),
-    currencyCodeExpression: z
-      .string()
-      .optional()
-      .describe(FORMULA_CURRENCY_CODE_EXPRESSION_DESCRIPTION),
-  })
-  .nullable()
-  .meta({ type: ['object', 'null'] })
-  .optional()
-  .describe(FORMULA_DESCRIPTION);
 
 export const fieldMetadataSettingsInputSchema = z
   .record(z.string(), z.unknown())

@@ -75,7 +75,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     const { name, emails, photos } = profile;
     const state = parseJson<SocialSsoState>(request.query.state as string);
 
-    const firstVerifiedEmail = emails?.find((email) => email?.verified)?.value;
+    const firstVerifiedEmail = emails?.find(
+      (email) => email?.verified === true,
+    )?.value;
 
     if (!firstVerifiedEmail) {
       throw new AuthException(

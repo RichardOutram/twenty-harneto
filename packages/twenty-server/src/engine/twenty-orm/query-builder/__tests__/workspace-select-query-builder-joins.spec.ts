@@ -80,7 +80,7 @@ describe('WorkspaceSelectQueryBuilder joins', () => {
 
     expect(queryBuilder.getQuery()).toContain(
       `LEFT JOIN (SELECT DISTINCT ON ("personId") * ` +
-        `FROM "${SCHEMA_NAME}"."company" AS "source" ` +
+        `FROM "${SCHEMA_NAME}"."company" ` +
         `WHERE "deletedAt" IS NULL ` +
         `ORDER BY "personId", "id") AS "people" ` +
         'ON ("people"."personId" = "person"."id")',

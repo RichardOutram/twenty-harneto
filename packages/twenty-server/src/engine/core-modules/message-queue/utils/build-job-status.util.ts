@@ -17,7 +17,6 @@ export const buildJobStatus = ({
   failedReason: job.failedReason,
   progress: getQueueJobProgressPercentage(job.progress),
   enqueuedAt: job.timestamp,
-  scheduledAt: job.scheduledAt,
   startedAt: job.processedOn,
   finishedAt: job.finishedOn,
 });

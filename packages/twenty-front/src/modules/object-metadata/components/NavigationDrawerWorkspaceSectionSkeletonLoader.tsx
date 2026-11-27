@@ -4,29 +4,21 @@ import { styled } from '@linaria/react';
 import { SKELETON_HEIGHT_SIZES } from 'twenty-ui/primitives/feedback';
 import { themeCssVariables } from 'twenty-ui/theme';
 
-const SKELETON_ROW_LABEL_WIDTHS = [72, 48, 88];
-
 const StyledTitleSkeleton = styled.div`
   align-items: center;
   display: flex;
-  height: ${themeCssVariables.spacing[7]};
+  height: ${themeCssVariables.spacing[5]};
   padding-left: ${themeCssVariables.spacing[1]};
+  padding-right: ${themeCssVariables.spacing['0.5']};
 `;
 
 const StyledRowsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${themeCssVariables.spacing['0.5']};
-`;
-
-const StyledRowSkeleton = styled.div`
-  align-items: center;
-  border: 1px solid transparent;
   box-sizing: border-box;
   display: flex;
-  gap: ${themeCssVariables.spacing[2]};
-  height: ${themeCssVariables.spacing[7]};
+  flex-direction: column;
+  gap: ${themeCssVariables.spacing[1]};
   padding-left: ${themeCssVariables.spacing[1]};
+  width: 100%;
 `;
 
 export const NavigationDrawerWorkspaceSectionSkeletonLoader = () => {
@@ -34,26 +26,24 @@ export const NavigationDrawerWorkspaceSectionSkeletonLoader = () => {
     <NavigationDrawerSection>
       <StyledTitleSkeleton>
         <SkeletonLine
-          width={64}
+          width={72}
           height={SKELETON_HEIGHT_SIZES.xs}
           highlightColor={themeCssVariables.background.transparent.light}
         />
       </StyledTitleSkeleton>
       <StyledRowsContainer>
-        {SKELETON_ROW_LABEL_WIDTHS.map((labelWidth) => (
-          <StyledRowSkeleton key={labelWidth}>
-            <SkeletonLine
-              width={SKELETON_HEIGHT_SIZES.s}
-              height={SKELETON_HEIGHT_SIZES.s}
-              highlightColor={themeCssVariables.background.transparent.light}
-            />
-            <SkeletonLine
-              width={labelWidth}
-              height={SKELETON_HEIGHT_SIZES.xs}
-              highlightColor={themeCssVariables.background.transparent.light}
-            />
-          </StyledRowSkeleton>
-        ))}
+        <SkeletonLine
+          height={SKELETON_HEIGHT_SIZES.s}
+          highlightColor={themeCssVariables.background.transparent.light}
+        />
+        <SkeletonLine
+          height={SKELETON_HEIGHT_SIZES.s}
+          highlightColor={themeCssVariables.background.transparent.light}
+        />
+        <SkeletonLine
+          height={SKELETON_HEIGHT_SIZES.s}
+          highlightColor={themeCssVariables.background.transparent.light}
+        />
       </StyledRowsContainer>
     </NavigationDrawerSection>
   );

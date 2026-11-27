@@ -5,8 +5,11 @@ import {
   type DatabaseEventTriggerSettings,
   isRecordEventTriggerManifestSettings,
 } from 'twenty-shared/application';
-import { type ExpressionNode } from 'twenty-shared/expression';
-import { isDefined } from 'twenty-shared/utils';
+import { type ValidationRuleBindings } from 'twenty-shared/types';
+import {
+  compileValidationRuleExpression,
+  isDefined,
+} from 'twenty-shared/utils';
 
 import { computeDatabaseEventWatchedFieldName } from 'src/engine/core-modules/application/application-manifest/utils/compute-database-event-watched-field-name.util';
 import { type DatabaseEventTriggerManifestLookup } from 'src/engine/core-modules/application/application-manifest/types/database-event-trigger-manifest-lookup.type';
@@ -18,7 +21,6 @@ import {
   ApplicationException,
   ApplicationExceptionCode,
 } from 'src/engine/core-modules/application/application.exception';
-import { compileValidationRuleTree } from 'src/engine/metadata-modules/validation-rule/utils/compile-validation-rule-tree.util';
 
 const ANY_OBJECT = '*';
 
@@ -38,7 +40,7 @@ const throwInvalidTrigger = ({
   );
 };
 
-const compileConditionTreeOrThrow = ({
+const compileConditionOrThrow = ({
   condition,
   objectUniversalIdentifier,
   lookup,
@@ -48,7 +50,7 @@ const compileConditionTreeOrThrow = ({
   objectUniversalIdentifier: string | undefined;
   lookup: DatabaseEventTriggerManifestLookup;
   subject: string;
-}): ExpressionNode => {
+}): ValidationRuleBindings => {
   if (!isDefined(objectUniversalIdentifier)) {
     return throwInvalidTrigger({
       subject,
@@ -56,7 +58,7 @@ const compileConditionTreeOrThrow = ({
     });
   }
 
-  const compilation = compileValidationRuleTree({
+  const compilation = compileValidationRuleExpression({
     expression: condition,
     fields: listDatabaseEventTriggerManifestConditionFields({
       lookup,
@@ -65,7 +67,7 @@ const compileConditionTreeOrThrow = ({
   });
 
   return compilation.isValid
-    ? compilation.tree
+    ? compilation.bindings
     : throwInvalidTrigger({
         subject,
         reason: `condition "${condition}" is invalid: ${compilation.errorMessage}`,
@@ -105,23 +107,18 @@ export const resolveDatabaseEventTriggerManifestSettingsOrThrow = ({
   });
 
   if (!isRecordEventTriggerManifestSettings(settings)) {
-    // Picked, so a tree or the bindings of an older export are never taken from a definition
-    const { eventName, updatedFields, batchMode } = settings;
-    const legacySettings = {
-      eventName,
-      ...(isDefined(updatedFields) && { updatedFields }),
-      ...(isDefined(batchMode) && { batchMode }),
-    };
+    const { conditionBindings: _conditionBindings, ...legacySettings } =
+      settings;
 
     if (!isDefined(condition)) {
       return legacySettings;
     }
 
-    const [objectNameSingular] = eventName.split('.');
+    const [objectNameSingular] = settings.eventName.split('.');
 
     return {
       ...legacySettings,
-      conditionTree: compileConditionTreeOrThrow({
+      conditionBindings: compileConditionOrThrow({
         condition,
         objectUniversalIdentifier:
           objectNameSingular === ANY_OBJECT
@@ -189,7 +186,8 @@ export const resolveDatabaseEventTriggerManifestSettingsOrThrow = ({
     eventName: `${objectNameSingular}.${action}`,
     ...(isDefined(updatedFields) && { updatedFields }),
     ...(isDefined(condition) && {
-      conditionTree: compileConditionTreeOrThrow({
+      condition,
+      conditionBindings: compileConditionOrThrow({
         condition,
         objectUniversalIdentifier,
         lookup,

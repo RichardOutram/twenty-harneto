@@ -26,7 +26,6 @@ import {
 import { runInRollbackSafeTransaction } from 'src/engine/workspace-query-executor/utils/run-in-rollback-safe-transaction.util';
 import { WorkspaceRepository } from 'src/engine/twenty-orm/repository/workspace-repository';
 import { type WorkspaceTableShape } from 'src/engine/twenty-orm/table-shape/types/workspace-table-shape.type';
-import { buildFormulaComputedColumnShapes } from 'src/engine/metadata-modules/formula-field/utils/build-formula-computed-column-shapes.util';
 import { buildWorkspaceTableShape } from 'src/engine/twenty-orm/table-shape/utils/build-workspace-table-shape.util';
 import { isSystemAuthContext } from 'src/engine/core-modules/auth/guards/is-system-auth-context.guard';
 
@@ -297,8 +296,7 @@ export class WorkspaceDataSource {
   }
 
   private getTableShape(objectMetadataId: string): WorkspaceTableShape {
-    const { flatFieldMetadataMaps, flatObjectMetadataMaps } =
-      this.internalContext;
+    const { flatFieldMetadataMaps } = this.internalContext;
     const flatObjectMetadata =
       this.getFlatObjectMetadataOrThrow(objectMetadataId);
     const cachedShapes =
@@ -313,20 +311,11 @@ export class WorkspaceDataSource {
       return cachedShape;
     }
 
-    const storedTableShape = buildWorkspaceTableShape({
+    const tableShape = buildWorkspaceTableShape({
       workspaceId: this.internalContext.workspaceId,
       flatObjectMetadata,
       flatFieldMetadataMaps,
     });
-    const tableShape = {
-      ...storedTableShape,
-      ...buildFormulaComputedColumnShapes({
-        flatObjectMetadata,
-        flatObjectMetadataMaps,
-        flatFieldMetadataMaps,
-        schemaName: storedTableShape.schemaName,
-      }),
-    };
 
     cachedShapes.set(flatObjectMetadata, tableShape);
 

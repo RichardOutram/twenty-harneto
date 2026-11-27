@@ -1,11 +1,9 @@
 import styled from '@emotion/styled';
 import { useId } from 'react';
 import { t } from 'twenty-sdk/front-component';
+import { InlineBanner } from 'twenty-ui/components/feedback';
 import { themeCssVariables } from 'twenty-ui/theme';
 import { getPublicAssetUrl } from 'twenty-sdk/utils';
-
-import { LinkedinHistoryImportStatus } from 'src/front-components/components/LinkedinHistoryImportStatus';
-import { type LinkedinHistoryImportState } from 'src/types/linkedin-history-import-state.type';
 
 const StyledContainer = styled.div`
   border-bottom: 1px solid ${() => themeCssVariables.border.color.light};
@@ -41,8 +39,6 @@ const StyledLogo = styled.img`
 `;
 
 const StyledText = styled.span`
-  flex: 1;
-  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -52,23 +48,16 @@ const StyledHandle = styled.span`
   color: ${() => themeCssVariables.font.color.tertiary};
 `;
 
-const StyledStatus = styled.span`
-  display: flex;
-  flex-shrink: 0;
-`;
-
 type LinkedinAccountFieldProps = {
   name: string;
   handle: string;
-  historyImport: LinkedinHistoryImportState | null;
-  importProgress: number | undefined;
+  isAuthFailed: boolean;
 };
 
 export const LinkedinAccountField = ({
   name,
   handle,
-  historyImport,
-  importProgress,
+  isAuthFailed,
 }: LinkedinAccountFieldProps) => {
   const labelId = useId();
 
@@ -80,13 +69,14 @@ export const LinkedinAccountField = ({
         <StyledText>
           {name} <StyledHandle>· {handle}</StyledHandle>
         </StyledText>
-        <StyledStatus>
-          <LinkedinHistoryImportStatus
-            historyImport={historyImport}
-            progress={importProgress}
-          />
-        </StyledStatus>
       </StyledValue>
+      {isAuthFailed && (
+        <InlineBanner layout="compact" status="warning">
+          {t(
+            'LinkedIn signed you out. Reconnect your account to keep syncing.',
+          )}
+        </InlineBanner>
+      )}
     </StyledContainer>
   );
 };

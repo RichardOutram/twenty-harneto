@@ -11,7 +11,6 @@ import { getLoginTokenFromCredentialsQueryFactory } from 'test/integration/graph
 import { initiateOtpProvisioning } from 'test/integration/graphql/utils/initiate-otp-provisioning.util';
 import { initiateOtpProvisioningForAuthenticatedUser } from 'test/integration/graphql/utils/initiate-otp-provisioning-for-authenticated-user.util';
 import { renewToken } from 'test/integration/graphql/utils/renew-token.util';
-import { seedLegacyRefreshToken } from 'test/integration/graphql/utils/seed-legacy-refresh-token.util';
 import { verifyTwoFactorAuthenticationMethod } from 'test/integration/graphql/utils/verify-two-factor-authentication-method.util';
 import { makeMetadataApiRequest } from 'test/integration/metadata/suites/utils/make-metadata-api-request.util';
 import { makeAdminPanelApiRequest } from 'test/integration/twenty-config/utils/make-admin-panel-api-request.util';
@@ -557,7 +556,7 @@ describe('Two-factor authentication recovery codes (integration)', () => {
     it('removes the authenticator, signs out other sessions and works only once', async () => {
       const otpLoginToken = await getJonyLoginToken();
 
-      const { errors: otpErrors } = await getAuthTokensFromOtp({
+      const { data: otpData, errors: otpErrors } = await getAuthTokensFromOtp({
         loginToken: otpLoginToken,
         otp: await generateOtp(jonySecret),
         origin: buildAppleWorkspaceOrigin(),
@@ -566,11 +565,15 @@ describe('Two-factor authentication recovery codes (integration)', () => {
 
       expect(otpErrors).toBeUndefined();
 
-      const { refreshToken: refreshTokenFromBeforeRecovery } =
-        await seedLegacyRefreshToken({
-          userId: USER_DATA_SEED_IDS.JONY,
-          workspaceId: SEED_APPLE_WORKSPACE_ID,
-        });
+      const rotatedRefreshToken =
+        otpData.getAuthTokensFromOTP.tokens.refreshToken.token;
+
+      const rotationResponse = await renewToken(rotatedRefreshToken);
+
+      expect(rotationResponse.body.errors).toBeUndefined();
+
+      const refreshTokenFromBeforeRecovery =
+        rotationResponse.body.data.renewToken.tokens.refreshToken.token;
 
       const { recoveryCode } = await generateCodeForJony();
       const loginToken = await getJonyLoginToken();
@@ -628,12 +631,17 @@ describe('Two-factor authentication recovery codes (integration)', () => {
 
       expect(revokedSessions.length).toBeGreaterThan(0);
 
-      const renewResponse = await renewToken(refreshTokenFromBeforeRecovery);
+      for (const refreshToken of [
+        refreshTokenFromBeforeRecovery,
+        rotatedRefreshToken,
+      ]) {
+        const renewResponse = await renewToken(refreshToken);
 
-      expect(renewResponse.body.data).toBeNull();
-      expect(renewResponse.body.errors?.[0]?.extensions?.code).toBe(
-        'FORBIDDEN',
-      );
+        expect(renewResponse.body.data).toBeNull();
+        expect(renewResponse.body.errors?.[0]?.extensions?.code).toBe(
+          'FORBIDDEN',
+        );
+      }
 
       const { errors: replayErrors } =
         await getAuthTokensFromTwoFactorAuthenticationRecoveryCode({
@@ -851,10 +859,12 @@ describe('Two-factor authentication recovery codes (integration)', () => {
       jonySecret = await enrollAuthenticator(APPLE_JONY_MEMBER_ACCESS_TOKEN);
     });
 
-    it('refuses a refresh token renewal that was in flight when a recovery revoked the refresh tokens', async () => {
-      const { refreshToken } = await seedLegacyRefreshToken({
-        userId: USER_DATA_SEED_IDS.JONY,
-        workspaceId: SEED_APPLE_WORKSPACE_ID,
+    it('refuses a refresh token renewal that was in flight when a recovery revoked the sessions', async () => {
+      const { data } = await getAuthTokensFromOtp({
+        loginToken: await getJonyLoginToken(),
+        otp: await generateOtp(jonySecret),
+        origin: buildAppleWorkspaceOrigin(),
+        expectToFail: false,
       });
 
       const lock = await holdUserAuthenticationLock(USER_DATA_SEED_IDS.JONY);
@@ -862,7 +872,9 @@ describe('Two-factor authentication recovery codes (integration)', () => {
       let renewal: ReturnType<typeof renewToken> | undefined;
 
       try {
-        renewal = renewToken(refreshToken);
+        renewal = renewToken(
+          data.getAuthTokensFromOTP.tokens.refreshToken.token,
+        );
 
         await waitUntilARequestAwaitsTheUserAuthenticationLock();
 

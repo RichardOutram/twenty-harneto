@@ -756,13 +756,17 @@ export class PageLayoutResetService {
       flatViewFieldGroupMaps.byUniversalIdentifier,
     )
       .filter(isDefined)
-      .filter((group) => group.viewId === viewId);
+      .filter(
+        (group) => group.viewId === viewId && !isDefined(group.deletedAt),
+      );
 
     const existingFields = Object.values(
       flatViewFieldMaps.byUniversalIdentifier,
     )
       .filter(isDefined)
-      .filter((field) => field.viewId === viewId);
+      .filter(
+        (field) => field.viewId === viewId && !isDefined(field.deletedAt),
+      );
 
     const { toHardDelete: groupsToDelete, toReset: groupsToReset } =
       splitEntitiesByResetStrategy({

@@ -14,7 +14,7 @@ const StyledNodeTitle = styled.div<{
   box-sizing: border-box;
   color: ${({ highlight, runStatus, selected }) => {
     const colors = getWorkflowDiagramColors({ runStatus });
-    if (highlight) {
+    if (highlight === true) {
       return colors.selected.titleColor;
     }
     return selected ? colors.selected.titleColor : colors.unselected.titleColor;

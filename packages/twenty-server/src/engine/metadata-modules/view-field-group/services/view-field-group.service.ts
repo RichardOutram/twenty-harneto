@@ -271,9 +271,10 @@ export class ViewFieldGroupService {
       );
     }
 
-    return fromFlatViewFieldGroupToViewFieldGroupDto(
-      existingFlatViewFieldGroup,
-    );
+    return fromFlatViewFieldGroupToViewFieldGroupDto({
+      ...existingFlatViewFieldGroup,
+      deletedAt: new Date().toISOString(),
+    });
   }
 
   async findByViewId({
@@ -304,7 +305,7 @@ export class ViewFieldGroupService {
 
     return Object.values(flatViewFieldGroupMaps.byUniversalIdentifier)
       .filter(isDefined)
-      .filter((group) => group.viewId === viewId)
+      .filter((group) => group.viewId === viewId && !isDefined(group.deletedAt))
       .map(fromFlatViewFieldGroupToViewFieldGroupDto)
       .sort((a, b) => a.position - b.position);
   }
@@ -329,7 +330,10 @@ export class ViewFieldGroupService {
       flatEntityMaps: flatViewFieldGroupMaps,
     });
 
-    if (!isDefined(flatViewFieldGroup)) {
+    if (
+      !isDefined(flatViewFieldGroup) ||
+      isDefined(flatViewFieldGroup.deletedAt)
+    ) {
       throw new ViewFieldGroupException(
         `View field group with id ${id} not found`,
         ViewFieldGroupExceptionCode.VIEW_FIELD_GROUP_NOT_FOUND,

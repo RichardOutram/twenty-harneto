@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { BillingModule } from 'src/engine/core-modules/billing/billing.module';
 import { FileEntity } from 'src/engine/core-modules/file/entities/file.entity';
+import { FeatureFlagModule } from 'src/engine/core-modules/feature-flag/feature-flag.module';
 import { FilesFieldModule } from 'src/engine/core-modules/file/files-field/files-field.module';
 import { EmailingDomainEntity } from 'src/engine/core-modules/emailing-domain/emailing-domain.entity';
 import { UsageLimitModule } from 'src/engine/core-modules/usage-limit/usage-limit.module';
@@ -34,6 +35,7 @@ import { SentMessagePersistenceService } from 'src/modules/messaging/message-out
     EmailingModule,
     BillingModule,
     UsageLimitModule,
+    FeatureFlagModule,
     FilesFieldModule,
     TypeOrmModule.forFeature([
       MessageChannelEntity,

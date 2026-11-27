@@ -16,7 +16,6 @@ const CHANNEL_OBJECT_NAMES = [
   'calendarEvent',
   'calendarChannelEventAssociation',
   'calendarEventParticipant',
-  'callRecording',
 ];
 
 export const syncChannelVisibilityRules = async () => {

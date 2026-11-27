@@ -30,6 +30,10 @@ export const signUp = async ({
             token
             expiresAt
           }
+          refreshToken {
+            token
+            expiresAt
+          }
         }
         availableWorkspaces {
           availableWorkspacesForSignIn {

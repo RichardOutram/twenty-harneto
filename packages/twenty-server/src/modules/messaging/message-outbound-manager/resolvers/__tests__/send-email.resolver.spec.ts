@@ -104,12 +104,7 @@ describe('SendEmailResolver errors', () => {
   });
 });
 
-const AUTH_CONTEXT = {
-  type: 'user',
-  workspace: { id: WORKSPACE_ID },
-  workspaceMemberId: 'workspace-member-id',
-  workspaceMember: { name: { firstName: 'Ada', lastName: 'Lovelace' } },
-};
+const AUTH_CONTEXT = { workspace: { id: WORKSPACE_ID } };
 
 jest.mock(
   'src/engine/core-modules/auth/storage/workspace-auth-context.storage',

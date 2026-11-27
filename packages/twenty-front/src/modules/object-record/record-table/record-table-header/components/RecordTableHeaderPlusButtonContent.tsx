@@ -2,7 +2,6 @@ import { findCanonicalRecordField } from '@/object-record/record-field/utils/fin
 import { RecordTableLookupTargetFieldSelectMenu } from '@/object-record/record-column-lookup/components/RecordTableLookupTargetFieldSelectMenu';
 import { RecordTableScopedRelationColumnSelectMenu } from '@/object-record/record-column-scope/components/RecordTableScopedRelationColumnSelectMenu';
 import { resolveScopableRelation } from '@/object-record/record-column-scope/utils/resolveScopableRelation';
-import { getFieldMetadataItemRelationType } from '@/object-metadata/utils/getFieldMetadataItemRelationType';
 import { useCanAddRecordTableLookupColumns } from '@/object-record/record-table/hooks/useCanAddRecordTableLookupColumns';
 import { isPlainManyToOneRelationField } from '@/object-record/utils/isPlainManyToOneRelationField';
 import { useOpenEditColumnInSidePanel } from '@/side-panel/hooks/useOpenEditColumnInSidePanel';
@@ -17,8 +16,7 @@ import { SelectOptionIcon } from '@/ui/input/components/SelectOptionIcon';
 import { navigationMemorizedUrlState } from '@/ui/navigation/states/navigationMemorizedUrlState';
 import { useSetAtomState } from '@/ui/utilities/state/jotai/hooks/useSetAtomState';
 import { useLingui } from '@lingui/react/macro';
-import { sortByProperty } from '~/utils/array/sortByProperty';
-import { Fragment, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { SettingsPath } from 'twenty-shared/types';
 import {
@@ -28,8 +26,6 @@ import {
 } from 'twenty-shared/utils';
 import { Dropdown } from 'twenty-ui/components/navigation';
 import { IconSettings } from 'twenty-ui/icon';
-import { RelationType } from '~/generated-metadata/graphql';
-import { ChartSettingsDropdownSection } from '@/side-panel/pages/page-layout/components/chart-settings/ChartSettingsDropdownSection';
 import { useIcons } from 'twenty-ui/icon/provider';
 
 export const RecordTableHeaderPlusButtonContent = () => {
@@ -100,25 +96,13 @@ export const RecordTableHeaderPlusButtonContent = () => {
   const scopedRelationFieldMetadataItems =
     availableFieldMetadataItemsToShow.filter(isScopedRelation);
 
-  const filteredFieldMetadataItems = availableFieldMetadataItemsToShow
-    .filter((fieldMetadataItem) =>
-      fieldMetadataItem.label.toLowerCase().includes(searchInput.toLowerCase()),
-    )
-    .toSorted(sortByProperty('label'));
-
-  const fieldSections = [
-    { label: t`Fields`, relationType: undefined },
-    { label: t`Belongs to`, relationType: RelationType.MANY_TO_ONE },
-    { label: t`Has many`, relationType: RelationType.ONE_TO_MANY },
-  ]
-    .map(({ label, relationType }) => ({
-      label,
-      fieldMetadataItems: filteredFieldMetadataItems.filter(
-        (fieldMetadataItem) =>
-          getFieldMetadataItemRelationType(fieldMetadataItem) === relationType,
-      ),
-    }))
-    .filter(({ fieldMetadataItems }) => isNonEmptyArray(fieldMetadataItems));
+  const filteredFieldMetadataItems = availableFieldMetadataItemsToShow.filter(
+    (fieldMetadataItem) => {
+      return fieldMetadataItem.label
+        .toLowerCase()
+        .includes(searchInput.toLowerCase());
+    },
+  );
 
   const handleFieldMetadataItemMenuItemClick = async (
     fieldMetadataItem: FieldMetadataItem,
@@ -129,30 +113,6 @@ export const RecordTableHeaderPlusButtonContent = () => {
   };
 
   const hasAvailableFields = isNonEmptyArray(availableFieldMetadataItemsToShow);
-
-  const renderFieldMetadataItem = (fieldMetadataItem: FieldMetadataItem) => {
-    const startIcon = (
-      <SelectOptionIcon Icon={getIcon(fieldMetadataItem.icon)} />
-    );
-
-    return hasSubPage(fieldMetadataItem) ? (
-      <Dropdown.ActionItem
-        key={fieldMetadataItem.id}
-        page={fieldMetadataItem.id}
-        startIcon={startIcon}
-      >
-        {fieldMetadataItem.label}
-      </Dropdown.ActionItem>
-    ) : (
-      <Dropdown.OptionItem
-        key={fieldMetadataItem.id}
-        onSelect={() => handleFieldMetadataItemMenuItemClick(fieldMetadataItem)}
-        startIcon={startIcon}
-      >
-        {fieldMetadataItem.label}
-      </Dropdown.OptionItem>
-    );
-  };
 
   return (
     <>
@@ -168,16 +128,33 @@ export const RecordTableHeaderPlusButtonContent = () => {
             <Dropdown.Separator />
           </>
         )}
-        <ChartSettingsDropdownSection>
-          {isNonEmptyArray(fieldSections) ? (
-            fieldSections.map(({ label, fieldMetadataItems }, index) => (
-              <Fragment key={label}>
-                {index > 0 && <Dropdown.Separator />}
-                <Dropdown.Section label={label}>
-                  {fieldMetadataItems.map(renderFieldMetadataItem)}
-                </Dropdown.Section>
-              </Fragment>
-            ))
+        <Dropdown.Section scrollable>
+          {isNonEmptyArray(filteredFieldMetadataItems) ? (
+            filteredFieldMetadataItems.map((fieldMetadataItem) => {
+              const startIcon = (
+                <SelectOptionIcon Icon={getIcon(fieldMetadataItem.icon)} />
+              );
+
+              return hasSubPage(fieldMetadataItem) ? (
+                <Dropdown.ActionItem
+                  key={fieldMetadataItem.id}
+                  page={fieldMetadataItem.id}
+                  startIcon={startIcon}
+                >
+                  {fieldMetadataItem.label}
+                </Dropdown.ActionItem>
+              ) : (
+                <Dropdown.OptionItem
+                  key={fieldMetadataItem.id}
+                  onSelect={() =>
+                    handleFieldMetadataItemMenuItemClick(fieldMetadataItem)
+                  }
+                  startIcon={startIcon}
+                >
+                  {fieldMetadataItem.label}
+                </Dropdown.OptionItem>
+              );
+            })
           ) : (
             <Dropdown.Empty>
               {hasAvailableFields
@@ -185,7 +162,7 @@ export const RecordTableHeaderPlusButtonContent = () => {
                 : t`All fields are already visible`}
             </Dropdown.Empty>
           )}
-        </ChartSettingsDropdownSection>
+        </Dropdown.Section>
         <Dropdown.Separator />
         <Dropdown.Section scrollable={false}>
           <Dropdown.ActionItem

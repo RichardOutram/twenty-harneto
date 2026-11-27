@@ -5,11 +5,11 @@ import { type AiChatThreadRecord } from '@/ai-chat/threads/types/AiChatThreadRec
 export const filterInboxRecentThreads = ({
   threads,
   favoriteThreads,
-  shouldExcludeDirectMessages,
+  isDirectMessageEnabled,
 }: {
   threads: AiChatThreadRecord[];
   favoriteThreads: Pick<AiChatThreadRecord, 'id'>[];
-  shouldExcludeDirectMessages: boolean;
+  isDirectMessageEnabled: boolean;
 }): AiChatThreadRecord[] => {
   const favoriteThreadIds = new Set(favoriteThreads.map(({ id }) => id));
 
@@ -17,7 +17,7 @@ export const filterInboxRecentThreads = ({
     ({ id, conversationType }) =>
       !favoriteThreadIds.has(id) &&
       !(
-        shouldExcludeDirectMessages &&
+        isDirectMessageEnabled &&
         conversationType === AgentChatThreadConversationType.DIRECT_MESSAGE
       ),
   );

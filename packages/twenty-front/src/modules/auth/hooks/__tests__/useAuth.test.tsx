@@ -235,6 +235,19 @@ describe('useAuth', () => {
             availableWorkspacesForSignIn: [],
             availableWorkspacesForSignUp: [],
           },
+          tokens: {
+            __typename: 'AuthTokenPair',
+            accessOrWorkspaceAgnosticToken: {
+              __typename: 'AuthToken',
+              token,
+              expiresAt: 'expiresAt',
+            },
+            refreshToken: {
+              __typename: 'AuthToken',
+              token,
+              expiresAt: 'expiresAt',
+            },
+          },
         },
       },
     }));

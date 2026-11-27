@@ -232,12 +232,16 @@ export const ValidationStep = ({
         if (isDefined(__errors)) {
           for (const key in __errors) {
             if (__errors[key].level === 'error') {
-              acc.invalidStructuredRows.push(values);
+              acc.invalidStructuredRows.push(
+                values as unknown as ImportedStructuredRow,
+              );
               return acc;
             }
           }
         }
-        acc.validStructuredRows.push(values);
+        acc.validStructuredRows.push(
+          values as unknown as ImportedStructuredRow,
+        );
         return acc;
       },
       {

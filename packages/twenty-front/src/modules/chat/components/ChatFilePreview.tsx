@@ -18,8 +18,6 @@ import { OverflowingTextWithTooltip } from 'twenty-ui/primitives/typography';
 import { themeCssVariables, useTheme } from 'twenty-ui/theme';
 import { useLingui } from '@lingui/react/macro';
 
-const FILE_PREVIEW_MAX_WIDTH = 240;
-
 const StyledPreviewButton = styled.button`
   align-items: center;
   background: transparent;
@@ -107,7 +105,6 @@ export const ChatFilePreview = ({
   return (
     <Chip
       variant="soft"
-      maxWidth={FILE_PREVIEW_MAX_WIDTH}
       startElement={
         <StyledPreviewButton
           type="button"

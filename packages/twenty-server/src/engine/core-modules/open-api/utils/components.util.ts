@@ -648,11 +648,7 @@ export const computeMetadataSchemaComponents = (
               key: { type: 'string', default: 'INDEX' },
               icon: { type: 'string' },
               position: { type: 'number', default: 0 },
-              isCompact: {
-                type: 'boolean',
-                description:
-                  'Defaults to true for LIST and LIST_WIDGET views, false otherwise',
-              },
+              isCompact: { type: 'boolean', default: false },
               openRecordIn: {
                 type: 'string',
                 enum: ['SIDE_PANEL', 'RECORD_PAGE'],

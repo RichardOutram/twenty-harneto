@@ -95,7 +95,6 @@ describe('startTeamsAssistantStream', () => {
       },
       {
         type: 'message',
-        textFormat: 'extendedmarkdown',
         text: 'Acme has 3 open deals.',
         entities: [
           { type: 'streaminfo', streamId: 'stream-1', streamType: 'final' },

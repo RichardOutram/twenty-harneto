@@ -32,7 +32,6 @@ export const answerTeamsAssistantRequest = async ({
     teamsConversationId,
     teamsConversationType,
     teamsUserId,
-    teamsUserAadObjectId,
     teamsTenantId,
     requestText,
   } = request;
@@ -66,7 +65,6 @@ export const answerTeamsAssistantRequest = async ({
       serviceUrl: teamsServiceUrl,
       conversationId: teamsConversationId,
       teamsUserId,
-      teamsUserAadObjectId,
       teamsTenantId,
       accessToken: await getTeamsConnectorAccessTokenOrThrow(),
     });

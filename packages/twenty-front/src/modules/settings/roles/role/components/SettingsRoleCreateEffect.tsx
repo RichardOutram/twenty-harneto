@@ -60,7 +60,6 @@ export const SettingsRoleCreateEffect = ({
       canBeAssignedToApiKeys: true,
       applicationId: '',
       isEditable: true,
-      areRecordPermissionsEditable: true,
       workspaceMembers: [],
       apiKeys: [],
       agents: [],

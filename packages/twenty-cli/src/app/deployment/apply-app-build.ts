@@ -1,4 +1,3 @@
-import { assertAppRolesAllowedOnTargetOrThrow } from '@/app/deployment/assert-app-roles-allowed';
 import { createApplyFailure } from '@/app/deployment/create-apply-failure';
 import { fetchAppPlan } from '@/app/deployment/fetch-app-plan';
 import { formatAppPlanActions } from '@/app/deployment/format-app-plan';
@@ -163,12 +162,6 @@ export const applyAppBuild = async ({
   });
 
   output.progress({ message: `Computing metadata plan on ${target.apiUrl}…` });
-
-  await assertAppRolesAllowedOnTargetOrThrow({ build, target, signal }).catch(
-    (error: unknown) => {
-      throw fail(error, 'preview');
-    },
-  );
 
   const { actions, isRegistrationCreated } = await previewOrBootstrap();
   const summary = getAppPlanSummary(actions);

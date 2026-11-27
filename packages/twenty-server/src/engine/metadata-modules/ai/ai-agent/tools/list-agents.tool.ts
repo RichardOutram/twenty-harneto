@@ -37,23 +37,20 @@ export class ListAgentsTool extends BaseTool<typeof listAgentsInputSchema> {
       workspaceId,
     });
 
-    const listedAgents = (
-      await this.agentService.toAgentDtos({
-        flatAgentsWithRoleId: agents.filter(
-          (agent) =>
-            agent.isActive &&
-            !agent.isSystem &&
-            canCallerReachApplication({
-              callingApplication: application,
-              applicationId: agent.applicationId,
-              operation: 'read',
-              workspaceCustomApplicationId:
-                authContext?.workspace.workspaceCustomApplicationId,
-            }),
-        ),
-        workspaceId,
-      })
-    ).map(toAgentSummary);
+    const listedAgents = agents
+      .filter(
+        (agent) =>
+          agent.isActive &&
+          !agent.isSystem &&
+          canCallerReachApplication({
+            callingApplication: application,
+            applicationId: agent.applicationId,
+            operation: 'read',
+            workspaceCustomApplicationId:
+              authContext?.workspace.workspaceCustomApplicationId,
+          }),
+      )
+      .map(toAgentSummary);
 
     return {
       success: true,

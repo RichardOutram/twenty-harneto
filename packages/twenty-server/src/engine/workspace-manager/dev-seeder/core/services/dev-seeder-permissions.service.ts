@@ -15,7 +15,6 @@ import { RoleTargetService } from 'src/engine/metadata-modules/role-target/servi
 import { RoleDTO } from 'src/engine/metadata-modules/role/dtos/role.dto';
 import { RoleEntity } from 'src/engine/metadata-modules/role/role.entity';
 import { RoleService } from 'src/engine/metadata-modules/role/role.service';
-import { ChannelVisibilityRoleWideAccessRevokeService } from 'src/engine/permissions/channel-visibility/services/channel-visibility-role-wide-access-revoke.service';
 import { RoleAssignmentWriteService } from 'src/engine/permissions/role-assignment/role-assignment-write.service';
 import { InjectWorkspaceScopedRepository } from 'src/engine/twenty-orm/workspace-scoped-repository/inject-workspace-scoped-repository.decorator';
 import { WorkspaceScopedRepository } from 'src/engine/twenty-orm/workspace-scoped-repository/workspace-scoped-repository';
@@ -37,7 +36,6 @@ export class DevSeederPermissionsService {
   constructor(
     private readonly roleService: RoleService,
     private readonly roleAssignmentWriteService: RoleAssignmentWriteService,
-    private readonly channelVisibilityRoleWideAccessRevokeService: ChannelVisibilityRoleWideAccessRevokeService,
     private readonly objectPermissionService: ObjectPermissionService,
     @InjectWorkspaceScopedRepository(ObjectMetadataEntity)
     private readonly objectMetadataRepository: WorkspaceScopedRepository<ObjectMetadataEntity>,
@@ -195,10 +193,6 @@ export class DevSeederPermissionsService {
       workspaceId,
       ownerFlatApplication: workspaceCustomFlatApplication,
     });
-
-    await this.channelVisibilityRoleWideAccessRevokeService.revokeRoleWideAccess(
-      { workspaceId },
-    );
 
     await this.coreDataSource
       .getRepository(WorkspaceEntity)

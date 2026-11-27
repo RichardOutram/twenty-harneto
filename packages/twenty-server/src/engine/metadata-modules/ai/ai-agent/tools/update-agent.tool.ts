@@ -86,18 +86,13 @@ export class UpdateAgentTool extends BaseTool<typeof updateAgentInputSchema> {
         ...(isDefined(triggers) && { triggers: toAgentTriggers(triggers) }),
       },
       workspaceId: context.workspaceId,
-      authContext: context.authContext,
+      userWorkspaceId: context.userWorkspaceId,
     });
 
     return {
       success: true,
       message: `Agent "${agent.label}" updated`,
-      result: toAgentSummary(
-        await this.agentService.toAgentDto({
-          flatAgentWithRoleId: agent,
-          workspaceId: context.workspaceId,
-        }),
-      ),
+      result: toAgentSummary(agent),
     };
   }
 }

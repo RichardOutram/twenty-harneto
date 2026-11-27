@@ -77,7 +77,11 @@ export class ObjectIndexViewLabelIdentifierOnUpdateSideEffectHandlerService exte
         indexViewUniversalIdentifier
       ];
 
-    if (!isDefined(indexFlatView) || !indexFlatView.isSystemSideEffect) {
+    if (
+      !isDefined(indexFlatView) ||
+      indexFlatView.isSystemSideEffect !== true ||
+      isDefined(indexFlatView.deletedAt)
+    ) {
       return { status: 'noop' };
     }
 
@@ -89,12 +93,13 @@ export class ObjectIndexViewLabelIdentifierOnUpdateSideEffectHandlerService exte
           ],
       )
       .filter(isDefined)
-      .filter((flatViewField) =>
-        resolveEffectiveUniversalFlatEntityProperty({
-          metadataName: 'viewField',
-          universalFlatEntity: flatViewField,
-          property: 'isActive',
-        }),
+      .filter(
+        (flatViewField) =>
+          resolveEffectiveUniversalFlatEntityProperty({
+            metadataName: 'viewField',
+            universalFlatEntity: flatViewField,
+            property: 'isActive',
+          }) && !isDefined(flatViewField.deletedAt),
       ) as UniversalFlatViewField[];
 
     const labelIdentifierFlatViewField = indexFlatViewFields.find(

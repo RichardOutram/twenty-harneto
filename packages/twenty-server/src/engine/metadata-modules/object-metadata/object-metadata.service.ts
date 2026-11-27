@@ -712,7 +712,6 @@ export class ObjectMetadataService {
       link: null,
       nativePageKey: null,
       builtInSectionKey: null,
-      visibleItemLimit: null,
       icon: null,
       color: null,
       position: nextPosition,

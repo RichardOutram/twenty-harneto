@@ -1,7 +1,6 @@
 import { v5 } from 'uuid';
 
 import { INBOX_MESSAGE_ID_NAMESPACE } from 'src/engine/metadata-modules/ai/ai-chat/constants/inbox-message-id-namespace.constant';
-import { buildInboxMessageToolCallId } from 'src/engine/metadata-modules/ai/ai-chat/utils/build-inbox-message-tool-call-id.util';
 import { buildInboxThreadId } from 'src/engine/metadata-modules/ai/ai-chat/utils/build-inbox-thread-id.util';
 
 type InboxMessageIds = {
@@ -32,7 +31,7 @@ export const buildInboxMessageIds = ({
   return {
     threadId,
     messageId,
-    toolCallId: buildInboxMessageToolCallId({ messageId, position: 0 }),
+    toolCallId: `call_${messageId.replace(/-/g, '')}`,
     turnId: v5(`${threadId}:turn`, INBOX_MESSAGE_ID_NAMESPACE),
     openingMessageId: v5(`${threadId}:opening`, INBOX_MESSAGE_ID_NAMESPACE),
   };

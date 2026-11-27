@@ -1,5 +1,4 @@
 import { doNotTranslate } from 'twenty-shared/i18n';
-import { NavigationMenuItemType } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
 import type { NavigationMenuItemDropPlacement } from '@/navigation-menu-item/common/types/NavigationMenuItemDropPlacement';
@@ -43,19 +42,6 @@ export const computeNavigationMenuItemDropPlacement = ({
     return null;
   }
 
-  const isContainerLevelDestination =
-    destinationTarget.kind === 'root' ||
-    (destinationTarget.kind === 'tabOrSectionList' &&
-      sortedItems.find((item) => item.id === destinationParentId)?.type ===
-        NavigationMenuItemType.TAB);
-
-  if (
-    isNavigationMenuItemTabOrSection(draggedItem) &&
-    !isContainerLevelDestination
-  ) {
-    return null;
-  }
-
   if (destinationTarget.kind === 'folderHeader') {
     if (!isDefined(destinationParentId)) {
       throw new Error(doNotTranslate('Invalid folder header ID'));
@@ -80,7 +66,7 @@ export const computeNavigationMenuItemDropPlacement = ({
   const destinationItems = sortedItems.filter(
     (item) =>
       matchesParentId(item, destinationParentId) &&
-      item.type !== NavigationMenuItemType.TAB,
+      !isNavigationMenuItemTabOrSection(item),
   );
 
   if (

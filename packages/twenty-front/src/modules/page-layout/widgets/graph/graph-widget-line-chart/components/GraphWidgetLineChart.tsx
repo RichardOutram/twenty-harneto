@@ -340,7 +340,6 @@ export const GraphWidgetLineChart = ({
           axisLeft={axisLeftConfiguration}
           enableGridX={showGrid}
           enableGridY={showGrid}
-          gridXValues={axisBottomConfiguration.tickValues}
           gridYValues={valueTickValues}
           enableSlices={'x'}
           sliceTooltip={() => null}

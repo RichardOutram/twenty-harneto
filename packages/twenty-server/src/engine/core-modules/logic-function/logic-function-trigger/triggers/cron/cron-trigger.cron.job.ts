@@ -1,7 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { isValidCronTriggerSpreadMs } from 'twenty-shared/logic-function';
 import { isDefined } from 'twenty-shared/utils';
 import { WorkspaceActivationStatus } from 'twenty-shared/workspace';
 import { Repository } from 'typeorm';
@@ -22,7 +21,6 @@ import { ThrottlerException } from 'src/engine/core-modules/throttler/throttler.
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
 import { LOGIC_FUNCTION_QUEUE_RETRY_BACKOFF } from 'src/engine/core-modules/logic-function/logic-function-trigger/constants/logic-function-queue-retry-backoff.constant';
 import { buildApplicationJobMemoryLimitLogEntry } from 'src/engine/core-modules/logic-function/logic-function-trigger/utils/build-application-job-memory-limit-log-entry.util';
-import { computeCronTriggerSpreadOffsetMs } from 'src/engine/core-modules/logic-function/logic-function-trigger/utils/compute-cron-trigger-spread-offset-ms.util';
 import { buildApplicationJobThrottledLogEntry } from 'src/engine/core-modules/logic-function/logic-function-trigger/utils/build-application-job-throttled-log-entry.util';
 import {
   LogicFunctionTriggerJob,
@@ -91,13 +89,7 @@ export class CronTriggerCronJob {
             await this.cronTriggerDeduplicationService.shouldDispatch(
               `logic-function-cron:${activeWorkspace.id}:${logicFunction.id}`,
               cronSettings.pattern,
-              this.getCronDate({
-                now,
-                workspaceId: activeWorkspace.id,
-                logicFunctionUniversalIdentifier:
-                  logicFunction.universalIdentifier,
-                spreadMs: cronSettings.spreadMs,
-              }),
+              now,
             );
 
           if (!shouldDispatch) {
@@ -182,30 +174,5 @@ export class CronTriggerCronJob {
         });
       }
     }
-  }
-
-  private getCronDate({
-    now,
-    workspaceId,
-    logicFunctionUniversalIdentifier,
-    spreadMs,
-  }: {
-    now: Date;
-    workspaceId: string;
-    logicFunctionUniversalIdentifier: string;
-    spreadMs: number | undefined;
-  }): Date {
-    if (!isValidCronTriggerSpreadMs(spreadMs)) {
-      return now;
-    }
-
-    return new Date(
-      now.getTime() -
-        computeCronTriggerSpreadOffsetMs({
-          workspaceId,
-          logicFunctionUniversalIdentifier,
-          spreadMs,
-        }),
-    );
   }
 }

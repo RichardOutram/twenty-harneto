@@ -100,18 +100,37 @@ describe('whatsappSyncHistoryHandler', () => {
     expect(mocks.enqueueJobs).toHaveBeenCalledTimes(1);
   });
 
-  it('limits the run to the most recent conversations', async () => {
+  it('limits the run to the past conversations the member chose', async () => {
+    mocks.kvStore.set('whatsapp-settings:connection-id', {
+      historyConversationLimit: 50,
+    });
+
     await syncHistory();
 
     expect(mocks.kvStore.get(HISTORY_KEY)).toEqual(
-      expect.objectContaining({ status: 'IMPORTING', conversationLimit: 100 }),
+      expect.objectContaining({ status: 'IMPORTING', conversationLimit: 50 }),
     );
   });
 
-  it('imports the selected conversations', async () => {
+  it('imports no past conversation when the member chose none', async () => {
+    mocks.kvStore.set('whatsapp-settings:connection-id', {
+      historyConversationLimit: 0,
+    });
+    setHistoryImport('COMPLETED');
+
+    await syncHistory();
+
+    expect(mocks.enqueueJobs).not.toHaveBeenCalled();
+    expect(mocks.kvStore.get(HISTORY_KEY)).toEqual(
+      expect.objectContaining({ runId: 'run-1', status: 'COMPLETED' }),
+    );
+  });
+
+  it('imports the selected conversations, whatever the number of past conversations', async () => {
     mocks.kvStore.set('whatsapp-settings:connection-id', {
       importPolicy: 'SELECTED',
       selectedChats: [{ id: 'chat-1', name: 'chat-1' }],
+      historyConversationLimit: 0,
     });
 
     await syncHistory();

@@ -203,7 +203,8 @@ export class FieldRecordPageViewFieldOnCreateSideEffectHandlerService extends Me
           return (
             isDefined(existingFlatViewField) &&
             existingFlatViewField.fieldMetadataUniversalIdentifier ===
-              sourceFlatFieldMetadata.universalIdentifier
+              sourceFlatFieldMetadata.universalIdentifier &&
+            !isDefined(existingFlatViewField.deletedAt)
           );
         },
       );

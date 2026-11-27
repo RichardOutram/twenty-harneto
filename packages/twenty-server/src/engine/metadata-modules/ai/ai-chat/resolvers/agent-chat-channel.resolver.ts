@@ -37,7 +37,6 @@ import { AiGraphqlApiExceptionInterceptor } from 'src/engine/metadata-modules/ai
 import { WorkspaceMigrationGraphqlApiExceptionInterceptor } from 'src/engine/workspace-manager/workspace-migration/interceptors/workspace-migration-graphql-api-exception.interceptor';
 import { AccessPolicyGuard } from 'src/engine/guards/access-policy.guard';
 import { type AccessPolicy } from 'src/engine/guards/types/access-policy.type';
-import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 
 const AGENT_CHAT_CHANNEL_ACCESS_POLICY: AccessPolicy = {
   authPrincipals: {
@@ -90,7 +89,6 @@ export class AgentChatChannelResolver {
   @ResolveField(() => Boolean, {
     deprecationReason: IS_CUSTOM_DEPRECATION_REASON,
   })
-  @UseGuards(NoPermissionGuard)
   isCustom(
     @Parent() channel: AgentChatChannelDTO,
     @AuthWorkspace() workspace: WorkspaceEntity,

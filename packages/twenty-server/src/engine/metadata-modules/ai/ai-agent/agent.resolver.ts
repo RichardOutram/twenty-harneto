@@ -10,9 +10,9 @@ import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.ent
 import { ApplicationTargetArg } from 'src/engine/decorators/auth/application-target-arg.decorator';
 import { AuthApplication } from 'src/engine/decorators/auth/auth-application.decorator';
 import { AuthWorkspace } from 'src/engine/decorators/auth/auth-workspace.decorator';
-import { type WorkspaceAuthContext } from 'src/engine/core-modules/auth/types/workspace-auth-context.type';
-import { AuthContext } from 'src/engine/decorators/auth/auth-context.decorator';
+import { AuthUserWorkspaceId } from 'src/engine/decorators/auth/auth-user-workspace-id.decorator';
 import { MetadataResolver } from 'src/engine/api/graphql/graphql-config/decorators/metadata-resolver.decorator';
+import { fromFlatAgentWithRoleIdToAgentDto } from 'src/engine/metadata-modules/flat-agent/utils/from-agent-entity-to-agent-dto.util';
 import { WorkspaceMigrationGraphqlApiExceptionInterceptor } from 'src/engine/workspace-manager/workspace-migration/interceptors/workspace-migration-graphql-api-exception.interceptor';
 import { AiModelRegistryService } from 'src/engine/metadata-modules/ai/ai-models/services/ai-model-registry.service';
 import { WorkspaceAiDataPolicyService } from 'src/engine/metadata-modules/ai/ai-models/services/workspace-ai-data-policy.service';
@@ -30,7 +30,6 @@ import { ApplicationTargetGuard } from 'src/engine/guards/application-target.gua
 import { AccessPolicyGuard } from 'src/engine/guards/access-policy.guard';
 import { AGENT_READ_ACCESS_POLICY } from 'src/engine/metadata-modules/ai/ai-agent/constants/agent-read-access-policy.constant';
 import { AGENT_WRITE_ACCESS_POLICY } from 'src/engine/metadata-modules/ai/ai-agent/constants/agent-write-access-policy.constant';
-import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 
 @UseInterceptors(
   WorkspaceMigrationGraphqlApiExceptionInterceptor,
@@ -48,7 +47,6 @@ export class AgentResolver {
   @ResolveField(() => Boolean, {
     deprecationReason: IS_CUSTOM_DEPRECATION_REASON,
   })
-  @UseGuards(NoPermissionGuard)
   isCustom(
     @Parent() agent: AgentDTO,
     @AuthWorkspace() workspace: WorkspaceEntity,
@@ -68,17 +66,16 @@ export class AgentResolver {
       workspaceId,
     });
 
-    return this.agentService.toAgentDtos({
-      flatAgentsWithRoleId: flatAgentsWithRoleId.filter((flatAgent) =>
+    return flatAgentsWithRoleId
+      .filter((flatAgent) =>
         canCallerReachApplication({
           callingApplication,
           applicationId: flatAgent.applicationId,
           operation: 'read',
           workspaceCustomApplicationId,
         }),
-      ),
-      workspaceId,
-    });
+      )
+      .map(fromFlatAgentWithRoleIdToAgentDto);
   }
 
   @Query(() => AgentDTO)
@@ -101,10 +98,7 @@ export class AgentResolver {
       id,
     });
 
-    return this.agentService.toAgentDto({
-      flatAgentWithRoleId: fatAgentWithRoleId,
-      workspaceId,
-    });
+    return fromFlatAgentWithRoleIdToAgentDto(fatAgentWithRoleId);
   }
 
   @Mutation(() => AgentDTO)
@@ -112,7 +106,8 @@ export class AgentResolver {
   async createOneAgent(
     @Args('input') input: CreateAgentInput,
     @AuthWorkspace() workspace: WorkspaceEntity,
-    @AuthContext() authContext: WorkspaceAuthContext,
+    @AuthUserWorkspaceId({ allowUndefined: true })
+    userWorkspaceId: string | undefined,
   ): Promise<AgentDTO> {
     if (isNonEmptyString(input.modelId)) {
       this.aiModelRegistryService.validateModelAvailabilityOrThrow({
@@ -127,13 +122,10 @@ export class AgentResolver {
     const createdAgent = await this.agentService.createOneAgent({
       input,
       workspaceId: workspace.id,
-      authContext,
+      userWorkspaceId,
     });
 
-    return this.agentService.toAgentDto({
-      flatAgentWithRoleId: createdAgent,
-      workspaceId: workspace.id,
-    });
+    return fromFlatAgentWithRoleIdToAgentDto(createdAgent);
   }
 
   @Mutation(() => AgentDTO)
@@ -150,7 +142,8 @@ export class AgentResolver {
     })
     input: UpdateAgentInput,
     @AuthWorkspace() workspace: WorkspaceEntity,
-    @AuthContext() authContext: WorkspaceAuthContext,
+    @AuthUserWorkspaceId({ allowUndefined: true })
+    userWorkspaceId: string | undefined,
   ): Promise<AgentDTO> {
     if (isNonEmptyString(input.modelId)) {
       this.aiModelRegistryService.validateModelAvailabilityOrThrow({
@@ -165,13 +158,10 @@ export class AgentResolver {
     const updatedAgent = await this.agentService.updateOneAgent({
       input,
       workspaceId: workspace.id,
-      authContext,
+      userWorkspaceId,
     });
 
-    return this.agentService.toAgentDto({
-      flatAgentWithRoleId: updatedAgent,
-      workspaceId: workspace.id,
-    });
+    return fromFlatAgentWithRoleIdToAgentDto(updatedAgent);
   }
 
   @Mutation(() => AgentDTO)
@@ -194,9 +184,6 @@ export class AgentResolver {
       workspaceId,
     });
 
-    return this.agentService.toAgentDto({
-      flatAgentWithRoleId: deletedFlatAgent,
-      workspaceId,
-    });
+    return fromFlatAgentWithRoleIdToAgentDto(deletedFlatAgent);
   }
 }

@@ -34,9 +34,7 @@ describe('createLinkedinCounterpartResolver', () => {
 
   it('looks up each profile once, even one LinkedIn cannot resolve', async () => {
     mocks.withLinkedinPublicIdentifier.mockResolvedValue(DELETED_MEMBER);
-    const resolveCounterpart = createLinkedinCounterpartResolver('acc_1', {
-      dailyLookupLimit: 60,
-    });
+    const resolveCounterpart = createLinkedinCounterpartResolver('acc_1');
 
     await resolveCounterpart({ user: DELETED_MEMBER });
 
@@ -46,7 +44,6 @@ describe('createLinkedinCounterpartResolver', () => {
     expect(mocks.withLinkedinPublicIdentifier).toHaveBeenCalledExactlyOnceWith({
       unipileAccountId: 'acc_1',
       user: DELETED_MEMBER,
-      dailyLookupLimit: 60,
       shouldLookUp: undefined,
     });
   });
@@ -57,9 +54,7 @@ describe('createLinkedinCounterpartResolver', () => {
     mocks.withLinkedinPublicIdentifier
       .mockImplementationOnce(askBeforeReturning(DELETED_MEMBER))
       .mockResolvedValueOnce(resolvedMember);
-    const resolveCounterpart = createLinkedinCounterpartResolver('acc_1', {
-      dailyLookupLimit: 60,
-    });
+    const resolveCounterpart = createLinkedinCounterpartResolver('acc_1');
 
     await resolveCounterpart({
       user: DELETED_MEMBER,
@@ -79,9 +74,7 @@ describe('createLinkedinCounterpartResolver', () => {
     mocks.withLinkedinPublicIdentifier.mockImplementation(
       askBeforeReturning(DELETED_MEMBER),
     );
-    const resolveCounterpart = createLinkedinCounterpartResolver('acc_1', {
-      dailyLookupLimit: 60,
-    });
+    const resolveCounterpart = createLinkedinCounterpartResolver('acc_1');
 
     await resolveCounterpart({
       user: DELETED_MEMBER,
@@ -101,9 +94,7 @@ describe('createLinkedinCounterpartResolver', () => {
         new UnipileRateLimitError('Retry in 1 hour.', 3601),
       )
       .mockResolvedValueOnce(DELETED_MEMBER);
-    const resolveCounterpart = createLinkedinCounterpartResolver('acc_1', {
-      dailyLookupLimit: 60,
-    });
+    const resolveCounterpart = createLinkedinCounterpartResolver('acc_1');
 
     await expect(resolveCounterpart({ user: DELETED_MEMBER })).rejects.toThrow(
       'Retry in 1 hour.',

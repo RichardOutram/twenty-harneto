@@ -79,21 +79,11 @@ export const revokeAllOtherUserSessionsQueryFactory = () => {
   };
 };
 
-export const signOutQueryFactory = () => {
-  return {
-    query: gql`
-      mutation SignOut {
-        signOut
-      }
-    `,
-    variables: {},
-  };
-};
-
-// The shape front bundles from before twentyhq/twenty#31657 still send.
-export const legacySignOutWithRefreshTokenQueryFactory = (
-  refreshToken: string,
-) => {
+export const signOutQueryFactory = ({
+  refreshToken,
+}: {
+  refreshToken?: string;
+} = {}) => {
   return {
     query: gql`
       mutation SignOut($refreshToken: String) {

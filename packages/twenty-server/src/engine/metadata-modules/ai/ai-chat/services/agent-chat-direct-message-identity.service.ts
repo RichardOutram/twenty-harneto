@@ -11,7 +11,6 @@ import { normalizeAgentChatDirectMessagePairOrThrow } from 'src/engine/metadata-
 import { throwAgentChatThreadNotFound } from 'src/engine/metadata-modules/ai/ai-chat/utils/throw-agent-chat-thread-not-found.util';
 import { type AgentHistoryRepository } from 'src/engine/metadata-modules/ai/ai-history/repositories/agent-history-repository';
 import { InjectAgentHistoryRepository } from 'src/engine/metadata-modules/ai/ai-history/repositories/inject-agent-history-repository.decorator';
-import { InboxObjectNamesResolverService } from 'src/engine/metadata-modules/ai/ai-history/services/inbox-object-names-resolver.service';
 import { type AgentChatThreadWorkspaceEntity } from 'src/engine/metadata-modules/ai/ai-history/standard-objects/agent-chat-thread.workspace-entity';
 import {
   AiException,
@@ -34,7 +33,6 @@ export class AgentChatDirectMessageIdentityService {
     private readonly workspaceOrmManager: WorkspaceOrmManager,
     private readonly directMessageConversationPrivacyService: AgentChatDirectMessageConversationPrivacyService,
     private readonly chatThreadService: AgentChatThreadService,
-    private readonly inboxObjectNamesResolverService: InboxObjectNamesResolverService,
   ) {}
 
   async open({
@@ -111,15 +109,12 @@ export class AgentChatDirectMessageIdentityService {
 
     this.assertMembersAvailableOrThrow({ flatWorkspaceMemberMaps, pair });
 
-    const { agentChatThread: threadObjectName } =
-      await this.inboxObjectNamesResolverService.resolve(workspaceId);
-
     const createdThreadId =
       await this.workspaceOrmManager.executeTransactionInWorkspaceContext(
         async (transactionScope) => {
           const { identifiers } = await transactionScope
             .getRepositoryWithoutPermissionChecks<AgentChatThreadWorkspaceEntity>(
-              threadObjectName,
+              'agentChatThread',
               { shouldSkipEventEmission: true },
             )
             .insert(

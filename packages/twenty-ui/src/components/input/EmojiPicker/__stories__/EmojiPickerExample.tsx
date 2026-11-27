@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import { Dropdown } from '@ui/components/navigation/Dropdown/Dropdown';
-import { Button } from '@ui/primitives/input/Button/Button';
 import { Text } from '@ui/primitives/typography/Text/Text';
 import { themeCssVariables } from '@ui/theme';
 import { isDefined } from '@ui/utilities/utils/isDefined';
@@ -45,26 +43,18 @@ export const EmojiPickerExample = ({
         width: EMOJI_PICKER_STORY_WIDTH_PX,
       }}
     >
-      <Dropdown.Root type="panel" defaultOpen>
-        <Dropdown.Trigger render={<Button>Add reaction</Button>} />
-        <Dropdown.Content
-          aria-label="Add reaction"
-          width={EMOJI_PICKER_STORY_WIDTH_PX}
-        >
-          <EmojiPicker
-            emojibaseUrl={emojibaseUrl}
-            searchLabel={searchLabel}
-            searchPlaceholder={searchPlaceholder}
-            loadingLabel={loadingLabel}
-            emptyLabel={emptyLabel}
-            autoFocus={autoFocus}
-            onEmojiSelect={(selectedEmoji) => {
-              setEmoji(selectedEmoji);
-              onEmojiSelect?.(selectedEmoji);
-            }}
-          />
-        </Dropdown.Content>
-      </Dropdown.Root>
+      <EmojiPicker
+        emojibaseUrl={emojibaseUrl}
+        searchLabel={searchLabel}
+        searchPlaceholder={searchPlaceholder}
+        loadingLabel={loadingLabel}
+        emptyLabel={emptyLabel}
+        autoFocus={autoFocus}
+        onEmojiSelect={(selectedEmoji) => {
+          setEmoji(selectedEmoji);
+          onEmojiSelect?.(selectedEmoji);
+        }}
+      />
       <Text role="status">
         {isDefined(emoji) ? `Selected emoji: ${emoji}` : 'Choose an emoji'}
       </Text>

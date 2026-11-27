@@ -1,5 +1,6 @@
 /* @license Enterprise */
 
+import { type ValidationRuleBindings } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
 import { type AllFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/all-flat-entity-maps.type';
@@ -12,13 +13,13 @@ import { mergeUpdateInExistingRecord } from 'src/utils/merge-update-in-existing-
 export const fromUpdateValidationRuleInputToFlatValidationRuleToUpdate = ({
   existingFlatValidationRule,
   update,
-  tree,
+  bindings,
   flatFieldMetadataMaps,
   flatObjectMetadataMaps,
 }: {
   existingFlatValidationRule: FlatValidationRule;
   update: UpdateValidationRuleInputUpdates;
-  tree: FlatValidationRule['tree'];
+  bindings: ValidationRuleBindings;
 } & Pick<
   AllFlatEntityMaps,
   'flatObjectMetadataMaps' | 'flatFieldMetadataMaps'
@@ -30,7 +31,7 @@ export const fromUpdateValidationRuleInputToFlatValidationRuleToUpdate = ({
       ...update,
       ...(isDefined(update.name) && { name: update.name.trim() }),
       ...(isDefined(update.message) && { message: update.message.trim() }),
-      tree,
+      bindings,
     },
   });
 

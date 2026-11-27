@@ -14,7 +14,6 @@ export const DEFAULT_SETTINGS_DRAFT_ROLE: RoleWithPartialMembers = {
   canAccessAllTools: false,
   canAccessAllAgentChatChannels: false,
   isEditable: false,
-  areRecordPermissionsEditable: false,
   workspaceMembers: [],
   permissionFlags: [],
   objectPermissions: [],

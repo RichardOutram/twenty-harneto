@@ -1,19 +1,25 @@
 import { ToastOnQueryErrorEffect } from '@/apollo/components/ToastOnQueryErrorEffect';
-import { useReadableObjectMetadataItems } from '@/object-metadata/hooks/useReadableObjectMetadataItems';
+import { useCloseCommandMenu } from '@/command-menu-item/hooks/useCloseCommandMenu';
+import { CommandMenuItem } from '@/command-menu/components/CommandMenuItem';
+import { SidePanelGroup } from '@/side-panel/components/SidePanelGroup';
 import { SidePanelList } from '@/side-panel/components/SidePanelList';
-import { SidePanelSearchRecordObjectSection } from '@/side-panel/pages/search/components/SidePanelSearchRecordObjectSection';
+import { useOpenRecordInSidePanel } from '@/side-panel/hooks/useOpenRecordInSidePanel';
 import { SidePanelSearchRecordPreviewCard } from '@/side-panel/pages/search/components/SidePanelSearchRecordPreviewCard';
 import { SIDE_PANEL_SEARCH_RECORD_PREVIEW_WIDTH } from '@/side-panel/pages/search/constants/SidePanelSearchRecordPreviewWidth';
 import { useSidePanelSearchRecordPreviewItem } from '@/side-panel/pages/search/hooks/useSidePanelSearchRecordPreviewItem';
 import { useSidePanelSearchRecords } from '@/side-panel/pages/search/hooks/useSidePanelSearchRecords';
-import { type SearchResultItemGroup } from '@/side-panel/pages/search/types/SearchResultItemGroup';
+import { SelectableListItem } from '@/ui/layout/selectable-list/components/SelectableListItem';
 import { useIsMobile } from 'twenty-ui/utilities';
 import { css } from '@linaria/core';
-import groupBy from 'lodash.groupby';
+import { useLingui } from '@lingui/react/macro';
 import { useMemo, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AppPath, StandardObjectNameSingular } from 'twenty-shared/types';
+import { getAppPath, isDefined } from 'twenty-shared/utils';
+import { Avatar } from 'twenty-ui/primitives/data-display';
 import { Tooltip } from 'twenty-ui/primitives/surfaces';
-import { isDefined } from 'twenty-shared/utils';
 import { themeCssVariables } from 'twenty-ui/theme';
+import { getAbsoluteImageUrl } from '~/utils/image/getAbsoluteImageUrl';
 
 // The card brings its own surface, so the tooltip only contributes the shadow.
 const previewTooltipClass = css`
@@ -24,42 +30,17 @@ const previewTooltipClass = css`
 `;
 
 export const SidePanelSearchRecordsPage = () => {
-  const {
-    searchResultItems,
-    loading,
-    isWaitingForDebouncedSearch,
-    noResults,
-    error,
-  } = useSidePanelSearchRecords();
-  const { readableObjectMetadataItems } = useReadableObjectMetadataItems();
+  const { t } = useLingui();
+  const { searchResultItems, loading, noResults, error } =
+    useSidePanelSearchRecords();
+  const { openRecordInSidePanel } = useOpenRecordInSidePanel();
+  const { closeCommandMenu } = useCloseCommandMenu();
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
 
-  const searchResultItemGroups: SearchResultItemGroup[] = useMemo(
-    () =>
-      Object.entries(
-        groupBy(searchResultItems, (item) => item.objectNameSingular),
-      ).map(([objectNameSingular, objectSearchResultItems]) => {
-        const objectMetadataItem = readableObjectMetadataItems.find(
-          (item) => item.nameSingular === objectNameSingular,
-        );
-
-        return {
-          objectNameSingular,
-          objectLabelPlural:
-            objectMetadataItem?.labelPlural ?? objectNameSingular,
-          objectMetadataItem,
-          searchResultItems: objectSearchResultItems,
-        };
-      }),
-    [searchResultItems, readableObjectMetadataItems],
-  );
-
   const selectableItemIds = useMemo(
-    () =>
-      searchResultItemGroups.flatMap((searchResultItemGroup) =>
-        searchResultItemGroup.searchResultItems.map((item) => item.id),
-      ),
-    [searchResultItemGroups],
+    () => searchResultItems.map((item) => item.id),
+    [searchResultItems],
   );
 
   const previewAnchorRef = useRef<HTMLDivElement>(null);
@@ -74,17 +55,68 @@ export const SidePanelSearchRecordsPage = () => {
 
       <SidePanelList
         selectableItemIds={selectableItemIds}
-        loading={loading || isWaitingForDebouncedSearch}
+        loading={loading}
         noResults={noResults}
       >
-        {searchResultItemGroups.map((searchResultItemGroup) => (
-          <SidePanelSearchRecordObjectSection
-            key={searchResultItemGroup.objectNameSingular}
-            searchResultItemGroup={searchResultItemGroup}
-            previewedItemId={previewedItem?.id}
-            previewAnchorRef={previewAnchorRef}
-          />
-        ))}
+        {searchResultItems.length > 0 && (
+          <SidePanelGroup heading={t`Results`}>
+            {searchResultItems.map((item) => {
+              const isTaskOrNote = [
+                StandardObjectNameSingular.Task,
+                StandardObjectNameSingular.Note,
+              ].includes(item.objectNameSingular as StandardObjectNameSingular);
+
+              const handleClick = () => {
+                if (isTaskOrNote) {
+                  openRecordInSidePanel({
+                    recordId: item.recordId,
+                    objectNameSingular:
+                      item.objectNameSingular as StandardObjectNameSingular,
+                  });
+                } else {
+                  closeCommandMenu();
+                  navigate(
+                    getAppPath(AppPath.RecordShowPage, {
+                      objectNameSingular: item.objectNameSingular,
+                      objectRecordId: item.recordId,
+                    }),
+                  );
+                }
+              };
+
+              return (
+                <SelectableListItem
+                  key={item.id}
+                  itemId={item.id}
+                  onEnter={handleClick}
+                >
+                  <div
+                    ref={
+                      previewedItem?.id === item.id
+                        ? previewAnchorRef
+                        : undefined
+                    }
+                  >
+                    <CommandMenuItem
+                      id={item.id}
+                      label={item.label}
+                      description={item.objectLabel}
+                      onClick={handleClick}
+                      LeftComponent={
+                        <Avatar
+                          shape={item.avatarShape}
+                          src={getAbsoluteImageUrl(item.imageUrl)}
+                          colorSeed={item.recordId}
+                          name={item.label}
+                        />
+                      }
+                    />
+                  </div>
+                </SelectableListItem>
+              );
+            })}
+          </SidePanelGroup>
+        )}
       </SidePanelList>
 
       {shouldDisplayPreview && (

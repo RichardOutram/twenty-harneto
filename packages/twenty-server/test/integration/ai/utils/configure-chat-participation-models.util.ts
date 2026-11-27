@@ -2,7 +2,6 @@ import {
   type Experimental_EvaluationModelV4Answer,
   type Experimental_EvaluationModelV4CallOptions,
   type Experimental_EvaluationModelV4Result,
-  type LanguageModelV4CallOptions,
 } from '@ai-sdk/provider';
 import { TEST_AI_MODEL_ID } from 'test/integration/constants/test-ai-model-ids.constants';
 import { getAppProviderByClassName } from 'test/integration/utils/get-app-provider-by-class-name.util';
@@ -37,24 +36,19 @@ export const configureChatParticipationModels = () => {
   const registry = getAppProviderByClassName<AiModelRegistryService>(
     'AiModelRegistryService',
   );
-  const languageModelCalls: LanguageModelV4CallOptions[] = [];
-  const languageModel = createScriptedLanguageModel((options) => {
-    languageModelCalls.push(options);
-
-    return {
-      content: [{ type: 'text', text: 'Ada answered the message.' }],
-      finishReason: { unified: 'stop', raw: undefined },
-      usage: {
-        inputTokens: {
-          total: 1,
-          noCache: 1,
-          cacheRead: undefined,
-          cacheWrite: undefined,
-        },
-        outputTokens: { total: 1, text: 1, reasoning: undefined },
+  const languageModel = createScriptedLanguageModel(() => ({
+    content: [{ type: 'text', text: 'Ada answered the message.' }],
+    finishReason: { unified: 'stop', raw: undefined },
+    usage: {
+      inputTokens: {
+        total: 1,
+        noCache: 1,
+        cacheRead: undefined,
+        cacheWrite: undefined,
       },
-    };
-  });
+      outputTokens: { total: 1, text: 1, reasoning: undefined },
+    },
+  }));
   const registeredModel: RegisteredAiModel = {
     modelId: TEST_AI_MODEL_ID,
     sdkPackage: '@ai-sdk/openai',
@@ -91,7 +85,6 @@ export const configureChatParticipationModels = () => {
 
   return {
     evaluate,
-    languageModelCalls,
     setReplyProbability: (probability: number) =>
       evaluate.mockResolvedValue(createReplyEvaluation(probability)),
     enableEvaluation: () =>

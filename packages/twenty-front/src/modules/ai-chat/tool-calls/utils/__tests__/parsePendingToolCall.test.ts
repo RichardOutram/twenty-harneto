@@ -109,17 +109,7 @@ describe('parsePendingToolCall', () => {
       toolCallId: 'call-1',
       kind: 'toolCallApproval',
       proposal,
-      isPostedByWorkflow: false,
     });
-    expect(
-      parsePendingToolCall({
-        ...part,
-        output: {
-          success: true,
-          result: { status: 'pending', proposal, isPostedByWorkflow: true },
-        },
-      }),
-    ).toMatchObject({ kind: 'toolCallApproval', isPostedByWorkflow: true });
   });
 
   it('reads a tool call to approve without its proposal as a generic one', () => {
@@ -140,7 +130,6 @@ describe('parsePendingToolCall', () => {
         arguments: {},
         template: 'generic',
       },
-      isPostedByWorkflow: false,
     });
   });
 

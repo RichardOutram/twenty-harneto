@@ -21,8 +21,10 @@ import { buildAgentChatChannelThreadCursorFilter } from 'src/engine/metadata-mod
 import { decodeAgentChatChannelThreadCursorOrThrow } from 'src/engine/metadata-modules/ai/ai-chat/utils/decode-agent-chat-channel-thread-cursor-or-throw.util';
 import { encodeAgentChatChannelThreadCursor } from 'src/engine/metadata-modules/ai/ai-chat/utils/encode-agent-chat-channel-thread-cursor.util';
 import { throwAgentChatChannelsUnavailable } from 'src/engine/metadata-modules/ai/ai-chat/utils/throw-agent-chat-channels-unavailable.util';
-import { AgentHistoryWorkspaceStorageService } from 'src/engine/metadata-modules/ai/ai-history/services/agent-history-workspace-storage.service';
+import { getAgentChatThreadParticipantTable } from 'src/engine/metadata-modules/ai/ai-chat/utils/get-agent-chat-thread-participant-table.util';
 import { WorkspaceOrmManager } from 'src/engine/twenty-orm/workspace-orm.manager';
+import { getWorkspaceSchemaName } from 'src/engine/workspace-datasource/utils/get-workspace-schema-name.util';
+import { escapeIdentifier } from 'src/engine/workspace-manager/workspace-migration/utils/remove-sql-injection.util';
 
 const { IS_UNREAD, STATUS } = AGENT_CHAT_CHANNEL_THREAD_PREDICATES;
 
@@ -62,7 +64,6 @@ export class AgentChatChannelThreadsService {
     private readonly sharingService: AgentChatSharingService,
     private readonly channelAccessService: AgentChatChannelAccessService,
     private readonly workspaceOrmManager: WorkspaceOrmManager,
-    private readonly storageService: AgentHistoryWorkspaceStorageService,
   ) {}
 
   async findThreadIds({
@@ -223,22 +224,19 @@ export class AgentChatChannelThreadsService {
     const workspaceMemberId = isUserAuthContext(authContext)
       ? authContext.workspaceMemberId
       : null;
-    const {
-      table,
-      inboxObjectNamesByLegacyName: { agentChatThread: threadObjectName },
-    } = await this.storageService.getContext(workspaceId);
+    const schema = escapeIdentifier(getWorkspaceSchemaName(workspaceId));
 
     return this.workspaceOrmManager.executeInWorkspaceContext(async () => {
       const repository =
-        this.workspaceOrmManager.getRepository(threadObjectName);
+        this.workspaceOrmManager.getRepository('agentChatThread');
       const readableThreadQueryBuilder = await repository
         .createQueryBuilder('readableThread')
         .select('"readableThread"."id"', 'id')
         .applyRowLevelPermissions();
 
       const { sql, parameters } = buildQuery({
-        fromClause: `FROM ${table('agentChatThread')} thread
-          LEFT JOIN ${table('agentChatThreadParticipant')} participant
+        fromClause: `FROM ${schema}."agentChatThread" thread
+          LEFT JOIN ${getAgentChatThreadParticipantTable(workspaceId)} participant
             ON participant."threadId" = thread.id
             AND participant."workspaceMemberId" = :channelThreadsWorkspaceMemberId::uuid
           WHERE thread."deletedAt" IS NULL

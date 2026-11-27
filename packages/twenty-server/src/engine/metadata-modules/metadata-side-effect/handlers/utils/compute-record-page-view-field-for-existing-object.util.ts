@@ -31,7 +31,8 @@ export const computeRecordPageViewFieldForExistingObject = ({
 
   if (
     !isDefined(recordPageFlatView) ||
-    !recordPageFlatView.isSystemSideEffect
+    !recordPageFlatView.isSystemSideEffect ||
+    isDefined(recordPageFlatView.deletedAt)
   ) {
     return undefined;
   }
@@ -77,12 +78,13 @@ export const computeRecordPageViewFieldForExistingObject = ({
           ],
       )
       .filter(isDefined)
-      .filter((group) =>
-        resolveEffectiveFlatEntityProperty({
-          metadataName: 'viewFieldGroup',
-          flatEntity: group,
-          property: 'isActive',
-        }),
+      .filter(
+        (group) =>
+          resolveEffectiveFlatEntityProperty({
+            metadataName: 'viewFieldGroup',
+            flatEntity: group,
+            property: 'isActive',
+          }) && !isDefined(group.deletedAt),
       );
 
   const lastFlatViewFieldGroup =
@@ -109,6 +111,7 @@ export const computeRecordPageViewFieldForExistingObject = ({
             universalFlatEntity: flatViewField,
             property: 'isActive',
           }) &&
+          !isDefined(flatViewField.deletedAt) &&
           flatViewField.viewFieldGroupUniversalIdentifier ===
             targetSystemViewFieldGroupUniversalIdentifier,
       )

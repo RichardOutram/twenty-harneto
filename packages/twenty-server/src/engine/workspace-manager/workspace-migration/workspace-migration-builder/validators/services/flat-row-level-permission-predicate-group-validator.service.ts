@@ -13,7 +13,6 @@ import { getEmptyFlatEntityValidationError } from 'src/engine/workspace-manager/
 import { FlatEntityUpdateValidationArgs } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/types/universal-flat-entity-update-validation-args.type';
 import { UniversalFlatEntityValidationArgs } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/types/universal-flat-entity-validation-args.type';
 import { getNestedPredicateGroupOperationErrors } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/get-nested-predicate-group-operation-errors.util';
-import { getMarketplaceApplicationRoleRestrictionErrors } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/get-marketplace-application-role-restriction-errors.util';
 import { getRoleNotEditableErrors } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/get-role-not-editable-errors.util';
 
 @Injectable()
@@ -38,10 +37,6 @@ export class FlatRowLevelPermissionPredicateGroupValidatorService {
       metadataName: 'rowLevelPermissionPredicateGroup',
       type: 'create',
     });
-
-    validationResult.errors.push(
-      ...getMarketplaceApplicationRoleRestrictionErrors({ buildOptions }),
-    );
 
     const existingPredicateGroup = findFlatEntityByUniversalIdentifier({
       universalIdentifier: flatPredicateGroupToValidate.universalIdentifier,
@@ -98,12 +93,7 @@ export class FlatRowLevelPermissionPredicateGroupValidatorService {
       });
     } else {
       validationResult.errors.push(
-        ...getRoleNotEditableErrors({
-          flatRole: role,
-          buildOptions,
-          // TODO(@charlesBochet): temporary Admin record permissions exception, remove once the workspace owns Admin's record permissions
-          isRecordPermissionsChange: true,
-        }),
+        ...getRoleNotEditableErrors({ flatRole: role, buildOptions }),
       );
     }
 
@@ -188,10 +178,6 @@ export class FlatRowLevelPermissionPredicateGroupValidatorService {
       metadataName: 'rowLevelPermissionPredicateGroup',
       type: 'update',
     });
-
-    validationResult.errors.push(
-      ...getMarketplaceApplicationRoleRestrictionErrors({ buildOptions }),
-    );
 
     if (!isDefined(existingPredicateGroup)) {
       validationResult.errors.push({
@@ -281,12 +267,7 @@ export class FlatRowLevelPermissionPredicateGroupValidatorService {
       });
     } else {
       validationResult.errors.push(
-        ...getRoleNotEditableErrors({
-          flatRole: role,
-          buildOptions,
-          // TODO(@charlesBochet): temporary Admin record permissions exception, remove once the workspace owns Admin's record permissions
-          isRecordPermissionsChange: true,
-        }),
+        ...getRoleNotEditableErrors({ flatRole: role, buildOptions }),
       );
     }
 

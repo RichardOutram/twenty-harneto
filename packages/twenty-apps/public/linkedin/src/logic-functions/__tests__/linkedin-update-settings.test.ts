@@ -5,7 +5,6 @@ const mocks = vi.hoisted(() => ({
   listMessageChannels: vi.fn(),
   updateMessageChannel: vi.fn(),
   enqueueJobs: vi.fn(),
-  getJobs: vi.fn(),
   kvStore: new Map<string, unknown>(),
 }));
 
@@ -18,14 +17,10 @@ vi.mock('twenty-sdk/logic-function', () => ({
   listMessageChannels: mocks.listMessageChannels,
   updateMessageChannel: mocks.updateMessageChannel,
   enqueueJobs: mocks.enqueueJobs,
-  getJobs: mocks.getJobs,
   kv: {
     get: async (key: string) => mocks.kvStore.get(key) ?? null,
     set: async (key: string, value: unknown) => {
       mocks.kvStore.set(key, value);
-    },
-    delete: async (key: string) => {
-      mocks.kvStore.delete(key);
     },
   },
 }));
@@ -40,11 +35,11 @@ const updateSettings = (body: Record<string, unknown>) =>
     userWorkspaceId: 'member-user-workspace-id',
   });
 
-const setHistoryImport = (status: 'COMPLETED' | 'IMPORTING') =>
+const setHistoryImport = (importPolicy: 'ALL' | 'CONTACTS_ONLY') =>
   mocks.kvStore.set(HISTORY_KEY, {
     runId: 'run-1',
-    importPolicy: 'ALL',
-    status,
+    importPolicy,
+    status: 'COMPLETED',
     importedConversationCount: 12,
     startedAt: '2026-10-01T00:00:00.000Z',
   });
@@ -69,10 +64,7 @@ describe('linkedinUpdateSettingsHandler', () => {
     mocks.listMessageChannels.mockResolvedValue([
       { id: 'channel-id', visibility: 'METADATA' },
     ]);
-    mocks.getJobs.mockImplementation(async (jobIds: string[]) =>
-      jobIds.map((jobId) => ({ jobId, state: 'DELAYED' })),
-    );
-    setHistoryImport('COMPLETED');
+    setHistoryImport('ALL');
   });
 
   it('saves the valid fields of the member connection and ignores the others', async () => {
@@ -80,6 +72,7 @@ describe('linkedinUpdateSettingsHandler', () => {
       contactAutoCreationPolicy: 'NONE',
       isNameMatchingEnabled: 'yes',
       importPolicy: 'SOME',
+      historyConversationLimit: 30,
     });
 
     expect(view).toEqual(
@@ -88,6 +81,8 @@ describe('linkedinUpdateSettingsHandler', () => {
         settings: {
           importPolicy: 'ALL',
           selectedChats: [],
+          areGroupChatsImported: true,
+          historyConversationLimit: 20,
           contactAutoCreationPolicy: 'NONE',
           isNameMatchingEnabled: true,
           areChatsMarkedAsRead: false,
@@ -99,59 +94,24 @@ describe('linkedinUpdateSettingsHandler', () => {
       false,
     );
     expect(mocks.updateMessageChannel).not.toHaveBeenCalled();
+    expect(mocks.enqueueJobs).not.toHaveBeenCalled();
   });
 
-  it('saves the settings of the requested connection when the member has several', async () => {
-    mocks.listConnections.mockResolvedValue([
-      {
-        id: 'connection-id',
-        name: 'Ada Lovelace',
-        handle: 'https://www.linkedin.com/in/ada',
-        userWorkspaceId: 'member-user-workspace-id',
-        authFailedAt: null,
-      },
-      {
-        id: 'company-connection-id',
-        name: 'Ada at Analytical Engines',
-        handle: 'https://www.linkedin.com/in/ada-company',
-        userWorkspaceId: 'member-user-workspace-id',
-        authFailedAt: null,
-      },
-    ]);
+  it.each([0, 10, 20, 50])(
+    'saves %i past conversations to import',
+    async (historyConversationLimit) => {
+      const view = await updateSettings({ historyConversationLimit });
 
-    const view = await updateSettings({
-      connectedAccountId: 'connection-id',
-      areChatsMarkedAsRead: true,
-    });
-
-    expect(mocks.kvStore.get('linkedin-settings:connection-id')).toEqual(
-      expect.objectContaining({ areChatsMarkedAsRead: true }),
-    );
-    expect(mocks.kvStore.has('linkedin-settings:company-connection-id')).toBe(
-      false,
-    );
-    expect(view).toEqual(
-      expect.objectContaining({
-        connection: expect.objectContaining({ id: 'connection-id' }),
-        connections: [
-          expect.objectContaining({ id: 'company-connection-id' }),
-          expect.objectContaining({ id: 'connection-id' }),
-        ],
-      }),
-    );
-  });
-
-  it('refuses a connection of another member', async () => {
-    await expect(
-      updateSettings({
-        connectedAccountId: 'other-connection-id',
-        isNameMatchingEnabled: false,
-      }),
-    ).rejects.toThrow('Connect your LinkedIn account first.');
-    expect(mocks.kvStore.has('linkedin-settings:other-connection-id')).toBe(
-      false,
-    );
-  });
+      expect(view).toEqual(
+        expect.objectContaining({
+          settings: expect.objectContaining({ historyConversationLimit }),
+        }),
+      );
+      expect(mocks.kvStore.get('linkedin-settings:connection-id')).toEqual(
+        expect.objectContaining({ historyConversationLimit }),
+      );
+    },
+  );
 
   it('saves whether chats opened in Twenty are marked as read on LinkedIn', async () => {
     const view = await updateSettings({ areChatsMarkedAsRead: true });
@@ -179,67 +139,15 @@ describe('linkedinUpdateSettingsHandler', () => {
   });
 
   it.each([
-    [{ importPolicy: 'CONTACTS_ONLY' }],
-    [{ contactAutoCreationPolicy: 'NONE' }],
-    [{ isNameMatchingEnabled: false }],
-  ])('imports the past conversations again when saving %o', async (update) => {
-    const view = await updateSettings(update);
-
-    expect(mocks.enqueueJobs).toHaveBeenCalledExactlyOnceWith(
-      expect.objectContaining({ delayMs: 15 * 1000 }),
-    );
-    expect(view).toEqual(
-      expect.objectContaining({
-        historyImport: expect.objectContaining({ status: 'IMPORTING' }),
-      }),
-    );
-    expect(mocks.kvStore.get(HISTORY_KEY)).toEqual(
-      expect.objectContaining({ runId: expect.not.stringMatching(/^run-1$/) }),
-    );
-  });
-
-  it.each([
     [{ importPolicy: 'ALL' }],
-    [{ visibility: 'SHARE_EVERYTHING' }],
-    [{ areChatsMarkedAsRead: true }],
-  ])('leaves the past conversations alone when saving %o', async (update) => {
+    [{ importPolicy: 'CONTACTS_ONLY' }],
+    [{ areGroupChatsImported: true }],
+    [{ historyConversationLimit: 50 }],
+  ])('leaves importing to the Sync button when saving %o', async (update) => {
+    setHistoryImport('CONTACTS_ONLY');
+
     await updateSettings(update);
 
     expect(mocks.enqueueJobs).not.toHaveBeenCalled();
-    expect(mocks.kvStore.get(HISTORY_KEY)).toEqual(
-      expect.objectContaining({ runId: 'run-1', status: 'COMPLETED' }),
-    );
-  });
-
-  it('replaces a running import and drops what it had listed', async () => {
-    setHistoryImport('IMPORTING');
-    mocks.kvStore.set('linkedin-history-import-planning:connection-id:run-1', {
-      plannedChunkCount: 1,
-      plannedConversationCount: 20,
-    });
-
-    await updateSettings({ importPolicy: 'CONTACTS_ONLY' });
-
-    expect(mocks.enqueueJobs).toHaveBeenCalledOnce();
-    expect(
-      mocks.kvStore.has('linkedin-history-import-planning:connection-id:run-1'),
-    ).toBe(false);
-    expect(mocks.kvStore.get(HISTORY_KEY)).toEqual(
-      expect.objectContaining({
-        status: 'IMPORTING',
-        importPolicy: 'CONTACTS_ONLY',
-      }),
-    );
-  });
-
-  it('stops a running import once no conversation is selected', async () => {
-    setHistoryImport('IMPORTING');
-
-    await updateSettings({ importPolicy: 'SELECTED' });
-
-    expect(mocks.enqueueJobs).not.toHaveBeenCalled();
-    expect(mocks.kvStore.get(HISTORY_KEY)).toEqual(
-      expect.objectContaining({ runId: 'run-1', status: 'CANCELLED' }),
-    );
   });
 });

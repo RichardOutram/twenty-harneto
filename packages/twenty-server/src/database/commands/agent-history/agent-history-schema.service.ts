@@ -13,7 +13,7 @@ import { getLegacyAgentHistoryFlatFieldMetadatas } from 'src/database/commands/a
 import { ApplicationService } from 'src/engine/core-modules/application/application.service';
 import { addFlatEntityToFlatEntityMapsOrThrow } from 'src/engine/metadata-modules/flat-entity/utils/add-flat-entity-to-flat-entity-maps-or-throw.util';
 import { WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';
-import { computeTwentyStandardApplicationAllFlatEntityMapsWithLegacyAgentChatNames } from 'src/database/commands/upgrade-version-command/2-42/utils/compute-twenty-standard-application-all-flat-entity-maps-with-legacy-agent-chat-names.util';
+import { computeTwentyStandardApplicationAllFlatEntityMaps } from 'src/engine/workspace-manager/twenty-standard-application/utils/twenty-standard-application-all-flat-entity-maps.constant';
 import { WorkspaceMigrationValidateBuildAndRunService } from 'src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service';
 
 @Injectable()
@@ -44,14 +44,11 @@ export class AgentHistorySchemaService {
     const {
       allFlatEntityMaps: standard,
       idByUniversalIdentifierByMetadataName,
-    } =
-      computeTwentyStandardApplicationAllFlatEntityMapsWithLegacyAgentChatNames(
-        {
-          now: new Date().toISOString(),
-          workspaceId,
-          twentyStandardApplicationId: twentyStandardFlatApplication.id,
-        },
-      );
+    } = computeTwentyStandardApplicationAllFlatEntityMaps({
+      now: new Date().toISOString(),
+      workspaceId,
+      twentyStandardApplicationId: twentyStandardFlatApplication.id,
+    });
     const historyObjectUniversalIdentifiers = ACTIVE_AGENT_HISTORY_TABLES.map(
       ({ name }) => STANDARD_OBJECTS[name].universalIdentifier,
     );

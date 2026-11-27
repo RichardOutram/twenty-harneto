@@ -120,7 +120,6 @@ exports[`registry-derived override property maps derives the overridable propert
     "calendarLayout",
     "calendarFieldMetadataId",
     "calendarEndFieldMetadataId",
-    "listPinnedFieldMetadataId",
     "isPrivate",
     "mainGroupByFieldMetadataId",
     "shouldHideEmptyGroups",

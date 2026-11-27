@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 import { isDefined } from 'twenty-shared/utils';
 
-import { type WorkspaceAuthContext } from 'src/engine/core-modules/auth/types/workspace-auth-context.type';
 import { CacheLockService } from 'src/engine/core-modules/cache-lock/cache-lock.service';
 import { GETTING_STARTED_WORKFLOWS } from 'src/engine/core-modules/getting-started/constants/getting-started-workflows.constant';
 import { type GettingStartedWorkflowDTO } from 'src/engine/core-modules/getting-started/dtos/getting-started-workflow.dto';
@@ -34,11 +33,11 @@ export class GettingStartedWorkflowWorkspaceService {
 
   async prepareWorkflowOrThrow({
     workspaceId,
-    authContext,
+    userWorkspaceId,
     stepActionKey,
   }: {
     workspaceId: string;
-    authContext: WorkspaceAuthContext;
+    userWorkspaceId: string;
     stepActionKey: GettingStartedStepActionKey;
   }): Promise<GettingStartedWorkflowDTO> {
     const gettingStartedWorkflow = GETTING_STARTED_WORKFLOWS[stepActionKey];
@@ -60,6 +59,7 @@ export class GettingStartedWorkflowWorkspaceService {
         const savedCoreWorkflow = isDefined(savedWorkflow)
           ? await this.coreWorkflowListService.findOneById({
               workspaceId,
+              userWorkspaceId,
               callerApplication: undefined,
               coreWorkflowId: savedWorkflow.workflowId,
             })
@@ -71,7 +71,7 @@ export class GettingStartedWorkflowWorkspaceService {
 
         return this.createWorkflowDraft({
           workspaceId,
-          authContext,
+          userWorkspaceId,
           stepActionKey,
           gettingStartedWorkflow,
         });
@@ -83,12 +83,12 @@ export class GettingStartedWorkflowWorkspaceService {
 
   private async createWorkflowDraft({
     workspaceId,
-    authContext,
+    userWorkspaceId,
     stepActionKey,
     gettingStartedWorkflow,
   }: {
     workspaceId: string;
-    authContext: WorkspaceAuthContext;
+    userWorkspaceId: string;
     stepActionKey: GettingStartedStepActionKey;
     gettingStartedWorkflow: GettingStartedWorkflow;
   }): Promise<GettingStartedWorkflowDTO> {
@@ -104,7 +104,7 @@ export class GettingStartedWorkflowWorkspaceService {
       await this.coreWorkflowMutationWorkspaceService.createWorkflowWithContent(
         {
           workspaceId,
-          authContext,
+          userWorkspaceId,
           ...buildGettingStartedWorkflowContent({
             gettingStartedWorkflow,
             flatObjectMetadataMaps,

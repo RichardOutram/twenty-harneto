@@ -46,14 +46,6 @@ export type LogicFunctionInstallPrebuiltBundleParams = {
   flatApplication: FlatApplication;
 };
 
-export type LogicFunctionWarmUpParams = {
-  flatLogicFunction: Pick<
-    ExecutableFlatLogicFunction,
-    'id' | 'executorNamePrefix'
-  >;
-  env?: Record<string, string>;
-};
-
 export type LogicFunctionTranspileParams = {
   targetRuntime: LogicFunctionRuntime;
   sourceCode: string;
@@ -91,7 +83,6 @@ export interface LogicFunctionDriver {
   getInstalledBundleChecksum(
     flatLogicFunction: ExecutableFlatLogicFunction,
   ): Promise<string | null>;
-  warmUp(params: LogicFunctionWarmUpParams): Promise<void>;
   executeHttpRequest(request: HttpEgressRequest): Promise<HttpEgressResponse>;
 }
 

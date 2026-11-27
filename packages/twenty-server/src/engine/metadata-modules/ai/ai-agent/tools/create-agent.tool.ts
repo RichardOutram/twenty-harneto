@@ -71,7 +71,7 @@ export class CreateAgentTool extends BaseTool<typeof createAgentInputSchema> {
 
   async execute({
     input: { triggers, ...parameters },
-    context: { workspaceId, authContext },
+    context: { workspaceId, userWorkspaceId },
   }: ToolExecuteArgs<typeof createAgentInputSchema>): Promise<ToolOutput> {
     const modelId =
       parameters.modelId ?? AUTO_SELECT_WORKSPACE_DEFAULT_MODEL_ID;
@@ -93,18 +93,13 @@ export class CreateAgentTool extends BaseTool<typeof createAgentInputSchema> {
         triggers: toAgentTriggers(triggers ?? []),
       },
       workspaceId,
-      authContext,
+      userWorkspaceId,
     });
 
     return {
       success: true,
       message: `Agent "${agent.label}" created`,
-      result: toAgentSummary(
-        await this.agentService.toAgentDto({
-          flatAgentWithRoleId: agent,
-          workspaceId,
-        }),
-      ),
+      result: toAgentSummary(agent),
     };
   }
 }

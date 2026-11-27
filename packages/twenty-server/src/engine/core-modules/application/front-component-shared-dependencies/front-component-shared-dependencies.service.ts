@@ -34,8 +34,8 @@ export class FrontComponentSharedDependenciesService {
     frontComponentSharedDependenciesChecksum: string | null;
   }> {
     const application =
-      await this.applicationService.findInstalledFlatApplicationOrThrow({
-        applicationId,
+      await this.applicationService.findOneApplicationWithRelationsOrThrow({
+        id: applicationId,
         workspaceId,
       });
 

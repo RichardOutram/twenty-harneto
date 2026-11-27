@@ -4,8 +4,8 @@ import { Injectable } from '@nestjs/common';
 
 import { isDefined } from 'twenty-shared/utils';
 
-import { buildTemporaryChannelWriteAccess } from 'src/engine/permissions/channel-visibility/utils/build-temporary-channel-write-access.util';
 import { type PermissionsMetadataMaps } from 'src/engine/permissions/internal/combine/types/permissions-access-request.type';
+import { RelatedRecordPathReadService } from 'src/engine/permissions/internal/related-record-path/services/related-record-path-read.service';
 import { getPermissionsPrincipalsRecordsPermissions } from 'src/engine/permissions/internal/role/utils/get-permissions-principals-records-permissions.util';
 import { type WorkspaceCacheDataMap } from 'src/engine/workspace-cache/types/workspace-cache-key.type';
 import { findWorkspaceMemberRelationPredicates } from 'src/engine/permissions/internal/rls/utils/find-workspace-member-relation-predicates.util';
@@ -26,7 +26,10 @@ export class PermissionsMetadataMapsService {
     Promise<LoadedPrincipalsPermissions>
   >();
 
-  constructor(private readonly workspaceCacheService: WorkspaceCacheService) {}
+  constructor(
+    private readonly workspaceCacheService: WorkspaceCacheService,
+    private readonly relatedRecordPathReadService: RelatedRecordPathReadService,
+  ) {}
 
   async load({
     workspaceId,
@@ -39,16 +42,12 @@ export class PermissionsMetadataMapsService {
       flatFieldMetadataOptionMaps,
       featureFlagsMap,
       rolesPermissions,
-      flatRelatedRecordPathMaps,
-      flatRoleMaps,
     } = await this.workspaceCacheService.getOrRecompute(workspaceId, [
       'flatObjectMetadataMaps',
       'flatFieldMetadataMapsOrm',
       'flatFieldMetadataOptionMaps',
       'featureFlagsMap',
       'rolesPermissions',
-      'flatRelatedRecordPathMaps',
-      'flatRoleMaps',
     ]);
 
     const metadataMaps: PermissionsMetadataMaps = {
@@ -57,36 +56,39 @@ export class PermissionsMetadataMapsService {
       flatFieldMetadataOptionMaps,
       featureFlagsMap,
       rolesPermissions,
-      flatRelatedRecordPathMaps,
-      // TODO(@charlesBochet): remove after 2026-12-27. Temporary channel write access for admins and API keys, only to unblock customers who reported broken links, merges and deletes
-      temporaryChannelWriteAccess: buildTemporaryChannelWriteAccess({
-        featureFlagsMap,
-        flatRoleMaps,
-        flatObjectMetadataMaps,
-      }),
     };
 
-    const [flatWorkspaceMemberMaps, rlsWorkspaceMemberRelationValueMaps] =
-      await Promise.all([
-        this.findCacheValueWhenPredicatesExist({
-          workspaceId,
-          hasPredicates:
-            findWorkspaceMemberBoundPredicates(rolesPermissions).length > 0,
-          cacheKeyName: 'flatWorkspaceMemberMaps',
-        }),
-        this.findCacheValueWhenPredicatesExist({
-          workspaceId,
-          hasPredicates:
-            findWorkspaceMemberRelationPredicates(rolesPermissions).length > 0,
-          cacheKeyName: 'rlsWorkspaceMemberRelationValueMaps',
-        }),
-      ]);
+    const [
+      flatWorkspaceMemberMaps,
+      rlsWorkspaceMemberRelationValueMaps,
+      flatRelatedRecordPathMaps,
+    ] = await Promise.all([
+      this.findCacheValueWhenPredicatesExist({
+        workspaceId,
+        hasPredicates:
+          findWorkspaceMemberBoundPredicates(rolesPermissions).length > 0,
+        cacheKeyName: 'flatWorkspaceMemberMaps',
+      }),
+      this.findCacheValueWhenPredicatesExist({
+        workspaceId,
+        hasPredicates:
+          findWorkspaceMemberRelationPredicates(rolesPermissions).length > 0,
+        cacheKeyName: 'rlsWorkspaceMemberRelationValueMaps',
+      }),
+      this.relatedRecordPathReadService.findEnabledFlatRelatedRecordPathMaps({
+        workspaceId,
+        featureFlagsMap,
+      }),
+    ]);
 
     return {
       ...metadataMaps,
       ...(isDefined(flatWorkspaceMemberMaps) && { flatWorkspaceMemberMaps }),
       ...(isDefined(rlsWorkspaceMemberRelationValueMaps) && {
         rlsWorkspaceMemberRelationValueMaps,
+      }),
+      ...(isDefined(flatRelatedRecordPathMaps) && {
+        flatRelatedRecordPathMaps,
       }),
     };
   }

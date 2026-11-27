@@ -8,12 +8,6 @@ import {
   IconMessageHeart,
 } from 'twenty-ui/icon';
 
-import { INBOX_CHANNELS_NAVIGATION_SECTION_ID } from '@/inbox/constants/InboxChannelsNavigationSectionId';
-import { INBOX_FAVORITES_NAVIGATION_SECTION_ID } from '@/inbox/constants/InboxFavoritesNavigationSectionId';
-import { INBOX_RECENTS_NAVIGATION_SECTION_ID } from '@/inbox/constants/InboxRecentsNavigationSectionId';
-import { INBOX_TRIAGE_NAVIGATION_SECTION_ID } from '@/inbox/constants/InboxTriageNavigationSectionId';
-import { AI_AGENTS_NAVIGATION_SECTION_ID } from '@/navigation-menu-item/common/constants/AiAgentsNavigationSectionId';
-import { FAVORITES_NAVIGATION_SECTION_ID } from '@/navigation-menu-item/display/sections/favorites/constants/FavoritesNavigationSectionId';
 import {
   FeatureFlagKey,
   PermissionFlagType,
@@ -22,7 +16,6 @@ import {
 export const NAVIGATION_MENU_BUILT_IN_SECTIONS = [
   {
     key: 'favorites',
-    navigationSectionId: FAVORITES_NAVIGATION_SECTION_ID,
     label: msg`Favorites`,
     Icon: IconHeart,
     color: 'red',
@@ -30,8 +23,7 @@ export const NAVIGATION_MENU_BUILT_IN_SECTIONS = [
   },
   {
     key: 'aiChatInbox',
-    navigationSectionId: INBOX_TRIAGE_NAVIGATION_SECTION_ID,
-    label: msg`Inbox`,
+    label: msg`Triage`,
     Icon: IconInbox,
     color: 'blue',
     isAi: true,
@@ -40,7 +32,6 @@ export const NAVIGATION_MENU_BUILT_IN_SECTIONS = [
   },
   {
     key: 'aiChatFavorites',
-    navigationSectionId: INBOX_FAVORITES_NAVIGATION_SECTION_ID,
     label: msg`Favorite chats`,
     Icon: IconMessageHeart,
     color: 'pink',
@@ -49,7 +40,6 @@ export const NAVIGATION_MENU_BUILT_IN_SECTIONS = [
   },
   {
     key: 'aiChatChannels',
-    navigationSectionId: INBOX_CHANNELS_NAVIGATION_SECTION_ID,
     label: msg`Channels`,
     Icon: IconHash,
     color: 'green',
@@ -59,17 +49,14 @@ export const NAVIGATION_MENU_BUILT_IN_SECTIONS = [
   },
   {
     key: 'aiChatRecents',
-    navigationSectionId: INBOX_RECENTS_NAVIGATION_SECTION_ID,
     label: msg`Recent chats`,
     Icon: IconHistory,
     color: 'orange',
     isAi: true,
     requiredPermissionFlag: PermissionFlagType.AI,
-    defaultVisibleItemLimit: 5,
   },
   {
     key: 'aiAgents',
-    navigationSectionId: AI_AGENTS_NAVIGATION_SECTION_ID,
     label: msg`Agents`,
     Icon: IconLego,
     color: 'purple',

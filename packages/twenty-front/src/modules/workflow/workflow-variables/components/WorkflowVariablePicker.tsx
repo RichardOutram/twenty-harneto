@@ -42,7 +42,7 @@ const StyledSearchVariablesDropdownContainer = styled.div<{
 
   &:hover {
     background-color: ${({ isReadonly, multiline }) => {
-      if (isReadonly) {
+      if (isReadonly === true) {
         return multiline
           ? 'transparent'
           : themeCssVariables.background.transparent.lighter;

@@ -22,4 +22,7 @@ export class WorkspaceCompanyEnrichmentResultDTO {
 
   @Field(() => GraphQLJSON, { nullable: true })
   personEnrichment: WorkspacePersonEnrichment | null;
+
+  @Field(() => Boolean)
+  isBookCallOnboardingStepPending: boolean;
 }

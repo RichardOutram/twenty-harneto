@@ -17,7 +17,7 @@ import { type AgentInboxSender } from 'src/engine/metadata-modules/ai/ai-chat/ty
 import { resolveEmailToolCallProposal } from 'src/engine/metadata-modules/ai/ai-agent-execution/pausing-tools/utils/resolve-email-tool-call-proposal.util';
 import { buildInboxMessageIds } from 'src/engine/metadata-modules/ai/ai-chat/utils/build-inbox-message-ids.util';
 import { buildInboxThreadId } from 'src/engine/metadata-modules/ai/ai-chat/utils/build-inbox-thread-id.util';
-import { buildInboxMessageToolCallParts } from 'src/engine/metadata-modules/ai/ai-chat/utils/build-inbox-message-tool-call-parts.util';
+import { buildInboxMessageToolCallPart } from 'src/engine/metadata-modules/ai/ai-chat/utils/build-inbox-message-tool-call-part.util';
 import { buildToolPart } from 'src/engine/metadata-modules/ai/ai-chat/utils/build-tool-part.util';
 import { extractInboxMessageMentionedWorkspaceMemberIds } from 'src/engine/metadata-modules/ai/ai-chat/utils/extract-inbox-message-mentioned-workspace-member-ids.util';
 import { formatErrorWithCause } from 'src/engine/metadata-modules/ai/ai-chat/utils/format-error-with-cause.util';
@@ -82,10 +82,7 @@ export class AgentInboxService {
   }: {
     workspaceId: string;
     sender: AgentInboxSender;
-    input: Omit<SendInboxMessageInput, 'toolCall' | 'toolCalls'> & {
-      toolCall?: unknown;
-      toolCalls?: unknown;
-    };
+    input: Omit<SendInboxMessageInput, 'toolCall'> & { toolCall?: unknown };
     // without a resolver, only emails can be proposed: they need no tool of the sender's
     resolveProposal?: ResolveInboxProposal;
     // a pausing call the server resolves, with its pending output, only when the message is written,
@@ -143,23 +140,24 @@ export class AgentInboxService {
       threadId,
       toolCallId,
     });
-    const toolCallParts = isDefined(awaitingToolCall)
+    const toolCallPart = isDefined(awaitingToolCall)
       ? {
-          parts: [buildToolPart({ ...awaitingToolCall, toolCallId })],
+          part: buildToolPart({ ...awaitingToolCall, toolCallId }),
           isAwaitingAnswer: true,
         }
-      : await buildInboxMessageToolCallParts({
-          toolCall: input.toolCall,
-          toolCalls: input.toolCalls,
-          messageId,
-          resolveProposal,
-          findApplicationTool: (logicFunctionUniversalIdentifier) =>
-            this.findApplicationTool({
-              workspaceId,
-              applicationId: senderDetails.applicationId,
-              logicFunctionUniversalIdentifier,
-            }),
-        });
+      : isDefined(input.toolCall)
+        ? await buildInboxMessageToolCallPart({
+            toolCall: input.toolCall,
+            toolCallId,
+            resolveProposal,
+            findApplicationTool: (logicFunctionUniversalIdentifier) =>
+              this.findApplicationTool({
+                workspaceId,
+                applicationId: senderDetails.applicationId,
+                logicFunctionUniversalIdentifier,
+              }),
+          })
+        : undefined;
 
     const { thread } = await openThread();
 
@@ -171,10 +169,11 @@ export class AgentInboxService {
       senderDescription: senderDetails.description,
     });
 
-    const parts: ExtendedUIMessagePart[] = [
-      { type: 'text', text: input.text },
-      ...toolCallParts.parts,
-    ];
+    const parts: ExtendedUIMessagePart[] = [{ type: 'text', text: input.text }];
+
+    if (isDefined(toolCallPart)) {
+      parts.push(toolCallPart.part);
+    }
 
     const isWritten = await this.ignoreDuplicate(() =>
       this.conversationWriterService.insertMessage({
@@ -184,9 +183,9 @@ export class AgentInboxService {
         turnId,
         role: AgentMessageRole.ASSISTANT,
         agentId: null,
-        senderWorkspaceMemberId: null,
+        senderUserWorkspaceId: null,
         senderApplicationId: senderDetails.applicationId,
-        isAwaitingAnswer: toolCallParts.isAwaitingAnswer,
+        isAwaitingAnswer: toolCallPart?.isAwaitingAnswer,
         parts,
       }),
     );
@@ -495,7 +494,7 @@ export class AgentInboxService {
         turnId,
         role: AgentMessageRole.SYSTEM,
         agentId: null,
-        senderWorkspaceMemberId: null,
+        senderUserWorkspaceId: null,
         parts: [
           {
             type: 'text',

@@ -202,7 +202,6 @@ describe('Send chat message workflow step', () => {
 
       expect(part.toolOutput.result).toMatchObject({
         status: 'pending',
-        isPostedByWorkflow: true,
         proposal: {
           template: 'recordUpdate',
           recordId: companyId,

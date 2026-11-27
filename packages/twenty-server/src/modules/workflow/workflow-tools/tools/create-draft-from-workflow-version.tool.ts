@@ -34,6 +34,7 @@ export const createCreateDraftFromWorkflowVersionTool = (
           await deps.coreWorkflowVersionMutationService.createDraftFromCoreWorkflowVersion(
             {
               workspaceId: context.workspaceId,
+              userWorkspaceId: context.userWorkspaceId,
               coreWorkflowId: parameters.coreWorkflowId,
               coreWorkflowVersionIdToCopy:
                 parameters.coreWorkflowVersionIdToCopy,

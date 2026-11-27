@@ -119,28 +119,8 @@ describe('resolveDatabaseEventTriggerManifestSettingsOrThrow', () => {
     ).toEqual({
       eventName: 'opportunity.updated',
       updatedFields: ['stage', 'companyId'],
-      conditionTree: {
-        type: 'GROUP',
-        logicalOperator: 'AND',
-        children: [
-          {
-            type: 'COMPARISON',
-            operator: 'EQUAL',
-            left: { type: 'FIELD', fieldUniversalIdentifier: STAGE },
-            right: { type: 'LITERAL', value: 'CUSTOMER' },
-          },
-          {
-            type: 'COMPARISON',
-            operator: 'NOT_EQUAL',
-            left: {
-              type: 'FIELD',
-              fieldUniversalIdentifier: STAGE,
-              isPreviousValue: true,
-            },
-            right: { type: 'LITERAL', value: 'CUSTOMER' },
-          },
-        ],
-      },
+      condition: "stage == 'CUSTOMER' and previous.stage != 'CUSTOMER'",
+      conditionBindings: { stage: STAGE, 'previous.stage': STAGE },
       batchMode: true,
     });
   });
@@ -155,23 +135,9 @@ describe('resolveDatabaseEventTriggerManifestSettingsOrThrow', () => {
       }),
     ).toEqual({
       eventName: 'signal.created',
-      conditionTree: {
-        type: 'COMPARISON',
-        operator: 'EQUAL',
-        left: { type: 'FIELD', fieldUniversalIdentifier: SIGNAL_STATUS },
-        right: { type: 'LITERAL', value: 'NEW' },
-      },
+      condition: "status == 'NEW'",
+      conditionBindings: { status: SIGNAL_STATUS },
     });
-  });
-
-  it('never takes a tree or bindings from a definition', () => {
-    expect(
-      resolve({
-        eventName: 'opportunity.created',
-        conditionTree: { type: 'LITERAL', value: true },
-        conditionBindings: { stage: STAGE },
-      } as Parameters<typeof resolve>[0]),
-    ).toEqual({ eventName: 'opportunity.created' });
   });
 
   it('listens to every object when no object is given', () => {
@@ -188,27 +154,8 @@ describe('resolveDatabaseEventTriggerManifestSettingsOrThrow', () => {
       }),
     ).toEqual({
       eventName: 'opportunity.created',
-      conditionTree: {
-        type: 'GROUP',
-        logicalOperator: 'AND',
-        children: [
-          {
-            type: 'FUNCTION_CALL',
-            functionName: 'isDefined',
-            arguments: [{ type: 'FIELD', fieldUniversalIdentifier: COMPANY }],
-          },
-          {
-            type: 'COMPARISON',
-            operator: 'NOT_EQUAL',
-            left: {
-              type: 'FIELD',
-              relationFieldUniversalIdentifier: COMPANY,
-              fieldUniversalIdentifier: COMPANY_NAME,
-            },
-            right: { type: 'LITERAL', value: 'Acme' },
-          },
-        ],
-      },
+      condition: "isDefined(company) and company.name != 'Acme'",
+      conditionBindings: { company: COMPANY, 'company.name': COMPANY_NAME },
     });
 
     expect(() =>
@@ -291,13 +238,8 @@ describe('resolveDatabaseEventTriggerManifestSettingsOrThrow built-in fields', (
       }),
     ).toEqual({
       eventName: 'signal.created',
-      conditionTree: {
-        type: 'FUNCTION_CALL',
-        functionName: 'isDefined',
-        arguments: [
-          { type: 'FIELD', fieldUniversalIdentifier: expect.any(String) },
-        ],
-      },
+      condition: 'isDefined(createdAt)',
+      conditionBindings: { createdAt: expect.any(String) },
     });
   });
 

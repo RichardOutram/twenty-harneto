@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_WHATSAPP_SETTINGS } from 'src/constants/default-whatsapp-settings.constant';
-import { type WhatsappSettings } from 'src/types/whatsapp-settings.type';
 import { type UnipileUser } from 'src/unipile/types/unipile-user.type';
 import { type UnipileMessage } from 'src/unipile/types/unipile-message.type';
 
@@ -109,19 +108,14 @@ const GROUP_CHAT = {
   ],
 };
 
-const ALL_CHATS_SETTINGS: WhatsappSettings = {
-  ...DEFAULT_WHATSAPP_SETTINGS,
-  importPolicy: 'ALL',
-};
-
 const ingest = ({
-  settings = ALL_CHATS_SETTINGS,
+  settings = DEFAULT_WHATSAPP_SETTINGS,
   messages = [buildMessage({ isSender: true })],
   chat = ONE_TO_ONE_CHAT,
   counterparts = [PRIYA],
 }: {
   counterparts?: UnipileUser[];
-  settings?: WhatsappSettings;
+  settings?: typeof DEFAULT_WHATSAPP_SETTINGS;
   messages?: UnipileMessage[];
   chat?: typeof ONE_TO_ONE_CHAT | typeof GROUP_CHAT;
 } = {}) =>
@@ -237,7 +231,7 @@ describe('ingestWhatsappMessages', () => {
     await expect(
       ingest({
         settings: {
-          ...ALL_CHATS_SETTINGS,
+          ...DEFAULT_WHATSAPP_SETTINGS,
           contactAutoCreationPolicy: 'NONE',
         },
       }),
@@ -252,7 +246,7 @@ describe('ingestWhatsappMessages', () => {
     await expect(
       ingest({
         settings: {
-          ...ALL_CHATS_SETTINGS,
+          ...DEFAULT_WHATSAPP_SETTINGS,
           importPolicy: 'CONTACTS_ONLY',
         },
       }),
@@ -292,7 +286,7 @@ describe('ingestWhatsappMessages', () => {
       counterparts: [PRIYA, SAM],
       messages: [buildMessage({ isSender: false, sender: PRIYA })],
       settings: {
-        ...ALL_CHATS_SETTINGS,
+        ...DEFAULT_WHATSAPP_SETTINGS,
         contactAutoCreationPolicy: 'SENT_AND_RECEIVED',
       },
     });
@@ -335,11 +329,27 @@ describe('ingestWhatsappMessages', () => {
     expect(mocks.ingestMessages).not.toHaveBeenCalled();
   });
 
+  it('skips group chats when they are not imported', async () => {
+    setPeopleInTwenty({ [PRIYA_HANDLE]: 'priya-person-id' });
+
+    await expect(
+      ingest({
+        chat: GROUP_CHAT,
+        counterparts: [PRIYA, SAM],
+        settings: {
+          ...DEFAULT_WHATSAPP_SETTINGS,
+          areGroupChatsImported: false,
+        },
+      }),
+    ).resolves.toMatchObject({ skippedReason: 'GROUP_CHATS_OFF' });
+    expect(mocks.findPersonIdsByWhatsappPhone).not.toHaveBeenCalled();
+  });
+
   it('skips a conversation the member did not select', async () => {
     await expect(
       ingest({
         settings: {
-          ...ALL_CHATS_SETTINGS,
+          ...DEFAULT_WHATSAPP_SETTINGS,
           importPolicy: 'SELECTED',
           selectedChats: [{ id: 'chat-2', name: 'chat-2' }],
         },
@@ -352,15 +362,16 @@ describe('ingestWhatsappMessages', () => {
     expect(mocks.ingestMessages).not.toHaveBeenCalled();
   });
 
-  it('imports a selected group chat even when nobody in it is in Twenty', async () => {
+  it('imports a selected group chat even when nobody in it is in Twenty and group chats are off', async () => {
     await expect(
       ingest({
         chat: GROUP_CHAT,
         counterparts: [PRIYA, SAM],
         settings: {
-          ...ALL_CHATS_SETTINGS,
+          ...DEFAULT_WHATSAPP_SETTINGS,
           importPolicy: 'SELECTED',
           selectedChats: [{ id: 'chat-2', name: 'chat-2' }],
+          areGroupChatsImported: false,
         },
       }),
     ).resolves.toMatchObject({

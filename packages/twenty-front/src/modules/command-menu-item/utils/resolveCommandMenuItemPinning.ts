@@ -1,4 +1,4 @@
-import { evaluateConditionalEvaluationExpression } from 'twenty-shared/conditional-evaluation';
+import { evaluateConditionalAvailabilityExpression } from 'twenty-shared/conditional-availability';
 import { type CommandMenuContextApi } from 'twenty-shared/types';
 
 import { type CommandMenuItemFieldsFragment } from '~/generated-metadata/graphql';
@@ -19,7 +19,7 @@ export const resolveCommandMenuItemPinning = <
   ...commandMenuItem,
   isPinned:
     commandMenuItem.isPinned &&
-    evaluateConditionalEvaluationExpression(
+    evaluateConditionalAvailabilityExpression(
       commandMenuItem.conditionalPinnedExpression,
       commandMenuContextApi,
     ),

@@ -18,7 +18,6 @@ import {
 import { GraphQLJSON } from 'graphql-type-json';
 import {
   type FieldMetadataDefaultOption,
-  type FieldMetadataFormula,
   type FieldMetadataOptions,
   type FieldMetadataSettings,
   FieldMetadataType,
@@ -144,10 +143,6 @@ export class FieldMetadataDTO<T extends FieldMetadataType = FieldMetadataType> {
   @IsOptional()
   @Field(() => GraphQLJSON, { nullable: true })
   settings?: FieldMetadataSettings<T>;
-
-  @IsOptional()
-  @Field(() => GraphQLJSON, { nullable: true })
-  formula?: FieldMetadataFormula | null;
 
   @HideField()
   workspaceId: string;

@@ -1,5 +1,6 @@
 /* @license Enterprise */
 
+import { type FeatureFlagKey } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
 import { type FlatWorkspaceMemberMaps } from 'src/engine/core-modules/user/types/flat-workspace-member-maps.type';
@@ -9,6 +10,7 @@ import { type OrmFlatFieldMetadata } from 'src/engine/metadata-modules/flat-fiel
 import { type FlatObjectMetadata } from 'src/engine/metadata-modules/flat-object-metadata/types/flat-object-metadata.type';
 import { type UserWorkspaceRoleMap } from 'src/engine/metadata-modules/role-target/types/user-workspace-role-map.type';
 import { type AccessGroupWithoutCompactId } from 'src/engine/permissions/internal/access-group/types/access-group-without-compact-id.type';
+import { isRlsRelationHopEnabled } from 'src/engine/permissions/internal/rls/utils/is-rls-relation-hop-enabled.util';
 import { buildRoleAccessGroupsOrThrow } from 'src/engine/permissions/internal/access-group/utils/build-role-access-groups-or-throw.util';
 import { PermissionsException } from 'src/engine/permissions/permissions.exception';
 import { type RlsWorkspaceMemberRelationValueMaps } from 'src/engine/permissions/internal/rls/types/rls-workspace-member-relation-value-maps.type';
@@ -59,6 +61,7 @@ const groupWorkspaceMembersByRoleId = ({
 };
 
 export const buildWorkspaceAccessGroups = ({
+  featureFlagsMap,
   rolesPermissions,
   flatObjectMetadataMaps,
   flatFieldMetadataMaps,
@@ -66,6 +69,7 @@ export const buildWorkspaceAccessGroups = ({
   flatWorkspaceMemberMaps,
   rlsWorkspaceMemberRelationValueMaps,
 }: {
+  featureFlagsMap: Partial<Record<FeatureFlagKey, boolean>>;
   rolesPermissions: Record<string, RoleRecordsPermissions>;
   flatObjectMetadataMaps: FlatEntityMaps<FlatObjectMetadata>;
   flatFieldMetadataMaps: FlatEntityMaps<OrmFlatFieldMetadata>;
@@ -106,6 +110,7 @@ export const buildWorkspaceAccessGroups = ({
           objectRecordsPermissions,
           workspaceMembers: workspaceMembersByRoleId.get(roleId) ?? [],
           flatFieldMetadataMaps,
+          isRelationHopEnabled: isRlsRelationHopEnabled(featureFlagsMap),
         })) {
           accessGroupByGroupHash.set(accessGroup.groupHash, accessGroup);
         }

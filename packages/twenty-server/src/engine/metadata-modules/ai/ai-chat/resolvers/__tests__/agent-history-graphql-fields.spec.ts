@@ -1,5 +1,5 @@
 import { GraphQLISODateTime } from '@nestjs/graphql';
-import { AgentChatThreadResolver } from 'src/engine/metadata-modules/ai/ai-chat/resolvers/agent-chat-thread.resolver';
+import { AgentChatResolver } from 'src/engine/metadata-modules/ai/ai-chat/resolvers/agent-chat.resolver';
 import { AgentMessageResolver } from 'src/engine/metadata-modules/ai/ai-agent-execution/resolvers/agent-message.resolver';
 import { AgentMessagePartResolver } from 'src/engine/metadata-modules/ai/ai-agent-execution/resolvers/agent-message-part.resolver';
 import { type AgentChatThreadWorkspaceEntity } from 'src/engine/metadata-modules/ai/ai-history/standard-objects/agent-chat-thread.workspace-entity';
@@ -20,9 +20,9 @@ it('serializes native workspace timestamps through the existing GraphQL Date sca
   } as AgentMessageWorkspaceEntity;
   const part = { createdAt: timestamp } as AgentMessagePartWorkspaceEntity;
   const values = [
-    AgentChatThreadResolver.prototype.createdAt(thread),
-    AgentChatThreadResolver.prototype.updatedAt(thread),
-    AgentChatThreadResolver.prototype.deletedAt(thread),
+    AgentChatResolver.prototype.createdAt(thread),
+    AgentChatResolver.prototype.updatedAt(thread),
+    AgentChatResolver.prototype.deletedAt(thread),
     AgentMessageResolver.prototype.createdAt(message),
     AgentMessageResolver.prototype.processedAt(message),
     AgentMessagePartResolver.prototype.createdAt(part),
@@ -31,7 +31,7 @@ it('serializes native workspace timestamps through the existing GraphQL Date sca
     Array(6).fill(timestamp),
   );
   expect(
-    AgentChatThreadResolver.prototype.deletedAt({
+    AgentChatResolver.prototype.deletedAt({
       ...thread,
       deletedAt: null,
       archivedAt: timestamp,
@@ -50,10 +50,6 @@ it('converts exact stored credit strings to display credits only at the API boun
     totalInputCredits: '12345',
     totalOutputCredits: '67890',
   } as AgentChatThreadWorkspaceEntity;
-  expect(AgentChatThreadResolver.prototype.totalInputCredits(thread)).toBe(
-    0.012345,
-  );
-  expect(AgentChatThreadResolver.prototype.totalOutputCredits(thread)).toBe(
-    0.06789,
-  );
+  expect(AgentChatResolver.prototype.totalInputCredits(thread)).toBe(0.012345);
+  expect(AgentChatResolver.prototype.totalOutputCredits(thread)).toBe(0.06789);
 });

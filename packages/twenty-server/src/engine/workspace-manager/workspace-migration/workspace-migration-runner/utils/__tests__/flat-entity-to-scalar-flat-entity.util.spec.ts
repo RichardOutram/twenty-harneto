@@ -54,7 +54,6 @@ describe('flatEntityToScalarFlatEntity', () => {
   "defaultValue": "'default-value'",
   "description": "test description",
   "disabledFieldPermissionActions": null,
-  "formula": null,
   "icon": "IconTest",
   "id": "field-metadata-id",
   "isActive": true,

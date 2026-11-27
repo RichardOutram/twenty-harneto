@@ -88,7 +88,7 @@ export const WorkflowDiagramHandleSource = ({
     } else {
       bg = themeCssVariables.background.primary;
       borderColor =
-        hovered && !disableHoverEffect
+        hovered && disableHoverEffect !== true
           ? themeCssVariables.font.color.light
           : themeCssVariables.border.color.strong;
     }
@@ -101,7 +101,7 @@ export const WorkflowDiagramHandleSource = ({
       '--handle-transform-origin': transformOrigin,
     };
 
-    if (!disableHoverEffect) {
+    if (disableHoverEffect !== true) {
       const hoverColors = getWorkflowDiagramColors({});
       styles['--handle-hover-bg'] = hoverColors.selected.background;
       styles['--handle-hover-border-color'] = hoverColors.selected.borderColor;

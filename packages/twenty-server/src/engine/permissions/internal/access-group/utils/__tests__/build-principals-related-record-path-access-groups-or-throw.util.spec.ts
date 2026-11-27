@@ -1,4 +1,5 @@
 import {
+  FeatureFlagKey,
   type ObjectRecordsOperationType,
   type ObjectRecordsPermissions,
 } from 'twenty-shared/types';
@@ -77,11 +78,13 @@ const salesMember: PermissionsPrincipalsWithRolesContext = {
 const buildPrincipalsAccessGroupObjectMetadataIds = ({
   isCompanyAttachmentsPathInherent = false,
   objectNamesWithRlsRule = ['company'],
+  isAccessGroupsEnabled = true,
   operationType = 'read',
   principals = salesMember,
 }: {
   isCompanyAttachmentsPathInherent?: boolean;
   objectNamesWithRlsRule?: string[];
+  isAccessGroupsEnabled?: boolean;
   operationType?: ObjectRecordsOperationType;
   principals?: PermissionsPrincipalsWithRolesContext;
 } = {}) => {
@@ -100,7 +103,9 @@ const buildPrincipalsAccessGroupObjectMetadataIds = ({
       flatObjectMetadata: ATTACHMENT,
       operationType,
       metadataMaps: {
-        featureFlagsMap: {},
+        featureFlagsMap: {
+          [FeatureFlagKey.IS_ACCESS_GROUPS_ENABLED]: isAccessGroupsEnabled,
+        },
         rolesPermissions: {
           sales: {
             ...NO_ROLE_RECORDS_PERMISSIONS,
@@ -164,6 +169,14 @@ describe('buildPrincipalsRelatedRecordPathAccessGroupsOrThrow', () => {
     expect(
       buildPrincipalsAccessGroupObjectMetadataIds({
         objectNamesWithRlsRule: [],
+      }),
+    ).toEqual([]);
+  });
+
+  it('should hold no group when access groups are disabled', () => {
+    expect(
+      buildPrincipalsAccessGroupObjectMetadataIds({
+        isAccessGroupsEnabled: false,
       }),
     ).toEqual([]);
   });

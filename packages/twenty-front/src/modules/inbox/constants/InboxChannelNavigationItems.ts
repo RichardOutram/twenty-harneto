@@ -6,7 +6,7 @@ import { AgentChatChannelThreadStatus } from '~/generated-metadata/graphql';
 export const INBOX_CHANNEL_NAVIGATION_ITEMS = [
   {
     channelStatus: AgentChatChannelThreadStatus.OPEN,
-    label: msg({ message: 'Open', context: 'Inbox thread status' }),
+    label: msg`Open`,
     Icon: IconCircleDashed,
     countKey: 'openCount',
     unreadKey: 'hasUnreadOpen',

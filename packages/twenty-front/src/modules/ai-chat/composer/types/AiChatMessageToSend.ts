@@ -1,7 +1,6 @@
 import { type AiChatNewThreadRecipients } from '@/ai-chat/composer/types/AiChatNewThreadRecipients';
 import { type AiChatParticipantMention } from '@/ai-chat/composer/types/AiChatParticipantMention';
 import { type AiChatSendTarget } from '@/ai-chat/composer/types/AiChatSendTarget';
-import { type AiChatFileUIPart } from '@/ai-chat/types/AiChatFileUIPart';
 
 export type AiChatMessageToSend = AiChatSendTarget & {
   isNewChat: boolean;
@@ -9,7 +8,6 @@ export type AiChatMessageToSend = AiChatSendTarget & {
   newThreadRecipients: AiChatNewThreadRecipients | undefined;
   serializedContentToSend: string;
   contentToSend: string;
-  attachments: AiChatFileUIPart[];
   participantMentions: AiChatParticipantMention[];
   initialRecipients: AiChatParticipantMention[];
   isAssistantMentioned: boolean;

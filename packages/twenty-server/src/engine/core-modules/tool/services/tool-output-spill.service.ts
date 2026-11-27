@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 
 import { FileFolder } from 'twenty-shared/types';
-import { isDefined, isNonEmptyArray } from 'twenty-shared/utils';
+import { isDefined } from 'twenty-shared/utils';
 import { v4 } from 'uuid';
 
 import { isObject } from 'class-validator';
@@ -78,8 +78,7 @@ export class ToolOutputSpillService {
     }
 
     try {
-      const { recordReferences, ...outputWithoutRecordReferences } = output;
-      const preview = jsonPreview(outputWithoutRecordReferences);
+      const preview = jsonPreview(output);
       const fileId = v4();
       const filename = `tool-output-${options.toolName}-${fileId}.json`;
 
@@ -107,7 +106,6 @@ export class ToolOutputSpillService {
       return {
         success: output.success,
         message: output.message,
-        ...(isNonEmptyArray(recordReferences) ? { recordReferences } : {}),
         result: {
           spilled: true,
           outputRef: {

@@ -14,7 +14,6 @@ import { assertFlatApplicationIsExportable } from 'src/engine/core-modules/appli
 import { classifyApplicationFlatEntities } from 'src/engine/core-modules/application/application-manifest/utils/classify-application-flat-entities.util';
 import { getApplicationSubAllFlatEntityMaps } from 'src/engine/core-modules/application/application-manifest/utils/get-application-sub-all-flat-entity-maps.util';
 import { reconstructAgentsManifest } from 'src/engine/core-modules/application/application-manifest/utils/reconstruct-agents-manifest.util';
-import { buildFormulaFieldDescriptorsFromUniversalFlatEntityMaps } from 'src/engine/metadata-modules/formula-field/utils/build-formula-field-descriptors-from-universal-flat-entity-maps.util';
 import { reconstructDataModelManifest } from 'src/engine/core-modules/application/application-manifest/utils/reconstruct-data-model-manifest.util';
 import { getResolvableReferenceUniversalIdentifiers } from 'src/engine/core-modules/application/application-manifest/utils/get-resolvable-reference-universal-identifiers.util';
 import { reconstructNavigationMenuItemsManifest } from 'src/engine/core-modules/application/application-manifest/utils/reconstruct-navigation-menu-items-manifest.util';
@@ -119,27 +118,7 @@ export class ApplicationManifestExportService {
       fields,
       indexes,
       coverage: dataModelCoverage,
-    } = reconstructDataModelManifest({
-      applicationAllFlatEntityMaps,
-      getFormulaFields: (objectUniversalIdentifier) => {
-        const universalFlatObjectMetadata =
-          allFlatEntityMaps.flatObjectMetadataMaps.byUniversalIdentifier[
-            objectUniversalIdentifier
-          ];
-
-        if (!isDefined(universalFlatObjectMetadata)) {
-          return [];
-        }
-
-        return buildFormulaFieldDescriptorsFromUniversalFlatEntityMaps({
-          universalFlatObjectMetadata,
-          universalFlatObjectMetadataMaps:
-            allFlatEntityMaps.flatObjectMetadataMaps,
-          universalFlatFieldMetadataMaps:
-            allFlatEntityMaps.flatFieldMetadataMaps,
-        });
-      },
-    });
+    } = reconstructDataModelManifest({ applicationAllFlatEntityMaps });
     const exportedObjectUniversalIdentifiers = new Set(
       objects.map(({ universalIdentifier }) => universalIdentifier),
     );
@@ -230,7 +209,6 @@ export class ApplicationManifestExportService {
       workspaceId,
       applicationUniversalIdentifier,
       applicationAllFlatEntityMaps,
-      allFlatEntityMaps,
       shouldIncludeLogicFunctionSources,
       fileBudget,
       exportedFiles: sourceFiles,

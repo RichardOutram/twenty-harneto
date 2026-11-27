@@ -1,4 +1,3 @@
-import { isNonEmptyString } from '@sniptt/guards';
 import { styled } from '@linaria/react';
 import { type FocusEventHandler } from 'react';
 
@@ -19,7 +18,6 @@ const StyledContainer = styled.div`
 export const TextArea = ({
   textAreaId,
   label,
-  description,
   disabled,
   height,
   placeholder,
@@ -84,9 +82,6 @@ export const TextArea = ({
           height,
         }}
       />
-      {isNonEmptyString(description) && (
-        <Field.Description>{description}</Field.Description>
-      )}
     </Field.Root>
   );
 };

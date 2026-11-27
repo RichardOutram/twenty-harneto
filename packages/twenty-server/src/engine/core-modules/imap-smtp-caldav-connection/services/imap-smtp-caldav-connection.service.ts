@@ -103,7 +103,7 @@ export class ImapSmtpCaldavService {
         );
       }
 
-      if (error.tlsFailed) {
+      if (error.tlsFailed === true) {
         throw new UserInputError(
           `IMAP STARTTLS upgrade failed: ${error.message}`,
           {

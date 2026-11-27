@@ -21,10 +21,6 @@ import {
   RULE_NAME as folderStructureName,
 } from './rules/folder-structure';
 import {
-  rule as graphqlFieldResolversShouldDeclareAccess,
-  RULE_NAME as graphqlFieldResolversShouldDeclareAccessName,
-} from './rules/graphql-field-resolvers-should-declare-access';
-import {
   rule as graphqlResolversShouldBeGuarded,
   RULE_NAME as graphqlResolversShouldBeGuardedName,
 } from './rules/graphql-resolvers-should-be-guarded';
@@ -129,8 +125,6 @@ export default definePlugin({
     [effectComponentsName]: effectComponents,
     [enforceModuleBoundariesName]: enforceModuleBoundaries,
     [folderStructureName]: folderStructure,
-    [graphqlFieldResolversShouldDeclareAccessName]:
-      graphqlFieldResolversShouldDeclareAccess,
     [graphqlResolversShouldBeGuardedName]: graphqlResolversShouldBeGuarded,
     [injectWorkspaceRepositoryName]: injectWorkspaceRepository,
     [matchingStateVariableName]: matchingStateVariable,

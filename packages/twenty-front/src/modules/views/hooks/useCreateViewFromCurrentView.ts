@@ -143,7 +143,6 @@ export const useCreateViewFromCurrentView = (viewBarComponentId?: string) => {
             type: viewType,
             objectMetadataId: sourceView.objectMetadataId,
             anyFieldFilterValue: anyFieldFilterValue,
-            presetFilter: sourceView.presetFilter,
             calendarLayout:
               viewType === ViewType.CALENDAR
                 ? ViewCalendarLayout.MONTH

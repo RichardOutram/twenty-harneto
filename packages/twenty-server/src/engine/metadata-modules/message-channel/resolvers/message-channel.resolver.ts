@@ -50,7 +50,6 @@ import {
 } from 'twenty-shared/types';
 import { AccessPolicyGuard } from 'src/engine/guards/access-policy.guard';
 import { type AccessPolicy } from 'src/engine/guards/types/access-policy.type';
-import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 
 const MESSAGE_CHANNEL_ACCESS_POLICY: AccessPolicy = {
   authPrincipals: {
@@ -96,7 +95,6 @@ export class MessageChannelResolver {
   ) {}
 
   @ResolveField('importProgress', () => Int, { nullable: true })
-  @UseGuards(NoPermissionGuard)
   async importProgress(
     @Parent() messageChannel: MessageChannelDTO,
     @AuthWorkspace() workspace: WorkspaceEntity,
@@ -110,7 +108,6 @@ export class MessageChannelResolver {
   @ResolveField('connectedAccount', () => ConnectedAccountPublicDTO, {
     nullable: true,
   })
-  @UseGuards(NoPermissionGuard)
   async connectedAccount(
     @Parent() messageChannel: MessageChannelDTO,
     @AuthWorkspace() workspace: WorkspaceEntity,

@@ -292,7 +292,7 @@ export class BillingSubscriptionService {
 
     if (!isSendInvoiceSubscription(billingSubscription)) {
       const hasPaymentMethod =
-        await this.stripeCustomerService.ensureDefaultPaymentMethod(
+        await this.stripeCustomerService.hasPaymentMethod(
           billingSubscription.stripeCustomerId,
         );
 
@@ -303,6 +303,10 @@ export class BillingSubscriptionService {
           stripeCustomerId: billingSubscription.stripeCustomerId,
         };
       }
+
+      await this.stripeCustomerService.ensureDefaultPaymentMethod(
+        billingSubscription.stripeCustomerId,
+      );
     }
 
     const updatedSubscription =

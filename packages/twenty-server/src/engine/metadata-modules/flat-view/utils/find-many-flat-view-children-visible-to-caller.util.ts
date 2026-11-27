@@ -40,10 +40,13 @@ export const findManyFlatViewChildrenVisibleToCaller = <
           isDefined(flatView) && isViewVisibleToCaller({ view: flatView }),
       );
 
-  return flatViews.filter(isDefined).flatMap((flatView) =>
-    findManyFlatEntityByIdInFlatEntityMaps({
-      flatEntityIds: flatView[flatViewChildIdsKey],
-      flatEntityMaps: flatViewChildMaps,
-    }),
-  );
+  return flatViews
+    .filter(isDefined)
+    .flatMap((flatView) =>
+      findManyFlatEntityByIdInFlatEntityMaps({
+        flatEntityIds: flatView[flatViewChildIdsKey],
+        flatEntityMaps: flatViewChildMaps,
+      }),
+    )
+    .filter((flatViewChild) => flatViewChild.deletedAt === null);
 };

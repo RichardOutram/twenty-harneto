@@ -269,6 +269,12 @@ export const computeStepOutputSchema = ({
           label: t`Action`,
           value: '',
         },
+        feedback: {
+          isLeaf: true,
+          type: FieldMetadataType.TEXT,
+          label: t`Feedback`,
+          value: '',
+        },
         error: {
           isLeaf: true,
           type: FieldMetadataType.TEXT,

@@ -16,7 +16,7 @@ import { LogConsoleToolbar } from '@/log-console/components/LogConsoleToolbar';
 import { LOG_CONSOLE_TABLE_SCROLL_WRAPPER_ID } from '@/log-console/constants/LogConsoleTableScrollWrapperId';
 import { useLogConsoleRetention } from '@/log-console/hooks/useLogConsoleRetention';
 import { useLogConsoleTimeZone } from '@/log-console/hooks/useLogConsoleTimeZone';
-import { logConsoleFiltersFamilyState } from '@/log-console/states/logConsoleFiltersFamilyState';
+import { logConsoleFiltersState } from '@/log-console/states/logConsoleFiltersState';
 import { logConsoleSelectedLogState } from '@/log-console/states/logConsoleSelectedLogState';
 import { logConsoleTimeRangeState } from '@/log-console/states/logConsoleTimeRangeState';
 import { type LogConsoleFilter } from '@/log-console/types/LogConsoleFilter';
@@ -29,7 +29,6 @@ import { SettingsEmptyPlaceholder } from '@/settings/components/SettingsEmptyPla
 import { useEventLogsLiveStream } from '@/settings/event-logs/hooks/useEventLogsLiveStream';
 import { useEventLogs } from '@/settings/event-logs/hooks/useQueryEventLogs';
 import { useScrollWrapperHTMLElement } from '@/ui/utilities/scroll/hooks/useScrollWrapperHTMLElement';
-import { useAtomFamilyState } from '@/ui/utilities/state/jotai/hooks/useAtomFamilyState';
 import { useAtomState } from '@/ui/utilities/state/jotai/hooks/useAtomState';
 import { type EventLogRecord } from '~/generated-metadata/graphql';
 import { sortByProperty } from '~/utils/array/sortByProperty';
@@ -61,9 +60,8 @@ export const LogConsoleResults = ({ source }: LogConsoleResultsProps) => {
   const [logConsoleTimeRange, setLogConsoleTimeRange] = useAtomState(
     logConsoleTimeRangeState,
   );
-  const [logConsoleFilters, setLogConsoleFilters] = useAtomFamilyState(
-    logConsoleFiltersFamilyState,
-    source.id,
+  const [logConsoleFilters, setLogConsoleFilters] = useAtomState(
+    logConsoleFiltersState,
   );
   const [refreshedAt, setRefreshedAt] = useState(() =>
     new Date().toISOString(),

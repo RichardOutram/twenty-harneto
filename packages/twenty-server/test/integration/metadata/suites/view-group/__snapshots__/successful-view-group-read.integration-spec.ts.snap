@@ -3,6 +3,7 @@
 exports[`View Group read should succeed should find a view group among all view groups 1`] = `
 {
   "createdAt": Any<String>,
+  "deletedAt": null,
   "fieldValue": "NEW",
   "id": Any<String>,
   "isVisible": true,
@@ -16,6 +17,7 @@ exports[`View Group read should succeed should find a view group among all view 
 exports[`View Group read should succeed should find a view group among the view groups of its view 1`] = `
 {
   "createdAt": Any<String>,
+  "deletedAt": null,
   "fieldValue": "NEW",
   "id": Any<String>,
   "isVisible": true,
@@ -29,6 +31,7 @@ exports[`View Group read should succeed should find a view group among the view 
 exports[`View Group read should succeed should find a view group by id 1`] = `
 {
   "createdAt": Any<String>,
+  "deletedAt": null,
   "fieldValue": "NEW",
   "id": Any<String>,
   "isVisible": true,
@@ -44,6 +47,7 @@ exports[`View Group read should succeed should return a view group on GET /metad
   "applicationId": Any<String>,
   "applicationUniversalIdentifier": Any<String>,
   "createdAt": Any<String>,
+  "deletedAt": null,
   "fieldValue": "NEW",
   "id": Any<String>,
   "isVisible": true,
@@ -61,6 +65,7 @@ exports[`View Group read should succeed should return a view group on GET /metad
   "applicationId": Any<String>,
   "applicationUniversalIdentifier": Any<String>,
   "createdAt": Any<String>,
+  "deletedAt": null,
   "fieldValue": "NEW",
   "id": Any<String>,
   "isVisible": true,
@@ -78,6 +83,7 @@ exports[`View Group read should succeed should return a view group on GET /metad
   "applicationId": Any<String>,
   "applicationUniversalIdentifier": Any<String>,
   "createdAt": Any<String>,
+  "deletedAt": null,
   "fieldValue": "NEW",
   "id": Any<String>,
   "isVisible": true,

@@ -1,7 +1,4 @@
-import {
-  type ActorMetadata,
-  type MessageParticipantRole,
-} from 'twenty-shared/types';
+import { type MessageParticipantRole } from 'twenty-shared/types';
 
 import { BaseWorkspaceEntity } from 'src/engine/twenty-orm/base.workspace-entity';
 import { type MessageCampaignWorkspaceEntity } from 'src/modules/emailing/standard-objects/message-campaign.workspace-entity';
@@ -14,7 +11,6 @@ export class MessageParticipantWorkspaceEntity extends BaseWorkspaceEntity {
   role: MessageParticipantRole;
   handle: string | null;
   displayName: string | null;
-  createdBy: ActorMetadata;
   message: EntityRelation<MessageWorkspaceEntity>;
   messageId: string;
   person: EntityRelation<PersonWorkspaceEntity> | null;

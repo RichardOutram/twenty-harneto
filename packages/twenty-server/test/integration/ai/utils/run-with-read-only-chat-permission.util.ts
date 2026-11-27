@@ -5,7 +5,6 @@ import { STANDARD_OBJECTS } from 'twenty-shared/metadata';
 import { isDefined } from 'twenty-shared/utils';
 
 import { type ObjectPermissionService } from 'src/engine/metadata-modules/object-permission/object-permission.service';
-import { isWorkspaceMemberIndividualRole } from 'src/engine/permissions/workspace-member-individual-role/utils/is-workspace-member-individual-role.util';
 import { type WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';
 
 export const runWithReadOnlyChatPermission = async <TResult>({
@@ -31,16 +30,7 @@ export const runWithReadOnlyChatPermission = async <TResult>({
     'flatObjectPermissionMaps',
     'flatObjectMetadataMaps',
   ]);
-  const roleId = (userWorkspaceRoleMap[userWorkspaceId] ?? []).find(
-    (candidateRoleId) => {
-      const flatRole =
-        flatRoleMaps.byUniversalIdentifier[
-          flatRoleMaps.universalIdentifierById[candidateRoleId] ?? ''
-        ];
-
-      return isDefined(flatRole) && !isWorkspaceMemberIndividualRole(flatRole);
-    },
-  );
+  const roleId = userWorkspaceRoleMap[userWorkspaceId]?.[0];
 
   ok(isDefined(roleId), 'The seeded chat member has no role');
 

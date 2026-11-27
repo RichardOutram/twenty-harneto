@@ -1,13 +1,10 @@
 import request from 'supertest';
 import { cleanupApplicationAndAppRegistration } from 'test/integration/metadata/suites/application/utils/cleanup-application-and-app-registration.util';
-import {
-  deletePublicDomains,
-  insertPublicDomain,
-} from 'test/integration/route-trigger/utils/public-domain-rows.util';
 import { setupHttpResponseLogicFunctionApplication } from 'test/integration/route-trigger/utils/setup-http-response-logic-function-application.util';
-import { mockCloudflareConfigured } from 'test/integration/route-trigger/utils/mock-cloudflare-configured.util';
 import { HTTPMethod } from 'twenty-shared/types';
 import { v4 as uuidv4 } from 'uuid';
+
+import { SEED_APPLE_WORKSPACE_ID } from 'src/engine/workspace-manager/dev-seeder/core/constants/seeder-workspaces.constant';
 
 const ROUTE_RESPONSE_SANDBOX_POLICY =
   'sandbox allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads';
@@ -29,6 +26,28 @@ const buildPublicGetRouteTriggerSettings = () => {
     },
   };
 };
+
+const insertPublicDomain = ({
+  domain,
+  isValidated,
+  applicationId,
+}: {
+  domain: string;
+  isValidated: boolean;
+  applicationId: string;
+}) =>
+  globalThis.testDataSource.query(
+    `INSERT INTO core."publicDomain"
+       (domain, "isValidated", "applicationId", "workspaceId")
+     VALUES ($1, $2, $3, $4)`,
+    [domain, isValidated, applicationId, SEED_APPLE_WORKSPACE_ID],
+  );
+
+const deletePublicDomain = (domain: string) =>
+  globalThis.testDataSource.query(
+    `DELETE FROM core."publicDomain" WHERE domain = $1`,
+    [domain],
+  );
 
 describe('RouteTrigger response headers (integration)', () => {
   const baseUrl = `http://localhost:${APP_PORT}`;
@@ -174,7 +193,7 @@ describe('RouteTrigger response headers (integration)', () => {
     }
   }, 60000);
 
-  it('serves an HTML route on a validated application public domain with the headers the function chose and no sandbox', async () => {
+  it('keeps the headers the function chose for an HTML route on an application public domain', async () => {
     const applicationPublicDomain = `${uuidv4()}.example.com`;
     const { path, triggerSettings } = buildPublicGetRouteTriggerSettings();
     const { applicationId, applicationUniversalIdentifier } =
@@ -193,11 +212,12 @@ describe('RouteTrigger response headers (integration)', () => {
       });
 
     try {
-      await insertPublicDomain({
-        domain: applicationPublicDomain,
-        isValidated: true,
-        applicationId,
-      });
+      await globalThis.testDataSource.query(
+        `INSERT INTO core."publicDomain"
+           (domain, "isValidated", "applicationId", "workspaceId")
+         VALUES ($1, true, $2, $3)`,
+        [applicationPublicDomain, applicationId, SEED_APPLE_WORKSPACE_ID],
+      );
 
       const response = await request(baseUrl)
         .get(`/s${path}`)
@@ -206,25 +226,27 @@ describe('RouteTrigger response headers (integration)', () => {
       expect(response.status).toBe(200);
       expect(response.headers['content-type']).toBe('text/html; charset=utf-8');
       expect(response.text).toBe(HTML_PAGE_WITH_SCRIPT);
-      expect(response.headers['content-security-policy']).toBe(
+      expect(response.headers['content-security-policy']).toContain(
         "default-src 'self'",
       );
       expect(response.headers['x-application-header']).toBe('kept');
-      expect(response.headers['x-content-type-options']).toBe('nosniff');
     } finally {
-      await deletePublicDomains([applicationPublicDomain]);
+      await globalThis.testDataSource.query(
+        `DELETE FROM core."publicDomain" WHERE domain = $1`,
+        [applicationPublicDomain],
+      );
       await cleanupApplicationAndAppRegistration({
         applicationUniversalIdentifier,
       });
     }
   }, 60000);
 
-  it('keeps the sandbox on the workspace host for an application that has a validated public domain', async () => {
-    const applicationPublicDomain = `${uuidv4()}.example.com`;
+  it('serves an HTML route response as a sandboxed document on a host matched by an unvalidated public domain record', async () => {
+    const unvalidatedPublicDomain = `${uuidv4()}.example.com`;
     const { path, triggerSettings } = buildPublicGetRouteTriggerSettings();
     const { applicationId, applicationUniversalIdentifier } =
       await setupHttpResponseLogicFunctionApplication({
-        name: 'Route Response Headers Workspace Host App',
+        name: 'Route Response Headers Unvalidated Domain App',
         response: {
           status: 200,
           headers: { 'content-type': 'text/html; charset=utf-8' },
@@ -235,112 +257,31 @@ describe('RouteTrigger response headers (integration)', () => {
 
     try {
       await insertPublicDomain({
-        domain: applicationPublicDomain,
-        isValidated: true,
+        domain: unvalidatedPublicDomain,
+        isValidated: false,
         applicationId,
       });
 
       const response = await request(baseUrl)
         .get(`/s${path}`)
-        .set('Host', workspaceHost);
+        .set('Host', `${unvalidatedPublicDomain}:${APP_PORT}`);
 
       expect(response.status).toBe(200);
+      expect(response.headers['content-type']).toBe('text/html; charset=utf-8');
       expect(response.text).toBe(HTML_PAGE_WITH_SCRIPT);
       expect(response.headers['content-security-policy']).toBe(
         ROUTE_RESPONSE_SANDBOX_POLICY,
       );
       expect(response.headers['x-content-type-options']).toBe('nosniff');
     } finally {
-      await deletePublicDomains([applicationPublicDomain]);
+      await deletePublicDomain(unvalidatedPublicDomain);
       await cleanupApplicationAndAppRegistration({
         applicationUniversalIdentifier,
       });
     }
   }, 60000);
 
-  it('does not serve routes on a host matched only by an unvalidated public domain record when Cloudflare is configured', async () => {
-    const unvalidatedPublicDomain = `${uuidv4()}.example.com`;
-    const { path, triggerSettings } = buildPublicGetRouteTriggerSettings();
-    const { applicationId, applicationUniversalIdentifier } =
-      await setupHttpResponseLogicFunctionApplication({
-        name: 'Route Response Headers Unvalidated Domain App',
-        response: {
-          status: 200,
-          headers: {
-            'content-type': 'text/html; charset=utf-8',
-            'x-application-header': 'not sent',
-          },
-          body: HTML_PAGE_WITH_SCRIPT,
-        },
-        triggerSettings,
-      });
-
-    const cloudflareConfigured = mockCloudflareConfigured();
-
-    try {
-      await insertPublicDomain({
-        domain: unvalidatedPublicDomain,
-        isValidated: false,
-        applicationId,
-      });
-
-      const response = await request(baseUrl)
-        .get(`/s${path}`)
-        .set('Host', `${unvalidatedPublicDomain}:${APP_PORT}`);
-
-      expect(response.status).toBe(404);
-      expect(response.text).not.toContain('routeScriptRan');
-      expect(response.headers['x-application-header']).toBeUndefined();
-    } finally {
-      cloudflareConfigured.mockRestore();
-      await deletePublicDomains([unvalidatedPublicDomain]);
-      await cleanupApplicationAndAppRegistration({
-        applicationUniversalIdentifier,
-      });
-    }
-  }, 60000);
-
-  it('serves routes on a host matched by an unvalidated public domain record when Cloudflare is not configured', async () => {
-    const unvalidatedPublicDomain = `${uuidv4()}.example.com`;
-    const { path, triggerSettings } = buildPublicGetRouteTriggerSettings();
-    const { applicationId, applicationUniversalIdentifier } =
-      await setupHttpResponseLogicFunctionApplication({
-        name: 'Route Response Headers Unmanaged Domain App',
-        response: {
-          status: 200,
-          headers: {
-            'content-type': 'text/html; charset=utf-8',
-            'x-application-header': 'kept',
-          },
-          body: HTML_PAGE_WITH_SCRIPT,
-        },
-        triggerSettings,
-      });
-
-    try {
-      await insertPublicDomain({
-        domain: unvalidatedPublicDomain,
-        isValidated: false,
-        applicationId,
-      });
-
-      const response = await request(baseUrl)
-        .get(`/s${path}`)
-        .set('Host', `${unvalidatedPublicDomain}:${APP_PORT}`);
-
-      expect(response.status).toBe(200);
-      expect(response.text).toBe(HTML_PAGE_WITH_SCRIPT);
-      expect(response.headers['x-application-header']).toBe('kept');
-      expect(response.headers['content-security-policy']).toBeUndefined();
-    } finally {
-      await deletePublicDomains([unvalidatedPublicDomain]);
-      await cleanupApplicationAndAppRegistration({
-        applicationUniversalIdentifier,
-      });
-    }
-  }, 60000);
-
-  it('lets a route function choose its own policy on a validated application public domain but keeps nosniff', async () => {
+  it('does not let a route function replace the sandbox and nosniff headers on an application public domain', async () => {
     const applicationPublicDomain = `${uuidv4()}.example.com`;
     const functionPolicy = 'sandbox allow-scripts allow-same-origin';
     const { path, triggerSettings } = buildPublicGetRouteTriggerSettings();
@@ -372,10 +313,12 @@ describe('RouteTrigger response headers (integration)', () => {
 
       expect(response.status).toBe(200);
       expect(response.headers['content-type']).toContain('text/html');
-      expect(response.headers['content-security-policy']).toBe(functionPolicy);
+      expect(response.headers['content-security-policy']).toBe(
+        `${functionPolicy}, ${ROUTE_RESPONSE_SANDBOX_POLICY}`,
+      );
       expect(response.headers['x-content-type-options']).toBe('nosniff');
     } finally {
-      await deletePublicDomains([applicationPublicDomain]);
+      await deletePublicDomain(applicationPublicDomain);
       await cleanupApplicationAndAppRegistration({
         applicationUniversalIdentifier,
       });

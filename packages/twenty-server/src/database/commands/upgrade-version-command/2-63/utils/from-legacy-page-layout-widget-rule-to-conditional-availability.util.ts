@@ -1,15 +1,15 @@
 import { isNonEmptyString } from '@sniptt/guards';
 import {
-  type ConditionalEvaluationNode,
-  parseConditionalEvaluationExpression,
-  validateConditionalEvaluationNode,
-} from 'twenty-shared/conditional-evaluation';
+  type ConditionalAvailabilityNode,
+  parseConditionalAvailabilityExpression,
+  validateConditionalAvailabilityNode,
+} from 'twenty-shared/conditional-availability';
 import { isDefined } from 'twenty-shared/utils';
 
 import { fromLegacyJsonLogicToConditionalAvailability } from 'src/engine/metadata-modules/page-layout-widget/utils/from-legacy-json-logic-to-conditional-availability.util';
 
 type LegacyPageLayoutWidgetRuleConversion =
-  | { isValid: true; node: ConditionalEvaluationNode | null }
+  | { isValid: true; node: ConditionalAvailabilityNode | null }
   | { isValid: false; errorMessage: string };
 
 export const fromLegacyPageLayoutWidgetRuleToConditionalAvailability = ({
@@ -20,7 +20,7 @@ export const fromLegacyPageLayoutWidgetRuleToConditionalAvailability = ({
   conditionalDisplay: unknown;
 }): LegacyPageLayoutWidgetRuleConversion => {
   if (isNonEmptyString(conditionalAvailabilityExpression)) {
-    return parseConditionalEvaluationExpression({
+    return parseConditionalAvailabilityExpression({
       expression: conditionalAvailabilityExpression,
       metadataName: 'pageLayoutWidget',
     });
@@ -39,7 +39,7 @@ export const fromLegacyPageLayoutWidgetRuleToConditionalAvailability = ({
     };
   }
 
-  const validationResult = validateConditionalEvaluationNode({
+  const validationResult = validateConditionalAvailabilityNode({
     node,
     metadataName: 'pageLayoutWidget',
   });

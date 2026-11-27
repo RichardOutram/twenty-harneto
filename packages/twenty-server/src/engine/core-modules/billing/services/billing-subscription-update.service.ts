@@ -298,7 +298,11 @@ export class BillingSubscriptionUpdateService {
     | { isPaymentDeclined: true }
     | { isPaymentDeclined: false; isCharged: boolean; persisted: TPersisted }
   > {
-    if (!this.billingApplicationSyncService.isApplicationBillingActive()) {
+    if (
+      !(await this.billingApplicationSyncService.isApplicationBillingActive(
+        workspaceId,
+      ))
+    ) {
       return {
         isPaymentDeclined: false,
         isCharged: false,

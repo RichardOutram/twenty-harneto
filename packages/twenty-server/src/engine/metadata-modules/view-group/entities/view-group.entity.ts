@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   Index,
   JoinColumn,
@@ -10,7 +11,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { type WasRemovedInUpgrade } from 'src/engine/core-modules/upgrade/decorators/was-removed-in-upgrade.decorator';
 import { ViewEntity } from 'src/engine/metadata-modules/view/entities/view.entity';
 import { SyncableEntity } from 'src/engine/workspace-manager/types/syncable-entity.interface';
 
@@ -43,14 +43,8 @@ export class ViewGroupEntity
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
 
-  @Column({
-    nullable: true,
-    type: 'timestamptz',
-    select: false,
-    insert: false,
-    update: false,
-  })
-  deletedAt: WasRemovedInUpgrade<Date> | null;
+  @DeleteDateColumn({ type: 'timestamptz' })
+  deletedAt: Date | null;
 
   @ManyToOne(() => ViewEntity, (view) => view.viewGroups, {
     onDelete: 'CASCADE',

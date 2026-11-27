@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { formatLinkedinSyncProgressLabel } from 'src/front-components/utils/format-linkedin-sync-progress-label.util';
 import { getLinkedinSyncProgress } from 'src/front-components/utils/get-linkedin-sync-progress.util';
 import { type LinkedinHistoryImportState } from 'src/types/linkedin-history-import-state.type';
 
@@ -44,5 +45,12 @@ describe('getLinkedinSyncProgress', () => {
         buildHistoryImport({ processedConversationCount: 40 }),
       ),
     ).toBeUndefined();
+  });
+});
+
+describe('formatLinkedinSyncProgressLabel', () => {
+  it('pads single digits so the label keeps its width', () => {
+    expect(formatLinkedinSyncProgressLabel(7)).toBe(' (7%)');
+    expect(formatLinkedinSyncProgressLabel(42)).toBe('(42%)');
   });
 });

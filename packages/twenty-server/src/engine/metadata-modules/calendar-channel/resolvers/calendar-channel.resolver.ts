@@ -18,24 +18,23 @@ import { CalendarChannelGraphqlApiExceptionInterceptor } from 'src/engine/metada
 import { AuthGraphqlApiExceptionFilter } from 'src/engine/core-modules/auth/filters/auth-graphql-api-exception.filter';
 import { CalendarChannelSyncStatusService } from 'src/modules/calendar/common/services/calendar-channel-sync-status.service';
 import { AccessPolicyGuard } from 'src/engine/guards/access-policy.guard';
-import { type AccessPolicy } from 'src/engine/guards/types/access-policy.type';
-import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 
-const CALENDAR_CHANNEL_ACCESS_POLICY: AccessPolicy = {
-  authPrincipals: {
-    userSession: {
-      standard: true,
-      impersonated: true,
-      playground: true,
-      workspaceAgnostic: false,
+@UseGuards(
+  AccessPolicyGuard({
+    authPrincipals: {
+      userSession: {
+        standard: true,
+        impersonated: true,
+        playground: true,
+        workspaceAgnostic: false,
+      },
+      apiKey: true,
+      oauthClient: true,
+      application: true,
     },
-    apiKey: true,
-    oauthClient: true,
-    application: true,
-  },
-  requiredPermissionFlags: [],
-};
-
+    requiredPermissionFlags: [],
+  }),
+)
 @UseInterceptors(CalendarChannelGraphqlApiExceptionInterceptor)
 @MetadataResolver(() => CalendarChannelDTO)
 @UseFilters(AuthGraphqlApiExceptionFilter)
@@ -48,7 +47,6 @@ export class CalendarChannelResolver {
   @ResolveField('connectedAccount', () => ConnectedAccountPublicDTO, {
     nullable: true,
   })
-  @UseGuards(NoPermissionGuard)
   async connectedAccount(
     @Parent() calendarChannel: CalendarChannelDTO,
     @AuthWorkspace() workspace: WorkspaceEntity,
@@ -64,7 +62,6 @@ export class CalendarChannelResolver {
   }
 
   @Query(() => [CalendarChannelDTO])
-  @UseGuards(AccessPolicyGuard(CALENDAR_CHANNEL_ACCESS_POLICY))
   @AllowSuspendedWorkspace()
   async myCalendarChannels(
     @AuthWorkspace() workspace: WorkspaceEntity,
@@ -92,7 +89,6 @@ export class CalendarChannelResolver {
   }
 
   @Mutation(() => CalendarChannelDTO)
-  @UseGuards(AccessPolicyGuard(CALENDAR_CHANNEL_ACCESS_POLICY))
   async updateCalendarChannel(
     @Args('input') input: UpdateCalendarChannelInput,
     @AuthWorkspace() workspace: WorkspaceEntity,

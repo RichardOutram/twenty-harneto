@@ -299,7 +299,7 @@ export class ToolCallAnswerService {
     try {
       const answerMessage = await this.agentChatService.addMessage({
         threadId,
-        workspaceMemberId: args.workspaceMemberId,
+        userWorkspaceId,
         turnStatus:
           isDefined(wakeUp) || !isLastAnswer
             ? AgentTurnStatus.COMPLETED
@@ -496,15 +496,10 @@ export class ToolCallAnswerService {
           threadId,
         });
 
-        return this.toolRegistryService.resolveAndExecute(
-          toolName,
-          args,
-          {
-            ...(await toolContext),
-            approvedToolName: toolName,
-          },
-          { shouldAddChatReferences: true },
-        );
+        return this.toolRegistryService.resolveAndExecute(toolName, args, {
+          ...(await toolContext),
+          approvedToolName: toolName,
+        });
       },
     };
   }

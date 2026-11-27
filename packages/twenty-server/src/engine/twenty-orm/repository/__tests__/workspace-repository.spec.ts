@@ -95,18 +95,16 @@ const buildRepository = ({
   shouldBypassPermissionChecks = true,
   shouldSkipEventEmission,
   statementResultsByKind = {},
-  computedColumnShapes,
 }: {
   shouldBypassPermissionChecks?: boolean;
   shouldSkipEventEmission: boolean;
   statementResultsByKind?: Record<string, Record<string, unknown>[][]>;
-  computedColumnShapes?: WorkspaceTableShape['computedColumnShapes'];
 }) => {
   const executedStatements: CompiledStatement[] = [];
   const emitDatabaseBatchEvent = jest.fn();
 
   const repository = new WorkspaceRepository({
-    tableShape: { ...tableShape, computedColumnShapes },
+    tableShape,
     flatObjectMetadata,
     internalContext: {
       workspaceId: 'workspace-id',
@@ -313,28 +311,6 @@ describe('WorkspaceRepository mutations', () => {
           events: [expect.objectContaining({ recordId: 'written-id' })],
         }),
       );
-    });
-
-    it('should leave computed fields out of event records', async () => {
-      const { repository, emitDatabaseBatchEvent } = buildRepository({
-        shouldSkipEventEmission: false,
-        computedColumnShapes: [
-          { columnName: 'state', sqlType: 'text', dependencies: [] },
-        ],
-        statementResultsByKind: {
-          SELECT: [[{ delivery_id: 'written-id', delivery_state: 'STALE' }]],
-          DELETE: [[{ delivery_id: 'written-id' }]],
-        },
-      });
-
-      await repository.delete({ id: 'written-id' });
-
-      const [[{ events }]] = emitDatabaseBatchEvent.mock.calls;
-
-      expect(events[0].properties.before).toEqual(
-        expect.not.objectContaining({ state: expect.anything() }),
-      );
-      expect(events[0].properties.before).toHaveProperty('id', 'written-id');
     });
 
     it('should emit no event when a soft delete writes no rows', async () => {

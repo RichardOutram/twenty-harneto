@@ -14,10 +14,6 @@ import { updateOneFieldMetadata } from 'test/integration/metadata/suites/field-m
 import { FieldMetadataType } from 'twenty-shared/types';
 import { waitForAllJobsToFinish } from 'test/integration/utils/wait-for-all-jobs-to-finish.util';
 import {
-  grantRoleWideAccessToChannelObjects,
-  revokeRoleWideAccessToChannelObjects,
-} from 'test/integration/utils/role-wide-access-to-channel-objects.util';
-import {
   type TimelineActivityAction,
   type TimelineActivityTypeSnapshot,
 } from 'twenty-shared/timeline';
@@ -242,7 +238,6 @@ let nonAuditLoggedFieldMetadataId = '';
 
 describe('timeline activity write path (integration)', () => {
   beforeAll(async () => {
-    await grantRoleWideAccessToChannelObjects();
     const response = await makeMetadataApiRequest({
       query: FIND_MANY_TIMELINE_ACTIVITY_TYPES,
     });
@@ -325,7 +320,6 @@ describe('timeline activity write path (integration)', () => {
         }),
       );
     }
-    await revokeRoleWideAccessToChannelObjects();
   });
 
   describe('a record own events', () => {

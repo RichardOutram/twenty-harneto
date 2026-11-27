@@ -15,7 +15,6 @@ import {
 } from 'twenty-ui/theme';
 
 import { WHATSAPP_SETTINGS_ROUTE_PATHS } from 'src/constants/whatsapp-settings-route-paths.constant';
-import { WhatsappAccountBanners } from 'src/front-components/components/WhatsappAccountBanners';
 import { WhatsappAccountField } from 'src/front-components/components/WhatsappAccountField';
 import { WhatsappContactAutoCreationSection } from 'src/front-components/components/WhatsappContactAutoCreationSection';
 import { WhatsappImportSection } from 'src/front-components/components/WhatsappImportSection';
@@ -62,8 +61,9 @@ export const WhatsappSettings = () => {
   });
   const [pollCount, setPollCount] = useState(0);
 
-  const [isImportRetrying, setIsImportRetrying] = useState(false);
-  const [importProgress, setImportProgress] = useState<{
+  const [isSyncStarting, setIsSyncStarting] = useState(false);
+  const [isSyncCancelling, setIsSyncCancelling] = useState(false);
+  const [syncProgress, setSyncProgress] = useState<{
     runId: string;
     progress: number;
   } | null>(null);
@@ -80,7 +80,7 @@ export const WhatsappSettings = () => {
       next: historyImport,
     });
     lastHistoryImportRef.current = historyImport;
-    setImportProgress((current) =>
+    setSyncProgress((current) =>
       getNextWhatsappSyncProgress({ current, historyImport }),
     );
     setState({ step: 'ready', view });
@@ -141,8 +141,8 @@ export const WhatsappSettings = () => {
     });
   };
 
-  const handleRetryImport = async () => {
-    setIsImportRetrying(true);
+  const handleSync = async () => {
+    setIsSyncStarting(true);
 
     try {
       await settingsSaveQueue.whenIdle();
@@ -154,11 +154,30 @@ export const WhatsappSettings = () => {
       );
     } catch {
       enqueueSnackbar({
-        message: t('Could not retry the WhatsApp import. Try again.'),
+        message: t('Could not start the WhatsApp sync. Try again.'),
         variant: 'error',
       });
     } finally {
-      setIsImportRetrying(false);
+      setIsSyncStarting(false);
+    }
+  };
+
+  const handleCancelSync = async () => {
+    setIsSyncCancelling(true);
+
+    try {
+      showView(
+        await postWhatsappSettingsRouteOrThrow({
+          routePath: WHATSAPP_SETTINGS_ROUTE_PATHS.cancelHistoryImport,
+        }),
+      );
+    } catch {
+      enqueueSnackbar({
+        message: t('Could not cancel the WhatsApp sync. Try again.'),
+        variant: 'error',
+      });
+    } finally {
+      setIsSyncCancelling(false);
     }
   };
 
@@ -206,31 +225,38 @@ export const WhatsappSettings = () => {
         )}
         {view?.isConnected && (
           <>
-            <WhatsappAccountBanners
-              isAuthFailed={view.connection.isAuthFailed}
-              historyImport={view.historyImport}
-              isImportRetrying={isImportRetrying}
-              onRetryImport={handleRetryImport}
-            />
             <WhatsappAccountField
               name={view.connection.name}
               handle={view.connection.handle}
-              historyImport={view.historyImport}
-              importProgress={
-                importProgress?.runId === view.historyImport?.runId
-                  ? importProgress?.progress
-                  : undefined
-              }
+              isAuthFailed={view.connection.isAuthFailed}
             />
             <WhatsappImportSection
               importPolicy={view.settings.importPolicy}
               selectedChats={view.settings.selectedChats}
+              areGroupChatsImported={view.settings.areGroupChatsImported}
+              historyConversationLimit={view.settings.historyConversationLimit}
+              historyImport={view.historyImport}
+              syncProgress={
+                syncProgress?.runId === view.historyImport?.runId
+                  ? syncProgress?.progress
+                  : undefined
+              }
+              isSyncStarting={isSyncStarting}
+              isSyncCancelling={isSyncCancelling}
               onChange={(importPolicy) =>
                 handleSettingsChange({ importPolicy })
               }
               onSelectedChatsChange={(selectedChats) =>
                 handleSettingsChange({ selectedChats })
               }
+              onGroupChatsImportChange={(areGroupChatsImported) =>
+                handleSettingsChange({ areGroupChatsImported })
+              }
+              onHistoryConversationLimitChange={(historyConversationLimit) =>
+                handleSettingsChange({ historyConversationLimit })
+              }
+              onSync={handleSync}
+              onCancelSync={handleCancelSync}
             />
             <WhatsappVisibilitySection
               visibility={view.settings.visibility}

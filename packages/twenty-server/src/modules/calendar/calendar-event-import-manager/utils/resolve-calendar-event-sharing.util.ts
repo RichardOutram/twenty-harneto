@@ -16,12 +16,14 @@ export const resolveCalendarEventSharing = ({
   existingEventExternalIds,
   sharedAssociations,
   iCalUidByCalendarEventId,
+  isCalendarEventSharingEnabled,
 }: {
   provider: ConnectedAccountProvider;
   fetchedCalendarEvents: FetchedCalendarEvent[];
   existingEventExternalIds: Set<string>;
   sharedAssociations: SharedAssociation[];
   iCalUidByCalendarEventId: Map<string, string | null>;
+  isCalendarEventSharingEnabled: boolean;
 }): {
   calendarEventIdToLinkByEventExternalId: Map<string, string>;
   otherChannelIdsByCalendarEventId: Map<string, string[]>;
@@ -53,6 +55,13 @@ export const resolveCalendarEventSharing = ({
   }
 
   const calendarEventIdToLinkByEventExternalId = new Map<string, string>();
+
+  if (!isCalendarEventSharingEnabled) {
+    return {
+      calendarEventIdToLinkByEventExternalId,
+      otherChannelIdsByCalendarEventId,
+    };
+  }
 
   for (const fetchedCalendarEvent of fetchedCalendarEvents) {
     if (existingEventExternalIds.has(fetchedCalendarEvent.id)) {

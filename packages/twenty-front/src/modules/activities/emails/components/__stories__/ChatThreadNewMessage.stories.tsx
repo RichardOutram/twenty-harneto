@@ -30,6 +30,7 @@ const ChatThreadNewMessageStory = () => {
       channelName="WhatsApp"
       onSendMessage={onSendMessage}
       onMessageSent={onMessageSent}
+      canAttachFiles
     />
   );
 };
@@ -55,10 +56,6 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const recipients = await canvas.findByRole('group', { name: 'Recipients' });
-
-    await expect(
-      canvas.getByPlaceholderText('Write a message'),
-    ).toBeInTheDocument();
 
     const recipientRemoval = within(recipients).getByRole('button', {
       name: 'Remove Thomas Kurian',

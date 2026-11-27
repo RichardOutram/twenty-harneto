@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { FeatureFlagKey } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import { Any, Repository } from 'typeorm';
 
 import { InjectCacheStorage } from 'src/engine/core-modules/cache-storage/decorators/cache-storage.decorator';
 import { CacheStorageService } from 'src/engine/core-modules/cache-storage/services/cache-storage.service';
 import { CacheStorageNamespace } from 'src/engine/core-modules/cache-storage/types/cache-storage-namespace.enum';
+import { FeatureFlagService } from 'src/engine/core-modules/feature-flag/services/feature-flag.service';
 import { UserWorkspaceEntity } from 'src/engine/core-modules/user-workspace/user-workspace.entity';
 import { WorkspaceInternalImportService } from 'src/engine/core-modules/workspace/services/workspace-internal-import.service';
 import { type CalendarChannelEntity } from 'src/engine/metadata-modules/calendar-channel/entities/calendar-channel.entity';
@@ -48,6 +50,7 @@ export class CalendarEventsImportService {
     @InjectRepository(UserWorkspaceEntity)
     private readonly userWorkspaceRepository: Repository<UserWorkspaceEntity>,
     private readonly workspaceInternalImportService: WorkspaceInternalImportService,
+    private readonly featureFlagService: FeatureFlagService,
   ) {}
 
   public async processCalendarEventsImport(
@@ -87,7 +90,8 @@ export class CalendarEventsImportService {
 
           const userWorkspace = await this.userWorkspaceRepository.findOne({
             where: {
-              id: connectedAccount.userWorkspaceId,
+              id: (connectedAccount as unknown as { userWorkspaceId: string })
+                .userWorkspaceId,
             },
           });
 
@@ -133,6 +137,12 @@ export class CalendarEventsImportService {
               workspaceId,
             });
 
+          const isInternalEventsFilterEnabled =
+            await this.featureFlagService.isFeatureEnabled(
+              FeatureFlagKey.IS_CALENDAR_INTERNAL_EVENTS_FILTER_ENABLED,
+              workspaceId,
+            );
+
           const { filteredEvents, eventsToRemove } =
             filterEventsAndReturnEventsToRemove({
               primaryHandle: calendarChannel.handle,
@@ -142,6 +152,7 @@ export class CalendarEventsImportService {
                 .map((blocklistItem) => blocklistItem.handle)
                 .filter(isDefined),
               excludePrivateEvents: calendarChannel.excludePrivateEvents,
+              isInternalEventsFilterEnabled,
               isInternalMessagesImportEnabled: isInternalImportEnabled,
             });
 

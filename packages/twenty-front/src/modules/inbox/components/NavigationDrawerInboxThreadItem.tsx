@@ -14,7 +14,6 @@ import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/use
 import { NavigationDrawerInput } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerInput';
 import { NavigationDrawerItem } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerItem';
 import { type InboxThreadListItemData } from '@/inbox/types/InboxThreadListItemData';
-import { NavigationMenuTabFirstItemOpenEffect } from '@/navigation-menu-item/display/effect-components/NavigationMenuTabFirstItemOpenEffect';
 
 type NavigationDrawerInboxThreadItemProps = {
   thread: InboxThreadListItemData;
@@ -63,26 +62,21 @@ export const NavigationDrawerInboxThreadItem = ({
   }
 
   return (
-    <>
-      {!isDeleted && (
-        <NavigationMenuTabFirstItemOpenEffect onOpen={() => onClick(thread)} />
-      )}
-      <NavigationDrawerItem
-        Icon={isExpanded ? undefined : IconMessage}
-        label={displayLabel}
-        active={isActive}
-        onClick={() => onClick(thread)}
-        variant={isDeleted ? 'tertiary' : 'default'}
-        isUnread={isShownAsUnread}
-        isRightOptionsDropdownOpen={isDropdownOpen}
-        rightOptions={
-          <InboxThreadActionsDropdown
-            thread={thread}
-            instanceId={actionsInstanceId}
-            onRenameRequested={startRename}
-          />
-        }
-      />
-    </>
+    <NavigationDrawerItem
+      Icon={isExpanded ? undefined : IconMessage}
+      label={displayLabel}
+      active={isActive}
+      onClick={() => onClick(thread)}
+      variant={isDeleted ? 'tertiary' : 'default'}
+      isUnread={isShownAsUnread}
+      isRightOptionsDropdownOpen={isDropdownOpen}
+      rightOptions={
+        <InboxThreadActionsDropdown
+          thread={thread}
+          instanceId={actionsInstanceId}
+          onRenameRequested={startRename}
+        />
+      }
+    />
   );
 };

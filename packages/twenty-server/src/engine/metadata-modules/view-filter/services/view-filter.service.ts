@@ -264,7 +264,10 @@ export class ViewFilterService {
       );
     }
 
-    return fromFlatViewFilterToViewFilterDto(existingFlatViewFilter);
+    return fromFlatViewFilterToViewFilterDto({
+      ...existingFlatViewFilter,
+      deletedAt: new Date().toISOString(),
+    });
   }
 
   async findByWorkspaceId({
@@ -365,6 +368,7 @@ export class ViewFilterService {
 
     if (
       !isDefined(flatViewFilter) ||
+      flatViewFilter.deletedAt !== null ||
       !isDefined(
         findFlatViewVisibleToCaller({
           viewId: flatViewFilter.viewId,

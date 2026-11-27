@@ -134,34 +134,6 @@ describe('PROPOSE_TOOL_CALL_PAUSING_TOOL', () => {
     );
   });
 
-  it('keeps the record references of the approved call', async () => {
-    const recordReference = {
-      objectNameSingular: 'opportunity',
-      recordId: RECORD_ID,
-      displayName: 'Acme renewal',
-      chatReference: `[[record:opportunity:${RECORD_ID}:Acme renewal]]`,
-    };
-    const executeTool = jest
-      .fn()
-      .mockResolvedValueOnce(buildFoundRecordOutput({ stage: 'PROPOSAL' }))
-      .mockResolvedValueOnce({
-        success: true,
-        message: 'Updated opportunity',
-        result: { id: RECORD_ID, stage: 'WON' },
-        recordReferences: [recordReference],
-      });
-
-    const completion = await parseCall().complete({
-      output: { decision: 'approve' },
-      context: { executeTool },
-    });
-
-    expect(completion.toolResult).toMatchObject({
-      success: true,
-      recordReferences: [recordReference],
-    });
-  });
-
   it('runs nothing when the record changed since the call was proposed', async () => {
     const executeTool = jest
       .fn()
@@ -302,16 +274,10 @@ describe('PROPOSE_TOOL_CALL_PAUSING_TOOL', () => {
     );
   });
 
-  it('tells the agent a call left by a new message was cancelled, not approved', () => {
-    const skippedToolResult = parseCall().toSkippedToolResult();
-
-    expect(skippedToolResult).toMatchObject({
+  it('keeps the proposal in a skipped result', () => {
+    expect(parseCall().toSkippedToolResult()).toMatchObject({
       result: { status: 'skipped', proposal: PROPOSAL },
     });
-    expect(skippedToolResult.message).toContain(
-      'The user cancelled the proposed call',
-    );
-    expect(skippedToolResult.message).toContain('not an approval');
   });
 
   describe('an email', () => {

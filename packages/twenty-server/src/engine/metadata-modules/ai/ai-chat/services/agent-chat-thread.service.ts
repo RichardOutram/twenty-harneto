@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 import { AgentChatThreadConversationType } from 'twenty-shared/ai';
 import { isDefined, isNonEmptyArray } from 'twenty-shared/utils';
@@ -34,7 +34,6 @@ import { throwAgentChatThreadNotFound } from 'src/engine/metadata-modules/ai/ai-
 import { AgentHistoryRepository } from 'src/engine/metadata-modules/ai/ai-history/repositories/agent-history-repository';
 import { type AgentHistoryStorageContext } from 'src/engine/metadata-modules/ai/ai-history/services/agent-history-workspace-storage.service';
 import { InjectAgentHistoryRepository } from 'src/engine/metadata-modules/ai/ai-history/repositories/inject-agent-history-repository.decorator';
-import { InboxObjectNamesResolverService } from 'src/engine/metadata-modules/ai/ai-history/services/inbox-object-names-resolver.service';
 import { AgentChatThreadWorkspaceEntity } from 'src/engine/metadata-modules/ai/ai-history/standard-objects/agent-chat-thread.workspace-entity';
 import {
   AiException,
@@ -57,11 +56,6 @@ export class AgentChatThreadService {
     private readonly workspaceOrmManager: WorkspaceOrmManager,
     @InjectWorkspaceScopedRepository(AgentChatChannelEntity)
     private readonly channelRepository: WorkspaceScopedRepository<AgentChatChannelEntity>,
-    @Inject(InboxObjectNamesResolverService)
-    private readonly inboxObjectNamesResolverService: Pick<
-      InboxObjectNamesResolverService,
-      'resolve'
-    >,
   ) {}
 
   async createThread(
@@ -515,10 +509,7 @@ export class AgentChatThreadService {
     const writeAssignment = async ({
       manager,
       table,
-    }: Pick<
-      AgentHistoryStorageContext,
-      'manager' | 'table'
-    >): Promise<void> => {
+    }: AgentHistoryStorageContext): Promise<void> => {
       const assignedThreadIds = await manager.query<{ id: string }[]>(
         `WITH assigned_thread AS (
            UPDATE ${table('agentChatThread')}
@@ -595,9 +586,6 @@ export class AgentChatThreadService {
       return;
     }
 
-    const { agentChatThread: threadObjectName } =
-      await this.inboxObjectNamesResolverService.resolve(workspaceId);
-
     // Owner re-checked in the UPDATE: removing a member clears it on their channel chats
     const movedThreadIds =
       await this.workspaceOrmManager.executeTransactionInWorkspaceContext(
@@ -613,7 +601,7 @@ export class AgentChatThreadService {
 
           const threadRepository =
             transactionScope.getRepositoryWithoutPermissionChecks<AgentChatThreadWorkspaceEntity>(
-              threadObjectName,
+              'agentChatThread',
               { shouldSkipEventEmission: true },
             );
           const currentThread = await threadRepository.findOne({

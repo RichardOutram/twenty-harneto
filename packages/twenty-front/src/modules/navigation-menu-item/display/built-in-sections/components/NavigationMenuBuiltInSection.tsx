@@ -1,10 +1,7 @@
-import { useLingui } from '@lingui/react/macro';
 import { type ReactNode } from 'react';
-import { isDefined } from 'twenty-shared/utils';
 
 import { NavigationDrawerInboxChannelsSection } from '@/inbox/components/NavigationDrawerInboxChannelsSection';
 import { NavigationDrawerInboxTriageSection } from '@/inbox/components/NavigationDrawerInboxTriageSection';
-import { NAVIGATION_MENU_BUILT_IN_SECTIONS } from '@/navigation-menu-item/common/constants/NavigationMenuBuiltInSections';
 import { NavigationMenuAiAgentsSection } from '@/navigation-menu-item/display/built-in-sections/components/NavigationMenuAiAgentsSection';
 import { NavigationMenuAiChatFavoritesSection } from '@/navigation-menu-item/display/built-in-sections/components/NavigationMenuAiChatFavoritesSection';
 import { NavigationMenuAiChatRecentsSection } from '@/navigation-menu-item/display/built-in-sections/components/NavigationMenuAiChatRecentsSection';
@@ -13,10 +10,7 @@ import { useNavigationMenuBuiltInSectionAvailability } from '@/navigation-menu-i
 import { type NavigationMenuItem } from '~/generated-metadata/graphql';
 
 type NavigationMenuBuiltInSectionProps = {
-  section: Pick<
-    NavigationMenuItem,
-    'id' | 'builtInSectionKey' | 'visibleItemLimit'
-  >;
+  section: Pick<NavigationMenuItem, 'id' | 'builtInSectionKey'>;
   headerAction?: ReactNode;
 };
 
@@ -24,10 +18,6 @@ export const NavigationMenuBuiltInSection = ({
   section,
   headerAction,
 }: NavigationMenuBuiltInSectionProps) => {
-  const { t } = useLingui();
-  const inboxBuiltInSection = NAVIGATION_MENU_BUILT_IN_SECTIONS.find(
-    ({ key }) => key === 'aiChatInbox',
-  );
   const { isBuiltInSectionAvailable } =
     useNavigationMenuBuiltInSectionAvailability();
 
@@ -40,48 +30,22 @@ export const NavigationMenuBuiltInSection = ({
   }
 
   if (section.builtInSectionKey === 'aiAgents') {
-    return (
-      <NavigationMenuAiAgentsSection
-        visibleItemLimit={section.visibleItemLimit}
-        headerAction={headerAction}
-      />
-    );
+    return <NavigationMenuAiAgentsSection headerAction={headerAction} />;
   }
 
   switch (section.builtInSectionKey) {
     case 'aiChatInbox':
-      return (
-        <NavigationDrawerInboxTriageSection
-          label={
-            isDefined(inboxBuiltInSection)
-              ? t(inboxBuiltInSection.label)
-              : undefined
-          }
-          visibleItemLimit={section.visibleItemLimit}
-          headerAction={headerAction}
-        />
-      );
+      return <NavigationDrawerInboxTriageSection headerAction={headerAction} />;
     case 'aiChatFavorites':
       return (
-        <NavigationMenuAiChatFavoritesSection
-          visibleItemLimit={section.visibleItemLimit}
-          headerAction={headerAction}
-        />
+        <NavigationMenuAiChatFavoritesSection headerAction={headerAction} />
       );
     case 'aiChatChannels':
       return (
-        <NavigationDrawerInboxChannelsSection
-          visibleItemLimit={section.visibleItemLimit}
-          headerAction={headerAction}
-        />
+        <NavigationDrawerInboxChannelsSection headerAction={headerAction} />
       );
     case 'aiChatRecents':
-      return (
-        <NavigationMenuAiChatRecentsSection
-          visibleItemLimit={section.visibleItemLimit}
-          headerAction={headerAction}
-        />
-      );
+      return <NavigationMenuAiChatRecentsSection headerAction={headerAction} />;
     default:
       return null;
   }

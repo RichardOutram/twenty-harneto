@@ -1,3 +1,4 @@
 export type RecordsAccessSQLConditionStrategy =
   | 'accessGroups'
-  | 'withoutRowLevelPermissions';
+  | 'withoutRowLevelPermissions'
+  | 'degradedRead';

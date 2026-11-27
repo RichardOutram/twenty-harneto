@@ -18,12 +18,13 @@ describe('readIsPersonEnrichmentEnabled', () => {
     ).toBe(true);
   });
 
-  it('should be disabled when the onboarding ai chat is off, even with billing enabled', () => {
+  it('should be disabled when the onboarding ai chat is off, even for a configured book-call step', () => {
     expect(
       readIsPersonEnrichmentEnabled(
         buildConfigService({
           IS_ONBOARDING_AI_CHAT_ENABLED: false,
-          IS_BILLING_ENABLED: true,
+          CALENDAR_BOOKING_PAGE_ID: 'team/twenty/talk-to-us',
+          ONBOARDING_BOOK_CALL_MIN_EMPLOYEE_COUNT: 50,
           PEOPLE_DATA_LABS_API_KEY: 'pdl-key',
         }),
       ),

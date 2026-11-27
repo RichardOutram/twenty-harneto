@@ -58,7 +58,7 @@ export class CalendarEventsImportJob {
         }
 
         await this.calendarEventsImportService.processCalendarEventsImport(
-          calendarChannel,
+          calendarChannel as unknown as CalendarChannelEntity,
           calendarChannel.connectedAccount,
           workspaceId,
         );

@@ -1,11 +1,9 @@
-import { UseGuards } from '@nestjs/common';
 import { Parent, ResolveField } from '@nestjs/graphql';
 
 import { CoreResolver } from 'src/engine/api/graphql/graphql-config/decorators/core-resolver.decorator';
 import { CoreWorkflowConnectionDTO } from 'src/engine/core-modules/workflow/dtos/core-workflow-connection.dto';
 import { CoreWorkflowRunSummaryDTO } from 'src/engine/core-modules/workflow/dtos/core-workflow-run-summary.dto';
 import { CoreWorkflowRunSummaryService } from 'src/engine/core-modules/workflow/services/core-workflow-run-summary.service';
-import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 
 @CoreResolver(() => CoreWorkflowConnectionDTO)
 export class CoreWorkflowConnectionResolver {
@@ -14,7 +12,6 @@ export class CoreWorkflowConnectionResolver {
   ) {}
 
   @ResolveField(() => [CoreWorkflowRunSummaryDTO])
-  @UseGuards(NoPermissionGuard)
   async runSummaries(
     @Parent() connection: CoreWorkflowConnectionDTO,
   ): Promise<CoreWorkflowRunSummaryDTO[]> {

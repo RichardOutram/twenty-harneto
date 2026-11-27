@@ -33,5 +33,4 @@ export enum MessageQueue {
   aiStreamQueue = 'ai-stream-queue',
   accessGroupQueue = 'access-group-queue',
   webPushQueue = 'web-push-queue',
-  storedFormulaFieldQueue = 'stored-formula-field-queue',
 }

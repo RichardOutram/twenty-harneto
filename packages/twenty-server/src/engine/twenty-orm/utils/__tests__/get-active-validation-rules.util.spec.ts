@@ -1,21 +1,9 @@
 /* @license Enterprise */
 
-import { type ExpressionNode } from 'twenty-shared/expression';
-
 import { createEmptyFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/constant/create-empty-flat-entity-maps.constant';
 import { type FlatValidationRuleMaps } from 'src/engine/metadata-modules/flat-validation-rule/types/flat-validation-rule-maps.type';
 import { type FlatValidationRule } from 'src/engine/metadata-modules/flat-validation-rule/types/flat-validation-rule.type';
 import { getActiveValidationRules } from 'src/engine/twenty-orm/utils/get-active-validation-rules.util';
-
-const MINIMUM_EMPLOYEES_TREE: ExpressionNode = {
-  type: 'COMPARISON',
-  operator: 'GREATER_THAN_OR_EQUAL',
-  left: {
-    type: 'FIELD',
-    fieldUniversalIdentifier: 'employees-universal-identifier',
-  },
-  right: { type: 'LITERAL', value: 10 },
-};
 
 const RULE: FlatValidationRule = {
   id: 'rule-id',
@@ -30,7 +18,8 @@ const RULE: FlatValidationRule = {
   name: 'Minimum employees',
   description: null,
   icon: null,
-  tree: MINIMUM_EMPLOYEES_TREE,
+  expression: 'employees >= 10',
+  bindings: { employees: 'employees-universal-identifier' },
   message: 'At least ten employees are required',
   isActive: true,
   createdAt: '2026-01-01T00:00:00.000Z',
@@ -38,7 +27,7 @@ const RULE: FlatValidationRule = {
 };
 
 describe('getActiveValidationRules', () => {
-  it('should isolate objects and omit disabled rules and rules not stored as trees yet', () => {
+  it('should isolate objects and omit disabled rules', () => {
     const flatValidationRuleMaps: FlatValidationRuleMaps =
       createEmptyFlatEntityMaps();
 
@@ -46,7 +35,6 @@ describe('getActiveValidationRules', () => {
       active: RULE,
       disabled: { ...RULE, id: 'disabled-rule', isActive: false },
       other: { ...RULE, id: 'other-rule', objectMetadataId: 'person-id' },
-      text: { ...RULE, id: 'text-rule', tree: null },
     };
 
     expect(

@@ -24,8 +24,6 @@ import {
 import { workflowGraphqlRequest } from 'test/integration/graphql/suites/workflow/utils/workflow-graphql-request.util';
 import { getAppProviderByClassName } from 'test/integration/utils/get-app-provider-by-class-name.util';
 
-import { type RawAuthContext } from 'src/engine/core-modules/auth/types/raw-auth-context.type';
-import { buildUserAuthContext } from 'src/engine/core-modules/auth/utils/build-user-auth-context.util';
 import { type CoreWorkflowLifecycleWorkspaceService } from 'src/engine/core-modules/workflow/services/core-workflow-lifecycle.workspace-service';
 import { findFlatEntityByIdInFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-id-in-flat-entity-maps.util';
 import { type MetadataEventEmitter } from 'src/engine/subscriptions/metadata-event/metadata-event-emitter';
@@ -39,13 +37,6 @@ import { AgentTurnStatus } from 'src/engine/metadata-modules/ai/ai-history/enums
 import { type AgentConversationWriterService } from 'src/engine/metadata-modules/ai/ai-history/services/agent-conversation-writer.service';
 import { type AgentTurnRecorderService } from 'src/engine/metadata-modules/ai/ai-history/services/agent-turn-recorder.service';
 import { type WorkflowAgentConversationWorkspaceService } from 'src/modules/workflow/workflow-executor/workflow-actions/ai-agent/services/workflow-agent-conversation.workspace-service';
-
-const recomputeAppleWorkflowCaches = (
-  cacheKeyNames: ('flatWorkflowMaps' | 'flatWorkflowVersionMaps')[],
-) =>
-  getAppProviderByClassName<WorkspaceCacheService>(
-    'WorkspaceCacheService',
-  ).invalidateAndRecompute(SEED_APPLE_WORKSPACE_ID, cacheKeyNames);
 
 const client = request(`http://localhost:${APP_PORT}`);
 
@@ -142,22 +133,6 @@ const RUN_MUTATION = `
   mutation RunCoreWorkflowVersion($input: RunCoreWorkflowVersionInput!) {
     runCoreWorkflowVersion(input: $input) {
       workflowRunId
-    }
-  }
-`;
-
-const DUPLICATE_CORE_WORKFLOW_MUTATION = `
-  mutation DuplicateCoreWorkflow($input: DuplicateCoreWorkflowInput!) {
-    duplicateCoreWorkflow(input: $input) {
-      id
-    }
-  }
-`;
-
-const DELETE_CORE_WORKFLOWS_MUTATION = `
-  mutation DeleteCoreWorkflows($input: DeleteCoreWorkflowsInput!) {
-    deleteCoreWorkflows(input: $input) {
-      id
     }
   }
 `;
@@ -324,6 +299,8 @@ describe('core workflow visibility (e2e)', () => {
     });
   });
 
+  // Pre-visibility workflows and those whose creator left (owner FK is ON DELETE SET NULL) have no owner,
+  // and without a claim nobody could reach them while they still run.
   describe('an ownerless workflow', () => {
     let ownerlessCoreWorkflowId: string;
 
@@ -336,8 +313,6 @@ describe('core workflow visibility (e2e)', () => {
         `UPDATE core."workflow" SET "createdByUserWorkspaceId" = NULL WHERE id = $1`,
         [ownerlessCoreWorkflowId],
       );
-
-      await recomputeAppleWorkflowCaches(['flatWorkflowMaps']);
     });
 
     afterAll(async () => {
@@ -348,52 +323,58 @@ describe('core workflow visibility (e2e)', () => {
       }
     });
 
-    it('lets no member change its privacy', async () => {
-      for (const requester of [workflowGraphqlRequest, asOtherMember]) {
-        const response = await requester(CORE_WORKFLOW_BY_ID_QUERY, {
-          coreWorkflowId: ownerlessCoreWorkflowId,
-        });
+    it('is claimable by any member who can already edit it', async () => {
+      const response = await asOtherMember(CORE_WORKFLOW_BY_ID_QUERY, {
+        coreWorkflowId: ownerlessCoreWorkflowId,
+      });
 
-        expect(response.body.errors).toBeUndefined();
-        expect(response.body.data.coreWorkflowById).toMatchObject({
-          isPrivate: false,
-          canChangeVisibility: false,
-        });
-      }
+      expect(response.body.errors).toBeUndefined();
+      expect(response.body.data.coreWorkflowById).toMatchObject({
+        canChangeVisibility: true,
+      });
     });
 
-    it('refuses to make it private', async () => {
-      for (const requester of [workflowGraphqlRequest, asOtherMember]) {
-        const response = await requester(UPDATE_CORE_WORKFLOW_MUTATION, {
-          input: {
-            coreWorkflowId: ownerlessCoreWorkflowId,
-            isPrivate: true,
-          },
-        });
-
-        expect(response.body.errors?.[0]?.extensions?.code).toBe(
-          'METADATA_VALIDATION_FAILED',
-        );
-      }
-    });
-
-    it('accepts an update that keeps it shared, without making the caller its creator', async () => {
-      const response = await asOtherMember(UPDATE_CORE_WORKFLOW_MUTATION, {
+    it('belongs to whoever claims it first, and only to them', async () => {
+      const claim = await asOtherMember(UPDATE_CORE_WORKFLOW_MUTATION, {
         input: {
           coreWorkflowId: ownerlessCoreWorkflowId,
           isPrivate: false,
         },
       });
 
-      expect(response.body.errors).toBeUndefined();
+      expect(claim.body.errors).toBeUndefined();
 
-      const afterUpdate = await asOtherMember(CORE_WORKFLOW_BY_ID_QUERY, {
+      const asCreatorOfNothing = await workflowGraphqlRequest(
+        CORE_WORKFLOW_BY_ID_QUERY,
+        { coreWorkflowId: ownerlessCoreWorkflowId },
+      );
+
+      expect(asCreatorOfNothing.body.data.coreWorkflowById).toMatchObject({
+        canChangeVisibility: false,
+      });
+    });
+
+    // The claim is the UPDATE's own WHERE, which is what stops two simultaneous claims both passing.
+    it('refuses a second claim even though the workflow is still workspace-visible', async () => {
+      const secondClaim = await workflowGraphqlRequest(
+        UPDATE_CORE_WORKFLOW_MUTATION,
+        {
+          input: {
+            coreWorkflowId: ownerlessCoreWorkflowId,
+            isPrivate: true,
+          },
+        },
+      );
+
+      expect(secondClaim.body.errors).toBeDefined();
+
+      const stillShared = await asOtherMember(CORE_WORKFLOW_BY_ID_QUERY, {
         coreWorkflowId: ownerlessCoreWorkflowId,
       });
 
-      expect(afterUpdate.body.data.coreWorkflowById).toMatchObject({
+      expect(stillShared.body.data.coreWorkflowById).toMatchObject({
         isPrivate: false,
-        canChangeVisibility: false,
+        canChangeVisibility: true,
       });
     });
   });
@@ -452,8 +433,6 @@ describe('core workflow visibility (e2e)', () => {
         [coreWorkflowId],
       );
 
-      await recomputeAppleWorkflowCaches(['flatWorkflowMaps']);
-
       try {
         const response = await asOtherMember(CORE_WORKFLOW_VERSIONS_QUERY, {
           workspaceWorkflowId,
@@ -466,8 +445,6 @@ describe('core workflow visibility (e2e)', () => {
           `UPDATE core."workflow" SET "workspaceWorkflowId" = $2 WHERE id = $1`,
           [coreWorkflowId, workspaceWorkflowId],
         );
-
-        await recomputeAppleWorkflowCaches(['flatWorkflowMaps']);
       }
     });
 
@@ -476,8 +453,6 @@ describe('core workflow visibility (e2e)', () => {
         `UPDATE core."workflowVersion" SET "workflowId" = NULL WHERE "coreWorkflowId" = $1`,
         [coreWorkflowId],
       );
-
-      await recomputeAppleWorkflowCaches(['flatWorkflowVersionMaps']);
 
       try {
         const response = await workflowGraphqlRequest(
@@ -496,8 +471,6 @@ describe('core workflow visibility (e2e)', () => {
           `UPDATE core."workflowVersion" SET "workflowId" = $2 WHERE "coreWorkflowId" = $1`,
           [coreWorkflowId, workspaceWorkflowId],
         );
-
-        await recomputeAppleWorkflowCaches(['flatWorkflowVersionMaps']);
       }
     });
 
@@ -524,54 +497,6 @@ describe('core workflow visibility (e2e)', () => {
 
       expect(response.body.errors).toBeDefined();
       expect(response.body.data?.runCoreWorkflowVersion ?? null).toBeNull();
-    });
-
-    describe('when another member sends an uppercased id', () => {
-      it('refuses to resolve it', async () => {
-        const response = await asOtherMember(CORE_WORKFLOW_BY_ID_QUERY, {
-          coreWorkflowId: coreWorkflowId.toUpperCase(),
-        });
-
-        expect(response.body.data?.coreWorkflowById ?? null).toBeNull();
-      });
-
-      it('refuses to duplicate it', async () => {
-        const response = await asOtherMember(DUPLICATE_CORE_WORKFLOW_MUTATION, {
-          input: {
-            coreWorkflowIdToDuplicate: coreWorkflowId.toUpperCase(),
-            coreWorkflowVersionIdToCopy: coreWorkflowVersionId.toUpperCase(),
-          },
-        });
-
-        expect(response.body.errors).toBeDefined();
-        expect(response.body.data?.duplicateCoreWorkflow ?? null).toBeNull();
-      });
-
-      it('refuses to run it', async () => {
-        const response = await asOtherMember(RUN_MUTATION, {
-          input: { coreWorkflowVersionId: coreWorkflowVersionId.toUpperCase() },
-        });
-
-        expect(response.body.errors).toBeDefined();
-        expect(response.body.data?.runCoreWorkflowVersion ?? null).toBeNull();
-      });
-
-      it('refuses to delete it', async () => {
-        const response = await asOtherMember(DELETE_CORE_WORKFLOWS_MUTATION, {
-          input: { coreWorkflowIds: [coreWorkflowId.toUpperCase()] },
-        });
-
-        expect(response.body.errors).toBeDefined();
-
-        const creatorResponse = await workflowGraphqlRequest(
-          CORE_WORKFLOW_BY_ID_QUERY,
-          { coreWorkflowId },
-        );
-
-        expect(creatorResponse.body.data.coreWorkflowById).toMatchObject({
-          id: coreWorkflowId,
-        });
-      });
     });
 
     it('refuses to let another member publish it back to the workspace', async () => {
@@ -617,35 +542,6 @@ describe('core workflow visibility (e2e)', () => {
           'CoreWorkflowLifecycleWorkspaceService',
         );
 
-      const validateCoreWorkflowVersionAs = ({
-        userWorkspaceId,
-        coreWorkflowVersionId,
-      }: {
-        userWorkspaceId: string;
-        coreWorkflowVersionId: string;
-      }) =>
-        global.workflowTestServices.withWorkspaceAuthContext(
-          buildUserAuthContext({
-            workspace: { id: SEED_APPLE_WORKSPACE_ID } as NonNullable<
-              RawAuthContext['workspace']
-            >,
-            userWorkspaceId,
-            user: { id: userWorkspaceId } as NonNullable<
-              RawAuthContext['user']
-            >,
-            workspaceMemberId: userWorkspaceId,
-            workspaceMember: { id: userWorkspaceId } as NonNullable<
-              RawAuthContext['workspaceMember']
-            >,
-            userSessionVariant: 'standard',
-          }),
-          () =>
-            lifecycleService().validateCoreWorkflowVersion({
-              workspaceId: SEED_APPLE_WORKSPACE_ID,
-              coreWorkflowVersionId,
-            }),
-        );
-
       beforeAll(async () => {
         draftWorkflow = await createCoreWorkflow({
           name: 'Private Workflow Draft',
@@ -688,7 +584,8 @@ describe('core workflow visibility (e2e)', () => {
 
       it('refuses to validate its version for another member', async () => {
         await expect(
-          validateCoreWorkflowVersionAs({
+          lifecycleService().validateCoreWorkflowVersion({
+            workspaceId: SEED_APPLE_WORKSPACE_ID,
             userWorkspaceId: USER_WORKSPACE_DATA_SEED_IDS.JONY,
             coreWorkflowVersionId: draftWorkflow.coreWorkflowVersionId,
           }),
@@ -697,7 +594,8 @@ describe('core workflow visibility (e2e)', () => {
 
       it('still validates its version for its creator', async () => {
         await expect(
-          validateCoreWorkflowVersionAs({
+          lifecycleService().validateCoreWorkflowVersion({
+            workspaceId: SEED_APPLE_WORKSPACE_ID,
             userWorkspaceId: USER_WORKSPACE_DATA_SEED_IDS.JANE,
             coreWorkflowVersionId: draftWorkflow.coreWorkflowVersionId,
           }),
@@ -918,9 +816,7 @@ describe('core workflow visibility (e2e)', () => {
         },
       });
 
-      expect(response.body.errors?.[0]?.extensions?.code).toBe(
-        'METADATA_VALIDATION_FAILED',
-      );
+      expect(response.body.errors?.[0]?.extensions?.code).toBe('FORBIDDEN');
       expect(await readAsCreator()).toMatchObject({
         name: RENAMED_NAME,
         isPrivate: false,
@@ -957,7 +853,9 @@ describe('core workflow visibility (e2e)', () => {
         [ownerlessPrivateCoreWorkflowId],
       );
 
-      await recomputeAppleWorkflowCaches(['flatWorkflowMaps']);
+      await getAppProviderByClassName<WorkspaceCacheService>(
+        'WorkspaceCacheService',
+      ).invalidateAndRecompute(SEED_APPLE_WORKSPACE_ID, ['flatWorkflowMaps']);
     });
 
     afterAll(async () => {
@@ -967,7 +865,9 @@ describe('core workflow visibility (e2e)', () => {
           [ownerlessPrivateCoreWorkflowId],
         );
 
-        await recomputeAppleWorkflowCaches(['flatWorkflowMaps']);
+        await getAppProviderByClassName<WorkspaceCacheService>(
+          'WorkspaceCacheService',
+        ).invalidateAndRecompute(SEED_APPLE_WORKSPACE_ID, ['flatWorkflowMaps']);
 
         await deleteCoreWorkflows({
           coreWorkflowIds: [ownerlessPrivateCoreWorkflowId],
@@ -986,6 +886,67 @@ describe('core workflow visibility (e2e)', () => {
           ownerlessPrivateCoreWorkflowId,
         );
       }
+    });
+  });
+
+  describe('two members claiming an ownerless workflow at the same time', () => {
+    let contestedCoreWorkflowId: string;
+
+    beforeAll(async () => {
+      ({ coreWorkflowId: contestedCoreWorkflowId } = await createCoreWorkflow({
+        name: 'Contested Ownerless Workflow',
+      }));
+
+      await global.testDataSource.query(
+        `UPDATE core."workflow" SET "createdByUserWorkspaceId" = NULL WHERE id = $1`,
+        [contestedCoreWorkflowId],
+      );
+
+      await getAppProviderByClassName<WorkspaceCacheService>(
+        'WorkspaceCacheService',
+      ).invalidateAndRecompute(SEED_APPLE_WORKSPACE_ID, ['flatWorkflowMaps']);
+    });
+
+    afterAll(async () => {
+      if (isDefined(contestedCoreWorkflowId)) {
+        await deleteCoreWorkflows({
+          coreWorkflowIds: [contestedCoreWorkflowId],
+        });
+      }
+    });
+
+    it('lets exactly one of them win', async () => {
+      const claimInput = {
+        input: {
+          coreWorkflowId: contestedCoreWorkflowId,
+          isPrivate: false,
+        },
+      };
+
+      const claims = await Promise.all([
+        workflowGraphqlRequest(UPDATE_CORE_WORKFLOW_MUTATION, claimInput),
+        asOtherMember(UPDATE_CORE_WORKFLOW_MUTATION, claimInput),
+      ]);
+
+      const refusedClaims = claims.filter(({ body }) => isDefined(body.errors));
+
+      expect(refusedClaims).toHaveLength(1);
+      expect(refusedClaims[0].body.errors[0].extensions.code).toBe('FORBIDDEN');
+
+      const ownershipViews = await Promise.all([
+        workflowGraphqlRequest(CORE_WORKFLOW_BY_ID_QUERY, {
+          coreWorkflowId: contestedCoreWorkflowId,
+        }),
+        asOtherMember(CORE_WORKFLOW_BY_ID_QUERY, {
+          coreWorkflowId: contestedCoreWorkflowId,
+        }),
+      ]);
+
+      expect(
+        ownershipViews.map(
+          ({ body }) => body.data.coreWorkflowById.canChangeVisibility,
+        ),
+      ).toEqual(claims.map(({ body }) => !isDefined(body.errors)));
     });
   });
 
@@ -1110,7 +1071,7 @@ describe('core workflow visibility (e2e)', () => {
         workspaceId: SEED_APPLE_WORKSPACE_ID,
         threadId,
         agentId: null,
-        senderWorkspaceMemberId: null,
+        senderUserWorkspaceId: null,
         senderApplicationId: null,
         messages: [{ role: 'user', content: 'Summarize the lead' }],
         createdBy: await conversationService.findTurnCreatedBy({

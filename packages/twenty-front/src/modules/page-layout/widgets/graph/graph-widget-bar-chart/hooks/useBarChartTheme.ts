@@ -38,6 +38,7 @@ export const useBarChartTheme = () => {
       line: {
         stroke: theme.border.color.light,
         strokeWidth: 1,
+        strokeDasharray: '4 4',
       },
     },
     labels: {

@@ -1,12 +1,10 @@
 import { isNonEmptyString } from '@sniptt/guards';
 import { jsonSchema } from 'ai';
 import { type JSONSchema7 } from 'json-schema';
-import { isDefined } from 'twenty-shared/utils';
 import { z } from 'zod';
 
 import { type ToolRegistryService } from 'src/engine/core-modules/tool-provider/services/tool-registry.service';
 import { type ToolContext } from 'src/engine/core-modules/tool-provider/types/tool-context.type';
-import { type ToolOutputTransformOptions } from 'src/engine/core-modules/tool-provider/types/tool-output-transform-options.type';
 import { type ToolOutput } from 'src/engine/core-modules/tool/types/tool-output.type';
 
 export const EXECUTE_TOOL_TOOL_NAME = 'execute_tool';
@@ -48,8 +46,10 @@ export const executeToolInputSchema = jsonSchema<ExecuteToolInput>(
 export const createExecuteToolTool = (
   toolRegistry: Pick<ToolRegistryService, 'resolveAndExecute'>,
   context: ToolContext,
-  options?: ToolOutputTransformOptions & {
+  options?: {
     isToolAllowed?: (toolName: string) => boolean;
+    compactOutput?: boolean;
+    spillLargeOutput?: boolean;
   },
 ) => ({
   description:
@@ -67,9 +67,7 @@ export const createExecuteToolTool = (
 
     const { toolName, arguments: args = {} } = parameters;
 
-    const isToolAllowed = options?.isToolAllowed?.(toolName);
-
-    if (isDefined(isToolAllowed) && !isToolAllowed) {
+    if (options?.isToolAllowed?.(toolName) === false) {
       return {
         success: false,
         message: `Tool "${toolName}" is not available`,
@@ -78,7 +76,6 @@ export const createExecuteToolTool = (
     }
 
     return toolRegistry.resolveAndExecute(toolName, args, context, {
-      shouldAddChatReferences: options?.shouldAddChatReferences,
       compactOutput: options?.compactOutput,
       spillLargeOutput: options?.spillLargeOutput,
     });

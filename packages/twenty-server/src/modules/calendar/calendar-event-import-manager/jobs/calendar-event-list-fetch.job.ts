@@ -58,7 +58,7 @@ export class CalendarEventListFetchJob {
         }
 
         await this.calendarFetchEventsService.fetchCalendarEvents(
-          calendarChannel,
+          calendarChannel as unknown as CalendarChannelEntity,
           calendarChannel.connectedAccount,
           workspaceId,
         );

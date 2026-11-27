@@ -1,5 +1,3 @@
-> **This is not Twenty.** It is an unaffiliated, standalone copy of [twentyhq/twenty](https://github.com/twentyhq/twenty) used as a test workload for an agent harness (harneto). Upstream's own workflows and Dependabot configuration are removed here; the licence files are unchanged. Nothing in this repository is sent upstream. For the real project, go to the link above.
-
 <p align="center">
   <a href="https://www.twenty.com">
     <img src="./packages/twenty-website/public/images/core/logo.svg" width="100px" alt="Twenty logo" />

@@ -498,7 +498,7 @@ describe('upsertViewWidget', () => {
       const filterGroups = await global.testDataSource.query(
         `SELECT id, "logicalOperator"
          FROM core."viewFilterGroup"
-         WHERE id = $1`,
+         WHERE id = $1 AND "deletedAt" IS NULL`,
         [filterGroupId],
       );
 
@@ -540,7 +540,7 @@ describe('upsertViewWidget', () => {
       const filterGroups = await global.testDataSource.query(
         `SELECT id, "logicalOperator"
          FROM core."viewFilterGroup"
-         WHERE id = $1`,
+         WHERE id = $1 AND "deletedAt" IS NULL`,
         [filterGroupId],
       );
 
@@ -586,7 +586,7 @@ describe('upsertViewWidget', () => {
 
       const removedGroup = await global.testDataSource.query(
         `SELECT id FROM core."viewFilterGroup"
-         WHERE id = $1`,
+         WHERE id = $1 AND "deletedAt" IS NULL`,
         [groupToRemoveId],
       );
 
@@ -594,7 +594,7 @@ describe('upsertViewWidget', () => {
 
       const keptGroup = await global.testDataSource.query(
         `SELECT id FROM core."viewFilterGroup"
-         WHERE id = $1`,
+         WHERE id = $1 AND "deletedAt" IS NULL`,
         [groupToKeepId],
       );
 
@@ -641,7 +641,7 @@ describe('upsertViewWidget', () => {
       const childGroup = await global.testDataSource.query(
         `SELECT id, "parentViewFilterGroupId"
          FROM core."viewFilterGroup"
-         WHERE id = $1`,
+         WHERE id = $1 AND "deletedAt" IS NULL`,
         [childGroupId],
       );
 
@@ -682,7 +682,7 @@ describe('upsertViewWidget', () => {
       const childGroups = await global.testDataSource.query(
         `SELECT id, "parentViewFilterGroupId"
          FROM core."viewFilterGroup"
-         WHERE id = ANY($1)`,
+         WHERE id = ANY($1) AND "deletedAt" IS NULL`,
         [[firstChildGroupId, secondChildGroupId]],
       );
 
@@ -719,7 +719,7 @@ describe('upsertViewWidget', () => {
         const [childGroup] = await global.testDataSource.query(
           `SELECT "parentViewFilterGroupId"
            FROM core."viewFilterGroup"
-           WHERE id = $1`,
+           WHERE id = $1 AND "deletedAt" IS NULL`,
           [childGroupId],
         );
 
@@ -801,7 +801,7 @@ describe('upsertViewWidget', () => {
 
       const groups = await global.testDataSource.query(
         `SELECT id FROM core."viewFilterGroup"
-         WHERE id = ANY($1)`,
+         WHERE id = ANY($1) AND "deletedAt" IS NULL`,
         [[parentGroupId, childGroupId]],
       );
 
@@ -985,7 +985,7 @@ describe('upsertViewWidget', () => {
       const filters = await global.testDataSource.query(
         `SELECT id, "viewFilterGroupId"
          FROM core."viewFilter"
-         WHERE id = $1`,
+         WHERE id = $1 AND "deletedAt" IS NULL`,
         [filterId],
       );
 
@@ -1032,7 +1032,7 @@ describe('upsertViewWidget', () => {
         global.testDataSource.query(
           `SELECT "viewFilterGroupId", value
            FROM core."viewFilter"
-           WHERE id = $1`,
+           WHERE id = $1 AND "deletedAt" IS NULL`,
           [filterId],
         );
 
@@ -1097,7 +1097,7 @@ describe('upsertViewWidget', () => {
       const filters = await global.testDataSource.query(
         `SELECT "viewFilterGroupId"
          FROM core."viewFilter"
-         WHERE id = $1`,
+         WHERE id = $1 AND "deletedAt" IS NULL`,
         [filterId],
       );
 
@@ -1137,7 +1137,7 @@ describe('upsertViewWidget', () => {
       const sorts = await global.testDataSource.query(
         `SELECT id, "fieldMetadataId", direction
          FROM core."viewSort"
-         WHERE id = $1`,
+         WHERE id = $1 AND "deletedAt" IS NULL`,
         [sortId],
       );
 
@@ -1181,7 +1181,7 @@ describe('upsertViewWidget', () => {
       const sorts = await global.testDataSource.query(
         `SELECT id, direction
          FROM core."viewSort"
-         WHERE id = $1`,
+         WHERE id = $1 AND "deletedAt" IS NULL`,
         [sortId],
       );
 
@@ -1230,7 +1230,7 @@ describe('upsertViewWidget', () => {
 
       const keptSort = await global.testDataSource.query(
         `SELECT id FROM core."viewSort"
-         WHERE id = $1`,
+         WHERE id = $1 AND "deletedAt" IS NULL`,
         [sortToKeepId],
       );
 
@@ -1238,7 +1238,7 @@ describe('upsertViewWidget', () => {
 
       const removedSort = await global.testDataSource.query(
         `SELECT id FROM core."viewSort"
-         WHERE id = $1`,
+         WHERE id = $1 AND "deletedAt" IS NULL`,
         [sortToRemoveId],
       );
 
@@ -1318,7 +1318,7 @@ describe('upsertViewWidget', () => {
 
       const filterGroups = await global.testDataSource.query(
         `SELECT id FROM core."viewFilterGroup"
-         WHERE id = $1`,
+         WHERE id = $1 AND "deletedAt" IS NULL`,
         [filterGroupId],
       );
 
@@ -1326,7 +1326,7 @@ describe('upsertViewWidget', () => {
 
       const filters = await global.testDataSource.query(
         `SELECT id, value FROM core."viewFilter"
-         WHERE id = $1`,
+         WHERE id = $1 AND "deletedAt" IS NULL`,
         [filterId],
       );
 
@@ -1335,7 +1335,7 @@ describe('upsertViewWidget', () => {
 
       const sorts = await global.testDataSource.query(
         `SELECT id, direction FROM core."viewSort"
-         WHERE id = $1`,
+         WHERE id = $1 AND "deletedAt" IS NULL`,
         [sortId],
       );
 
@@ -1468,7 +1468,7 @@ describe('upsertViewWidget', () => {
 
       const sortsAfter = await global.testDataSource.query(
         `SELECT id FROM core."viewSort"
-         WHERE id = $1`,
+         WHERE id = $1 AND "deletedAt" IS NULL`,
         [sortId],
       );
 

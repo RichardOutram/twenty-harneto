@@ -1,4 +1,3 @@
-import { isLayoutCustomizationModeEnabledState } from '@/layout-customization/states/isLayoutCustomizationModeEnabledState';
 import { DropdownContent } from '@/ui/layout/dropdown/components/DropdownContent';
 import { DropdownRoot } from '@/ui/layout/dropdown/components/DropdownRoot';
 import { MultiWorkspaceDropdownClickableComponent } from '@/navigation/components/MultiWorkspaceDropdown/internal/MultiWorkspaceDropdownClickableComponent';
@@ -8,15 +7,9 @@ import { MultiWorkspaceDropdownThemesComponents } from '@/navigation/components/
 import { MultiWorkspaceDropdownWorkspacesListComponents } from '@/navigation/components/MultiWorkspaceDropdown/internal/MultiWorkspaceDropdownWorkspacesListComponents';
 import { MULTI_WORKSPACE_DROPDOWN_ID } from '@/navigation/constants/MultiWorkspaceDropdownId';
 import { MULTI_WORKSPACE_DROPDOWN_MOBILE_BOUNDARY_PADDING } from '@/navigation/constants/MultiWorkspaceDropdownMobileBoundaryPadding';
-import { TooltipDelay } from '@/ui/layout/tooltip/constants/TooltipDelay';
-import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
-import { useIsFeatureEnabled } from '@/workspace/hooks/useIsFeatureEnabled';
 import { styled } from '@linaria/react';
-import { useLingui } from '@lingui/react/macro';
 import { Dropdown } from 'twenty-ui/components/navigation';
-import { Tooltip } from 'twenty-ui/primitives/surfaces';
 import { useIsMobile } from 'twenty-ui/utilities';
-import { FeatureFlagKey } from '~/generated-metadata/graphql';
 
 const StyledTrigger = styled.div<{ shouldHideLabel: boolean }>`
   width: ${({ shouldHideLabel }) => (shouldHideLabel ? 'auto' : '100%')};
@@ -29,46 +22,28 @@ type MultiWorkspaceDropdownButtonProps = {
 export const MultiWorkspaceDropdownButton = ({
   shouldHideLabel = false,
 }: MultiWorkspaceDropdownButtonProps) => {
-  const { t } = useLingui();
   const isMobile = useIsMobile();
-  const isLayoutCustomizationModeEnabled = useAtomStateValue(
-    isLayoutCustomizationModeEnabledState,
-  );
-  const isCustomizableSidebarEnabled = useIsFeatureEnabled(
-    FeatureFlagKey.IS_CUSTOMIZABLE_SIDEBAR_ENABLED,
-  );
-  const shouldAlignToStart = isMobile || isCustomizableSidebarEnabled;
-  const labeledTriggerAlignOffset = shouldAlignToStart ? -5 : 5;
-  const desktopCollisionPadding = isCustomizableSidebarEnabled ? 0 : undefined;
+  const labeledTriggerAlignOffset = isMobile ? -5 : 5;
 
   return (
     <DropdownRoot dropdownId={MULTI_WORKSPACE_DROPDOWN_ID} type="menu">
-      <Tooltip
-        content={t`Finish editing the layout to open this menu`}
-        disabled={!isLayoutCustomizationModeEnabled}
-        delay={TooltipDelay.noDelay}
-        side="right"
+      <Dropdown.Trigger
+        nativeButton={false}
+        render={<StyledTrigger shouldHideLabel={shouldHideLabel} />}
       >
-        <Dropdown.Trigger
-          nativeButton={false}
-          disabled={isLayoutCustomizationModeEnabled}
-          render={<StyledTrigger shouldHideLabel={shouldHideLabel} />}
-        >
-          <MultiWorkspaceDropdownClickableComponent
-            disabled={isLayoutCustomizationModeEnabled}
-            shouldHideLabel={shouldHideLabel}
-          />
-        </Dropdown.Trigger>
-      </Tooltip>
+        <MultiWorkspaceDropdownClickableComponent
+          shouldHideLabel={shouldHideLabel}
+        />
+      </Dropdown.Trigger>
       <DropdownContent
         side="bottom"
-        align={shouldAlignToStart ? 'start' : 'end'}
+        align={isMobile ? 'start' : 'end'}
         sideOffset={shouldHideLabel ? 4 : -31}
         alignOffset={shouldHideLabel ? 0 : labeledTriggerAlignOffset}
         collisionPadding={
           isMobile
             ? MULTI_WORKSPACE_DROPDOWN_MOBILE_BOUNDARY_PADDING
-            : desktopCollisionPadding
+            : undefined
         }
       >
         <Dropdown.Page id="root">

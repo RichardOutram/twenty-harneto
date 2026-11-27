@@ -36,7 +36,6 @@ import { AuthGraphqlApiExceptionFilter } from 'src/engine/core-modules/auth/filt
 import { PAGE_LAYOUT_WIDGET_READ_ACCESS_POLICY } from 'src/engine/metadata-modules/page-layout-widget/constants/page-layout-widget-read-access-policy.constant';
 import { PAGE_LAYOUT_WIDGET_WRITE_ACCESS_POLICY } from 'src/engine/metadata-modules/page-layout-widget/constants/page-layout-widget-write-access-policy.constant';
 import { AccessPolicyGuard } from 'src/engine/guards/access-policy.guard';
-import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 
 @MetadataResolver(() => PageLayoutWidgetDTO)
 @UseInterceptors(WorkspaceMigrationGraphqlApiExceptionInterceptor)
@@ -49,7 +48,6 @@ export class PageLayoutWidgetResolver {
   ) {}
 
   @ResolveField(() => String, { nullable: true })
-  @UseGuards(NoPermissionGuard)
   async applicationName(
     @Parent() widget: Pick<PageLayoutWidgetDTO, 'applicationId'>,
     @AuthWorkspace()
@@ -69,7 +67,6 @@ export class PageLayoutWidgetResolver {
   }
 
   @ResolveField(() => [IframeMediaPermissionDTO], { nullable: true })
-  @UseGuards(NoPermissionGuard)
   async applicationGrantedIframeMediaPermissions(
     @Parent() widget: Pick<PageLayoutWidgetDTO, 'applicationId'>,
     @AuthWorkspace()
@@ -89,7 +86,6 @@ export class PageLayoutWidgetResolver {
   }
 
   @ResolveField(() => String)
-  @UseGuards(NoPermissionGuard)
   async title(
     @Parent() widget: PageLayoutWidgetDTO,
     @Context() context: { loaders: IDataloaders } & I18nContext,
@@ -177,7 +173,6 @@ export class PageLayoutWidgetResolver {
   }
 
   @ResolveField(() => WidgetConfiguration, { nullable: true })
-  @UseGuards(NoPermissionGuard)
   configuration(@Parent() widget: PageLayoutWidgetDTO) {
     return widget.configuration;
   }

@@ -51,7 +51,6 @@ import { WorkspaceScopedRepository } from 'src/engine/twenty-orm/workspace-scope
 import { FIELD_METADATA_READ_ACCESS_POLICY } from 'src/engine/metadata-modules/field-metadata/constants/field-metadata-read-access-policy.constant';
 import { FIELD_METADATA_WRITE_ACCESS_POLICY } from 'src/engine/metadata-modules/field-metadata/constants/field-metadata-write-access-policy.constant';
 import { AccessPolicyGuard } from 'src/engine/guards/access-policy.guard';
-import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 
 // structural type so ResolverValidationPipe skips FieldMetadataDTO decorators on loaded parents
 type FieldMetadataStandardOverrideParent = Pick<
@@ -154,7 +153,6 @@ export class FieldMetadataResolver {
   }
 
   @ResolveField(() => ObjectMetadataDTO, { nullable: true })
-  @UseGuards(NoPermissionGuard)
   async object(
     @AuthWorkspace() workspace: WorkspaceEntity,
     @Parent()
@@ -171,7 +169,6 @@ export class FieldMetadataResolver {
     nullable: true,
     deprecationReason: 'Use isUIEditable',
   })
-  @UseGuards(NoPermissionGuard)
   async isUIReadOnly(
     @Parent() fieldMetadata: Pick<FieldMetadataDTO, 'isUIEditable'>,
   ): Promise<boolean> {
@@ -202,7 +199,6 @@ export class FieldMetadataResolver {
   }
 
   @ResolveField(() => String, { nullable: true })
-  @UseGuards(NoPermissionGuard)
   async label(
     @Parent() fieldMetadata: FieldMetadataStandardOverrideParent,
     @Context() context: { loaders: IDataloaders } & I18nContext,
@@ -217,7 +213,6 @@ export class FieldMetadataResolver {
   }
 
   @ResolveField(() => String, { nullable: true })
-  @UseGuards(NoPermissionGuard)
   async description(
     @Parent() fieldMetadata: FieldMetadataStandardOverrideParent,
     @Context() context: { loaders: IDataloaders } & I18nContext,
@@ -232,7 +227,6 @@ export class FieldMetadataResolver {
   }
 
   @ResolveField(() => String, { nullable: true })
-  @UseGuards(NoPermissionGuard)
   async icon(
     @Parent() fieldMetadata: FieldMetadataStandardOverrideParent,
     @Context() context: { loaders: IDataloaders } & I18nContext,
@@ -305,7 +299,6 @@ export class FieldMetadataResolver {
   }
 
   @ResolveField(() => RelationDTO, { nullable: true })
-  @UseGuards(NoPermissionGuard)
   async relation(
     @AuthWorkspace() workspace: WorkspaceEntity,
     @Parent()
@@ -327,7 +320,6 @@ export class FieldMetadataResolver {
   }
 
   @ResolveField(() => [RelationDTO], { nullable: true })
-  @UseGuards(NoPermissionGuard)
   async morphRelations(
     @AuthWorkspace() workspace: WorkspaceEntity,
     @Parent()

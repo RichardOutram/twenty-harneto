@@ -61,7 +61,7 @@ describe('whatsappOnConnectHandler', () => {
     );
   });
 
-  it('creates a private channel on the member phone number that replies go through, claims the account and imports its most recent conversations once WhatsApp handed them over', async () => {
+  it('creates a private channel on the member phone number that replies go through, claims the account and leaves importing to the Sync button', async () => {
     await expect(whatsappOnConnectHandler(PAYLOAD)).resolves.toEqual({
       messageChannelId: 'channel-id',
     });
@@ -82,17 +82,7 @@ describe('whatsappOnConnectHandler', () => {
       undefined,
       { scope: 'SERVER' },
     );
-    expect(mocks.kvSet).toHaveBeenCalledWith(
-      'whatsapp-history-import:connected-account-id',
-      expect.objectContaining({
-        status: 'IMPORTING',
-        importPolicy: 'CONTACTS_ONLY',
-        conversationLimit: 100,
-      }),
-    );
-    expect(mocks.enqueueJobs).toHaveBeenCalledExactlyOnceWith(
-      expect.objectContaining({ delayMs: 60 * 1000 }),
-    );
+    expect(mocks.enqueueJobs).not.toHaveBeenCalled();
   });
 
   it('reads the member phone number from the account name when Unipile puts it there', async () => {
@@ -152,7 +142,7 @@ describe('whatsappOnConnectHandler', () => {
     expect(mocks.createMessageChannel).not.toHaveBeenCalled();
   });
 
-  it('reuses the channel of a reconnected account and imports its conversations again', async () => {
+  it('reuses the channel of a reconnected account', async () => {
     mocks.listMessageChannels.mockResolvedValue([
       { id: 'existing-channel-id' },
     ]);
@@ -162,6 +152,5 @@ describe('whatsappOnConnectHandler', () => {
     });
     expect(mocks.createMessageChannel).not.toHaveBeenCalled();
     expect(mocks.getUnipileAccount).not.toHaveBeenCalled();
-    expect(mocks.enqueueJobs).toHaveBeenCalledOnce();
   });
 });

@@ -6,9 +6,5 @@ export type AiChatPendingToolCall =
   | AiChatPendingQuestion
   | ({ toolCallId: string } & (
       | { kind: 'form'; fields: RequestFormField[] }
-      | {
-          kind: 'toolCallApproval';
-          proposal: ProposedToolCall;
-          isPostedByWorkflow: boolean;
-        }
+      | { kind: 'toolCallApproval'; proposal: ProposedToolCall }
     ));

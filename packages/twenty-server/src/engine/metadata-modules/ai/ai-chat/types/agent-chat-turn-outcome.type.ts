@@ -2,10 +2,7 @@ import { type AgentChatTurnCancellationReason } from 'src/engine/metadata-module
 
 // exactly one per started turn so started = completed + cancelled + failed on dashboards
 export type AgentChatTurnOutcome =
-  | {
-      kind: 'completed';
-      outcome: 'answered' | 'awaiting_user' | 'silent' | 'tools_only';
-    }
+  | { kind: 'completed'; outcome: 'answered' | 'awaiting_user' | 'silent' }
   | {
       kind: 'cancelled';
       reason: AgentChatTurnCancellationReason;

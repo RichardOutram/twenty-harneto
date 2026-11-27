@@ -88,5 +88,4 @@ export const buildLegacyWorkflowCoreWorkflowIdFlatFieldMetadata = ({
   searchFieldMetadataIds: [],
   searchFieldMetadataUniversalIdentifiers: [],
   universalSettings: null,
-  formula: null,
 });

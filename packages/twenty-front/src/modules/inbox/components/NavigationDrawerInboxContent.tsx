@@ -17,6 +17,7 @@ import { INBOX_RECENTS_NAVIGATION_SECTION_ID } from '@/inbox/constants/InboxRece
 import { useInboxThreadList } from '@/inbox/hooks/useInboxThreadList';
 import { inboxDirectMessageSidebarItemsSelector } from '@/inbox/states/selectors/inboxDirectMessageSidebarItemsSelector';
 import { useAiChatPageThreadId } from '@/ai-chat/hooks/useAiChatPageThreadId';
+import { inboxFavoriteChannelsSelector } from '@/inbox/states/selectors/inboxFavoriteChannelsSelector';
 import { inboxFavoriteThreadsSelector } from '@/inbox/states/selectors/inboxFavoriteThreadsSelector';
 import { filterInboxRecentThreads } from '@/inbox/utils/filterInboxRecentThreads';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
@@ -60,6 +61,9 @@ export const NavigationDrawerInboxContent = () => {
     INBOX_RECENT_THREAD_LIST_SOURCE,
   );
   const inboxFavoriteThreads = useAtomStateValue(inboxFavoriteThreadsSelector);
+  const inboxFavoriteChannels = useAtomStateValue(
+    inboxFavoriteChannelsSelector,
+  );
   const inboxDirectMessageSidebarItems = useAtomStateValue(
     inboxDirectMessageSidebarItemsSelector,
   );
@@ -75,7 +79,7 @@ export const NavigationDrawerInboxContent = () => {
   const recentThreads = filterInboxRecentThreads({
     threads,
     favoriteThreads: inboxFavoriteThreads,
-    shouldExcludeDirectMessages: isDirectMessageEnabled,
+    isDirectMessageEnabled,
   }).slice(0, INBOX_RECENT_THREADS_MAX_COUNT);
 
   return (
@@ -84,6 +88,7 @@ export const NavigationDrawerInboxContent = () => {
         <StyledSectionsContainer>
           <NavigationDrawerInboxTriageSection />
           <NavigationDrawerInboxFavoritesSection
+            channels={inboxFavoriteChannels}
             threads={inboxFavoriteThreads}
             currentThreadId={aiChatPageThreadId}
             onThreadClick={handleThreadClick}

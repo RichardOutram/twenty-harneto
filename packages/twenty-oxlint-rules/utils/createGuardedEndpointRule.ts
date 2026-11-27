@@ -1,7 +1,5 @@
 import { defineRule } from '@oxlint/plugins';
 
-import { isDefined } from 'twenty-shared/utils';
-
 import { typedTokenHelpers } from './typedTokenHelpers';
 
 type GuardedEndpointRuleOptions = {
@@ -9,7 +7,6 @@ type GuardedEndpointRuleOptions = {
   messageId: string;
   description: string;
   message: string;
-  isDeclaringAccess?: (node: any) => boolean;
 };
 
 const ACCESS_POLICY_GUARD_NOT_FIRST_MESSAGE_ID = 'accessPolicyGuardNotFirst';
@@ -28,25 +25,13 @@ const findClassDeclaration = (node: any): any | null => {
   return null;
 };
 
-const isMissingGuards = (
-  node: any,
-  triggerDecorators: string[],
-  isDeclaringAccess: ((node: any) => boolean) | undefined,
-) => {
+const isMissingGuards = (node: any, triggerDecorators: string[]) => {
   const hasTriggerDecorator = typedTokenHelpers.nodeHasDecoratorsNamed(
     node,
     triggerDecorators,
   );
 
   const classNode = findClassDeclaration(node);
-
-  if (isDefined(isDeclaringAccess)) {
-    return (
-      hasTriggerDecorator &&
-      !isDeclaringAccess(node) &&
-      !(classNode ? isDeclaringAccess(classNode) : false)
-    );
-  }
 
   const missingAuthGuard =
     hasTriggerDecorator &&
@@ -66,7 +51,6 @@ export const createGuardedEndpointRule = ({
   messageId,
   description,
   message,
-  isDeclaringAccess,
 }: GuardedEndpointRuleOptions) =>
   defineRule({
     meta: {
@@ -193,7 +177,7 @@ export const createGuardedEndpointRule = ({
           reportStackedUseGuards(node);
           reportAccessPolicyGuardOnClassAndMethod(node);
 
-          if (isMissingGuards(node, triggerDecorators, isDeclaringAccess)) {
+          if (isMissingGuards(node, triggerDecorators)) {
             context.report({ node, messageId });
           }
         },

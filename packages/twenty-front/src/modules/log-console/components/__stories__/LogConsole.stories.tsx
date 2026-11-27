@@ -12,12 +12,11 @@ import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
 import { TimeFormat } from '@/localization/constants/TimeFormat';
 import { workspaceMemberFormatPreferencesState } from '@/localization/states/workspaceMemberFormatPreferencesState';
 import { LogConsole } from '@/log-console/components/LogConsole';
-import { LOG_CONSOLE_SOURCES } from '@/log-console/constants/LogConsoleSources';
 import { LOG_CONSOLE_TAB_LIST_INSTANCE_ID } from '@/log-console/constants/LogConsoleTabListInstanceId';
 import { isLogConsoleFullScreenState } from '@/log-console/states/isLogConsoleFullScreenState';
 import { logConsoleActiveSourceIdState } from '@/log-console/states/logConsoleActiveSourceIdState';
 import { logConsoleDisplayModeState } from '@/log-console/states/logConsoleDisplayModeState';
-import { logConsoleFiltersFamilyState } from '@/log-console/states/logConsoleFiltersFamilyState';
+import { logConsoleFiltersState } from '@/log-console/states/logConsoleFiltersState';
 import { logConsoleHeightState } from '@/log-console/states/logConsoleHeightState';
 import { logConsoleTimeRangeState } from '@/log-console/states/logConsoleTimeRangeState';
 import { logConsoleTimeZoneState } from '@/log-console/states/logConsoleTimeZoneState';
@@ -177,11 +176,6 @@ const meta: Meta<PageDecoratorArgs> = {
     jotaiStore.set(logConsoleHeightState.atom, null);
     jotaiStore.set(isLogConsoleFullScreenState.atom, false);
     jotaiStore.set(logConsoleActiveSourceIdState.atom, null);
-    jotaiStore.set(logConsoleTimeRangeState.atom, '24h');
-    jotaiStore.set(logConsoleTimeZoneState.atom, 'member');
-    LOG_CONSOLE_SOURCES.forEach((source) =>
-      jotaiStore.set(logConsoleFiltersFamilyState.atomFamily(source.id), []),
-    );
   },
   parameters: {
     layout: 'fullscreen',
@@ -611,7 +605,7 @@ export const LevelFilter: Story = {
       }),
       'app-logs',
     );
-    jotaiStore.set(logConsoleFiltersFamilyState.atomFamily('app-logs'), [
+    jotaiStore.set(logConsoleFiltersState.atom, [
       {
         filterFieldId: 'level',
         operand: EventLogFilterOperand.IS,
@@ -657,7 +651,7 @@ export const FilterMenu: Story = {
 export const NoFilterMatch: Story = {
   beforeEach: () => {
     jotaiStore.set(logConsoleDisplayModeState.atom, 'open');
-    jotaiStore.set(logConsoleFiltersFamilyState.atomFamily('record-changes'), [
+    jotaiStore.set(logConsoleFiltersState.atom, [
       {
         filterFieldId: 'object',
         operand: EventLogFilterOperand.IS,

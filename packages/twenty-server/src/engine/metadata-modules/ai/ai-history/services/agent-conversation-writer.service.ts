@@ -13,6 +13,7 @@ import { AgentTurnStatus } from 'src/engine/metadata-modules/ai/ai-history/enums
 import { AgentHistoryTransactionService } from 'src/engine/metadata-modules/ai/ai-history/services/agent-history-transaction.service';
 import { type AgentHistoryTransactionScope } from 'src/engine/metadata-modules/ai/ai-history/types/agent-history-transaction-scope.type';
 import { isAgentTurnStatusFinal } from 'src/engine/metadata-modules/ai/ai-history/utils/is-agent-turn-status-final.util';
+import { WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';
 import {
   AiException,
   AiExceptionCode,
@@ -22,6 +23,7 @@ import {
 export class AgentConversationWriterService {
   constructor(
     private readonly transactionService: AgentHistoryTransactionService,
+    private readonly workspaceCacheService: WorkspaceCacheService,
   ) {}
 
   runInTransaction<TResult>({
@@ -159,7 +161,7 @@ export class AgentConversationWriterService {
         turnId: insertedTurnId,
         role: AgentMessageRole.SYSTEM,
         agentId: null,
-        senderWorkspaceMemberId: null,
+        senderUserWorkspaceId: null,
         parts: [{ type: 'text', text: context }],
         scope,
       });
@@ -185,7 +187,7 @@ export class AgentConversationWriterService {
     turnId,
     role,
     agentId,
-    senderWorkspaceMemberId,
+    senderUserWorkspaceId,
     senderApplicationId,
     isAwaitingAnswer,
     processedAt,
@@ -198,7 +200,7 @@ export class AgentConversationWriterService {
     turnId: string;
     role: AgentMessageRole;
     agentId: string | null;
-    senderWorkspaceMemberId: string | null;
+    senderUserWorkspaceId: string | null;
     senderApplicationId?: string | null;
     isAwaitingAnswer?: boolean;
     processedAt?: Date;
@@ -206,6 +208,11 @@ export class AgentConversationWriterService {
     scope?: AgentHistoryTransactionScope;
   }): Promise<string> {
     const messageId = id ?? randomUUID();
+    const senderWorkspaceMemberId = await this.findSenderWorkspaceMemberId({
+      workspaceId,
+      senderUserWorkspaceId,
+    });
+
     const write = async (transactionScope: AgentHistoryTransactionScope) => {
       await transactionScope.insert({
         name: 'agentMessage',
@@ -263,5 +270,28 @@ export class AgentConversationWriterService {
     }
 
     return messageId;
+  }
+
+  // Callers name the sender by their membership; a sender who has left since
+  // is recorded without one
+  private async findSenderWorkspaceMemberId({
+    workspaceId,
+    senderUserWorkspaceId,
+  }: {
+    workspaceId: string;
+    senderUserWorkspaceId: string | null;
+  }): Promise<string | null> {
+    if (!isDefined(senderUserWorkspaceId)) {
+      return null;
+    }
+
+    const { flatWorkspaceMemberMaps } =
+      await this.workspaceCacheService.getOrRecompute(workspaceId, [
+        'flatWorkspaceMemberMaps',
+      ]);
+
+    return (
+      flatWorkspaceMemberMaps.idByUserWorkspaceId[senderUserWorkspaceId] ?? null
+    );
   }
 }

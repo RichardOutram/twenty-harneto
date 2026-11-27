@@ -23,7 +23,6 @@ export const queries = {
         description
         icon
         isActive
-        isUIEditable
         isNullable
         createdAt
         updatedAt
@@ -46,7 +45,6 @@ export const queries = {
         description
         icon
         isActive
-        isUIEditable
         isUnique
         isNullable
         createdAt

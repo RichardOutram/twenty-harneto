@@ -168,19 +168,18 @@ export const ThinkingStepsDisplay = ({
     >
       <Collapsible.Trigger render={<StyledSummaryButton />}>
         {isWorking ? (
-          <>
-            <StyledIconContainer>
-              <ThinkingOrbitLoaderIcon />
-            </StyledIconContainer>
-            <StyledShimmeringRowLabel>{workingLabel}</StyledShimmeringRowLabel>
-          </>
+          <StyledIconContainer>
+            <ThinkingOrbitLoaderIcon />
+          </StyledIconContainer>
         ) : (
-          <>
-            <StyledSummaryText>{summaryLabel}</StyledSummaryText>
-            <StyledChevronContainer>
-              <IconChevronRight size={14} />
-            </StyledChevronContainer>
-          </>
+          <StyledChevronContainer>
+            <IconChevronRight size={14} />
+          </StyledChevronContainer>
+        )}
+        {isWorking ? (
+          <StyledShimmeringRowLabel>{workingLabel}</StyledShimmeringRowLabel>
+        ) : (
+          <StyledSummaryText>{summaryLabel}</StyledSummaryText>
         )}
         {isWorking && parts.length > 1 && (
           <StyledStepCount>{stepCountLabel}</StyledStepCount>

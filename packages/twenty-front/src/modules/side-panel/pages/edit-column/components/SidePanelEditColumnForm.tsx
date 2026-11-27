@@ -3,7 +3,6 @@ import { type FieldMetadataItem } from '@/object-metadata/types/FieldMetadataIte
 import { AdvancedFilterSidePanelContainer } from '@/object-record/advanced-filter/side-panel/components/AdvancedFilterSidePanelContainer';
 import { getLookupTargetFieldMetadataItems } from '@/object-record/record-column-lookup/utils/getLookupTargetFieldMetadataItems';
 import { getRecordFieldColumnHeader } from '@/object-record/record-column-lookup/utils/getRecordFieldColumnHeader';
-import { getAggregateOperationLabel } from '@/object-record/record-board/record-board-column/utils/getAggregateOperationLabel';
 import { getRecordFieldSummary } from '@/object-record/record-column-summary/utils/getRecordFieldSummary';
 import { getRecordFieldSummaryLabel } from '@/object-record/record-column-summary/utils/getRecordFieldSummaryLabel';
 import { getSummaryShowOptionValue } from '@/object-record/record-column-summary/utils/getSummaryShowOptionValue';
@@ -21,10 +20,9 @@ import { SIDE_PANEL_FOCUS_ID } from '@/side-panel/constants/SidePanelFocusId';
 import { useSidePanelHistory } from '@/side-panel/hooks/useSidePanelHistory';
 import { RecordTableSettingsSortsContent } from '@/side-panel/pages/page-layout/components/record-table-settings/RecordTableSettingsSortsContent';
 import { SidePanelEditColumnHeader } from '@/side-panel/pages/edit-column/components/SidePanelEditColumnHeader';
-import { SidePanelEditColumnShowSelect } from '@/side-panel/pages/edit-column/components/SidePanelEditColumnShowSelect';
-import { type SidePanelEditColumnSummaryShowOption } from '@/side-panel/pages/edit-column/types/SidePanelEditColumnSummaryShowOption';
 import { SidePanelPageComponentInstanceContext } from '@/side-panel/states/contexts/SidePanelPageComponentInstanceContext';
 import { FormFieldInputContainer } from '@/ui/input/components/FormFieldInputContainer';
+import { Select } from '@/ui/input/components/Select';
 import { TextInput } from '@/ui/input/components/TextInput';
 import { SidePanelFooter } from '@/ui/layout/side-panel/components/SidePanelFooter';
 import { currentFocusIdSelector } from '@/ui/utilities/focus/states/currentFocusIdSelector';
@@ -34,7 +32,6 @@ import { useAtomComponentStateCallbackState } from '@/ui/utilities/state/jotai/h
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import { styled } from '@linaria/react';
 import { useLingui } from '@lingui/react/macro';
-import { InlineBanner } from 'twenty-ui/components/feedback';
 import { useStore } from 'jotai';
 import { useState } from 'react';
 import { Key } from 'ts-key-enum';
@@ -175,7 +172,7 @@ export const SidePanelEditColumnForm = ({
               relationTargetFieldMetadataId: id,
             })),
         )),
-  ].flatMap<SidePanelEditColumnSummaryShowOption>((summaryColumnContent) => {
+  ].flatMap((summaryColumnContent) => {
     const optionSummary = getRecordFieldSummary({
       ...summaryColumnContent,
       relationObjectMetadataItem,
@@ -185,10 +182,10 @@ export const SidePanelEditColumnForm = ({
       ? [
           {
             ...summaryColumnContent,
+            Icon: isDefined(optionSummary.aggregatedFieldMetadataItem)
+              ? getIcon(optionSummary.aggregatedFieldMetadataItem.icon)
+              : undefined,
             label: getRecordFieldSummaryLabel(optionSummary),
-            operationLabel: getAggregateOperationLabel(
-              optionSummary.aggregateOperation,
-            ),
             value: getSummaryShowOptionValue(summaryColumnContent),
           },
         ]
@@ -276,34 +273,45 @@ export const SidePanelEditColumnForm = ({
         onLabelChange={setLabel}
       />
       <StyledContent>
-        <InlineBanner status="neutral" layout="compact">
-          {t`Summary columns can't be sorted or filtered.`}
-        </InlineBanner>
         <FormFieldInputContainer>
           <Field.Label>{t`Show`}</Field.Label>
-          <SidePanelEditColumnShowSelect
+          <Select
             dropdownId={`edit-column-show-${sidePanelPageId}`}
-            relationObjectMetadataItem={relationObjectMetadataItem}
-            fieldMetadataItems={
-              isJunctionRelation ? [] : lookupTargetFieldMetadataItems
-            }
-            summaryShowOptions={summaryShowOptions}
+            fullWidth
             value={selectedShowValue}
+            pinnedOption={{
+              Icon: getIcon(relationObjectMetadataItem.icon),
+              label: relationObjectMetadataItem.labelPlural,
+              value: null,
+            }}
+            options={[
+              ...(isJunctionRelation ? [] : lookupTargetFieldMetadataItems).map(
+                (lookupTargetFieldMetadataItem) => ({
+                  Icon: getIcon(lookupTargetFieldMetadataItem.icon),
+                  label: lookupTargetFieldMetadataItem.label,
+                  value: lookupTargetFieldMetadataItem.id,
+                }),
+              ),
+              ...summaryShowOptions.map(({ Icon, label, value }) => ({
+                Icon,
+                label,
+                value,
+              })),
+            ]}
             onChange={handleShowChange}
+            withSearchInput
           />
         </FormFieldInputContainer>
         <FormFieldInputContainer>
           <Field.Label>{t`Filter`}</Field.Label>
-          <div>
-            <AdvancedFilterSidePanelContainer
-              objectMetadataItem={
-                scopedRelationJunction?.targetObjectMetadataItem ??
-                relationObjectMetadataItem
-              }
-              isWorkflowFindRecords={false}
-              shouldHideRelationFields={isJunctionRelation}
-            />
-          </div>
+          <AdvancedFilterSidePanelContainer
+            objectMetadataItem={
+              scopedRelationJunction?.targetObjectMetadataItem ??
+              relationObjectMetadataItem
+            }
+            isWorkflowFindRecords={false}
+            shouldHideRelationFields={isJunctionRelation}
+          />
         </FormFieldInputContainer>
         {!isSummary && (
           <>
@@ -326,8 +334,7 @@ export const SidePanelEditColumnForm = ({
                   : t`Enter a number between 1 and ${QUERY_MAX_RECORDS_FROM_RELATION}`
               }
               onChange={setLimitInput}
-              placeholder={t`Enter limit`}
-              hint={t`This column can show up to ${QUERY_MAX_RECORDS_FROM_RELATION} records.`}
+              placeholder={String(QUERY_MAX_RECORDS_FROM_RELATION)}
               fullWidth
             />
           </>

@@ -7,6 +7,7 @@ import { findViewFilters } from 'test/integration/metadata/suites/view-filter/ut
 import { createViewWithChildren } from 'test/integration/metadata/suites/view/utils/create-view-with-children.util';
 import { deleteOneView } from 'test/integration/metadata/suites/view/utils/delete-one-view.util';
 import { destroyOneView } from 'test/integration/metadata/suites/view/utils/destroy-one-view.util';
+import { setViewRowDeletedAt } from 'test/integration/metadata/suites/view/utils/set-view-row-deleted-at.util';
 import { findAllMetadataRestListPages } from 'test/integration/rest/utils/find-all-metadata-rest-list-pages.util';
 import { makeRestApiRequest } from 'test/integration/rest/utils/make-rest-api-request.util';
 import { maskUuids } from 'test/integration/utils/mask-uuids.util';
@@ -14,6 +15,7 @@ import {
   type EachTestingContext,
   eachTestingContextFilter,
 } from 'twenty-shared/testing';
+import { ViewVisibility } from 'twenty-shared/types';
 
 type ArrangedViewFilter = {
   viewFilterId: string;
@@ -27,11 +29,11 @@ type TestContext = {
 };
 
 const arrangeViewFilter = async ({
-  isPrivate = false,
+  visibility = ViewVisibility.WORKSPACE,
   token,
   prepare = async () => ({}),
 }: {
-  isPrivate?: boolean;
+  visibility?: ViewVisibility;
   token?: string;
   prepare?: (
     arrangedViewFilter: ArrangedViewFilter,
@@ -39,7 +41,7 @@ const arrangeViewFilter = async ({
 } = {}): Promise<ArrangedViewFilter> => {
   const { viewId, childIdByChildName } = await createViewWithChildren({
     name: `View Filter read ${randomUUID().slice(0, 8)}`,
-    isPrivate,
+    visibility,
     token,
   });
   const arrangedViewFilter = {
@@ -87,6 +89,32 @@ const failingViewFilterReadTestCases: EachTestingContext<TestContext>[] = [
     },
   },
   {
+    title: 'when the view filter is soft-deleted',
+    context: {
+      arrange: () =>
+        arrangeViewFilter({
+          prepare: async ({ viewFilterId, cleanup }) => {
+            await setViewRowDeletedAt({
+              tableName: 'viewFilter',
+              id: viewFilterId,
+              deletedAt: new Date(),
+            });
+
+            return {
+              cleanup: async () => {
+                await setViewRowDeletedAt({
+                  tableName: 'viewFilter',
+                  id: viewFilterId,
+                  deletedAt: null,
+                });
+                await cleanup();
+              },
+            };
+          },
+        }),
+    },
+  },
+  {
     title: 'when the view of the view filter is deleted',
     context: {
       arrange: () =>
@@ -105,7 +133,7 @@ const failingViewFilterReadTestCases: EachTestingContext<TestContext>[] = [
     context: {
       arrange: () =>
         arrangeViewFilter({
-          isPrivate: true,
+          visibility: ViewVisibility.UNLISTED,
           token: APPLE_PHIL_GUEST_ACCESS_TOKEN,
           prepare: async () => ({ token: APPLE_JONY_MEMBER_ACCESS_TOKEN }),
         }),

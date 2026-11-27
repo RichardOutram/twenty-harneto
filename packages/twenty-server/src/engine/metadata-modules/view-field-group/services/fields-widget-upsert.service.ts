@@ -5,6 +5,7 @@ import {
   isDefined,
   isFieldMetadataEligibleForFieldsWidget,
 } from 'twenty-shared/utils';
+import { IsNull } from 'typeorm';
 import { v4 } from 'uuid';
 
 import { ApplicationService } from 'src/engine/core-modules/application/application.service';
@@ -198,7 +199,7 @@ export class FieldsWidgetUpsertService {
     }
 
     const view = await this.viewRepository.findOne(workspaceId, {
-      where: { id: viewId },
+      where: { id: viewId, deletedAt: IsNull() },
     });
 
     if (!isDefined(view)) {

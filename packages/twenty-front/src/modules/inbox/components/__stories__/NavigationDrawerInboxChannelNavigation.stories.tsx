@@ -51,10 +51,11 @@ const CHANNEL_OPTIONS = (
 const ChannelNavigationStory = ({
   channel,
   summary,
+  isExpandable,
   rightOptions,
 }: Pick<
   ComponentProps<typeof NavigationDrawerInboxChannelNavigation>,
-  'channel' | 'summary' | 'rightOptions'
+  'channel' | 'summary' | 'isExpandable' | 'rightOptions'
 >) => {
   const channelView = useAtomStateValue(inboxSelectedChannelViewSelector);
 
@@ -65,6 +66,7 @@ const ChannelNavigationStory = ({
         summary={summary}
         channelView={channelView}
         isActive={channelView?.channelId === channel.id}
+        isExpandable={isExpandable}
         rightOptions={rightOptions}
       />
     </StyledNavigation>
@@ -234,6 +236,24 @@ export const CollapsedDrawer: Story = {
 
     await expect(channel).toHaveAttribute('aria-current', 'true');
     await expect(channel).not.toHaveAttribute('aria-expanded');
+    await expect(
+      canvas.queryByRole('button', { name: OPEN_CHANNEL_LABEL_PATTERN }),
+    ).not.toBeInTheDocument();
+  },
+};
+
+export const Favorite: Story = {
+  args: { isExpandable: false },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const channel = canvas.getByRole('button', { name: 'Sales' });
+
+    await expect(channel).toHaveAttribute('aria-current', 'true');
+    await expect(channel).not.toHaveAttribute('aria-expanded');
+    await userEvent.click(channel);
+    await expect(jotaiStore.get(inboxSelectedChannelViewSelector.atom)).toEqual(
+      OPEN_VIEW,
+    );
     await expect(
       canvas.queryByRole('button', { name: OPEN_CHANNEL_LABEL_PATTERN }),
     ).not.toBeInTheDocument();

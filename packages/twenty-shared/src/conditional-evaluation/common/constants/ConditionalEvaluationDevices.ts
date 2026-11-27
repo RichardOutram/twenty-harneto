@@ -1,1 +1,0 @@
-export const CONDITIONAL_EVALUATION_DEVICES = ['MOBILE', 'DESKTOP'] as const;

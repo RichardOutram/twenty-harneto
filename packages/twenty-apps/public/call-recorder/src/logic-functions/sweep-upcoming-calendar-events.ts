@@ -1,3 +1,4 @@
+import { CoreApiClient } from 'twenty-client-sdk/core';
 import { defineLogicFunction } from 'twenty-sdk/define';
 
 import {
@@ -8,7 +9,7 @@ import { enqueueLogicFunctionJobs } from 'src/logic-functions/data/enqueue-logic
 import { fetchUpcomingCalendarEvents } from 'src/logic-functions/data/fetch-upcoming-calendar-events.util';
 import { groupUpcomingCalendarEventIdsIntoBatches } from 'src/logic-functions/domain/group-upcoming-calendar-event-ids-into-batches.util';
 import { buildRetryableStepFailure } from 'src/logic-functions/utils/build-step-failure.util';
-import { createCoreApiClientRunningAsApplication } from 'src/logic-functions/utils/create-core-api-client-running-as-application.util';
+import { fetchWithRateLimitRetry } from 'src/logic-functions/utils/fetch-with-rate-limit-retry.util';
 
 type SweepUpcomingCalendarEventsResult =
   | { outcome: 'nothing-to-reconcile' }
@@ -21,7 +22,7 @@ type SweepUpcomingCalendarEventsResult =
 export const sweepUpcomingCalendarEventsHandler =
   async (): Promise<SweepUpcomingCalendarEventsResult> => {
     try {
-      const client = createCoreApiClientRunningAsApplication();
+      const client = new CoreApiClient({ fetch: fetchWithRateLimitRetry });
 
       const calendarEventIdBatches = groupUpcomingCalendarEventIdsIntoBatches(
         await fetchUpcomingCalendarEvents({ client, now: new Date() }),
