@@ -1,0 +1,9 @@
+# harneto spike S3, tool distribution: can this public repository call a reusable
+# workflow kept in a private repository? Started by hand only.
+name: harneto-spike-s3-call
+on:
+  workflow_dispatch:
+permissions: {}
+jobs:
+  call:
+    uses: RichardOutram/harneto/.github/workflows/spike-reusable.yml@spike/s2-headless-agent
