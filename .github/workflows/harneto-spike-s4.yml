@@ -1,0 +1,86 @@
+# harneto spike S4: task supply. Runs the admission check on each candidate in
+# harneto-spikes/s4-candidates.json. Started by hand only. Reads the repository;
+# writes nothing to it.
+name: harneto-spike-s4
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: Space-separated PR numbers to run (default: all candidates)
+        required: false
+        default: ''
+permissions:
+  contents: read
+concurrency:
+  group: harneto-spike
+  cancel-in-progress: false
+jobs:
+  candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: harneto-spikes
+      - id: m
+        env:
+          ONLY: ${{ inputs.only }}
+        run: |
+          node -e '
+            const only = (process.env.ONLY || "").split(/\s+/).filter(Boolean);
+            const c = JSON.parse(require("fs").readFileSync("harneto-spikes/s4-candidates.json", "utf8"))
+              .filter((x) => !only.length || only.includes(String(x.pr)))
+              .map((x) => ({ pr: x.pr, parent: x.parent, fix: x.sha }));
+            console.log("matrix=" + JSON.stringify({ include: c }));
+          ' >> "$GITHUB_OUTPUT"
+  admit:
+    needs: candidates
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix: ${{ fromJSON(needs.candidates.outputs.matrix) }}
+    env:
+      NX_CACHE_DIRECTORY: ${{ github.workspace }}/.nx/cache
+    steps:
+      - name: The spike's own script, from the default branch
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: harneto-spikes
+          path: spike
+      - name: Shallow checkout of the parent commit
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ matrix.parent }}
+          fetch-depth: 1
+          persist-credentials: false
+          path: work
+      - name: Fetch the fix commit
+        working-directory: work
+        run: git fetch --depth 1 "https://github.com/${GITHUB_REPOSITORY}.git" "${{ matrix.fix }}"
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: work/.nvmrc
+      - name: Install
+        working-directory: work
+        run: |
+          yarn --immutable
+          echo "t_install=$SECONDS" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Admission check
+        working-directory: work
+        run: |
+          mkdir -p harneto-spikes-run && cp ../spike/harneto-spikes/* harneto-spikes-run/
+          node harneto-spikes-run/s4-admit.mjs "${{ matrix.pr }}"
+          echo "t_job=$SECONDS"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: s4-${{ matrix.pr }}
+          path: work/s4-result.json
