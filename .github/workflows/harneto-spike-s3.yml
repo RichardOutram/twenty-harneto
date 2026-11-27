@@ -62,7 +62,7 @@ jobs:
           mkdir -p poisoned && echo "written by the build-shaped job, run $GITHUB_RUN_ID" > poisoned/marker.txt
           # What the builder legitimately hands on: a patch, as a file.
           mkdir -p handoff
-          printf '%s\n' '--- a/README.md' '+++ b/README.md' '@@ -0,0 +1 @@' '+<!-- harneto spike S3 patch -->' > handoff/patch.diff
+          printf '%s\n' '--- /dev/null' '+++ b/harneto-spike-s3.txt' '@@ -0,0 +1 @@' '+published by harneto spike S3' > handoff/patch.diff
       - name: Write a cache (the platform allows this from any job)
         uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
@@ -103,20 +103,43 @@ jobs:
         run: |
           set -e
           P="$RUNNER_TEMP/handoff/patch.diff"
-          # The patch is data: only README.md may be touched, and it is checked before it is applied.
-          test "$(grep -c '^+++ ' "$P")" = "1" && grep -q '^+++ b/README.md$' "$P"
-          git apply --check "$P" && git apply "$P"
-          ls .github/workflows | wc -l | xargs echo "upstream workflow files on this base:"
+          # The patch is data: one new file may be added, and it is checked before it is applied.
+          test "$(grep -c '^+++ ' "$P")" = "1" && grep -q '^+++ b/harneto-spike-s3.txt$' "$P"
           git config user.name "harneto spike"; git config user.email "spike@example.invalid"
           RUN="s3-$GITHUB_RUN_ID"
-          git push origin "HEAD:refs/heads/harneto/$RUN-base"
+          echo "upstream workflow files on this base: $(ls .github/workflows | wc -l)"
+          note() { echo "- $1" | tee -a notes.md; }
+
+          # A. The old upstream commit as it is. It carries upstream's workflow files.
+          if git push origin "HEAD:refs/heads/harneto/$RUN-raw-base" 2> push-a.txt; then
+            note "A. pushing the old upstream commit as a branch: **accepted**"
+          else
+            note "A. pushing the old upstream commit as a branch: refused ($(grep -o 'refusing to allow[^`]*' push-a.txt | head -1))"
+          fi
+
+          # B. The same tree with upstream's automation replaced by the default branch's, as a child of the default branch.
+          git fetch -q --depth 1 origin main
+          MAIN=$(git rev-parse FETCH_HEAD)
+          git rm -q -r --cached .github/workflows; rm -rf .github/workflows
+          git rm -q --cached --ignore-unmatch .github/dependabot.yml; rm -f .github/dependabot.yml
+          git checkout -q "$MAIN" -- .github/workflows
+          BASE_TREE=$(git write-tree)
+          BASE_COMMIT=$(git commit-tree "$BASE_TREE" -p "$MAIN" -m "harneto base: upstream $BASE with the copy's automation")
+          if git push origin "$BASE_COMMIT:refs/heads/harneto/$RUN-base" 2> push-b.txt; then
+            note "B. pushing that tree with the default branch's workflow files, as a child of the default branch: accepted"
+          else
+            note "B. synthetic base: **refused** ($(tail -2 push-b.txt | tr '\n' ' '))"; exit 1
+          fi
+          git reset -q --hard "$BASE_COMMIT"
+          git apply --check "$P" && git apply "$P" && git add harneto-spike-s3.txt
           git checkout -q -b "harneto/$RUN-task"
-          git commit -q -am "harneto spike S3: published patch"
+          git commit -q -m "harneto spike S3: published patch"
           git push origin "harneto/$RUN-task"
           gh pr create --repo "$GITHUB_REPOSITORY" --base "harneto/$RUN-base" --head "harneto/$RUN-task" --title "harneto spike S3 ($GITHUB_RUN_ID)" --body "Published by the trusted job of spike S3. Not for merging." | tee pr.txt
           {
             echo "### trusted publish job"
+            cat notes.md
             echo "- environment secret readable here: $([ -n "$CANARY" ] && echo yes, length ${#CANARY} || echo NO)"
             echo "- pull request: $(cat pr.txt)"
             echo "- cache restore steps in this job: 0 (it has none; the cache key written by the build-shaped job was not read)"
-          } >> "$GITHUB_STEP_SUMMARY"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
