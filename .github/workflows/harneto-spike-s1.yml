@@ -1,0 +1,126 @@
+# harneto spike S1: does this workload install, boot its services and run a
+# targeted test subset on a standard hosted runner, and how long does it take?
+# Started by hand only. Reads the repository; writes nothing to it.
+name: harneto-spike-s1
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Commit to measure (default: the branch this is run from)
+        required: false
+        default: ''
+      spec:
+        description: One server integration spec, relative to packages/twenty-server
+        required: false
+        default: test/integration/graphql/suites/workspace-invitation-sending-rate-limit.integration-spec.ts
+permissions:
+  contents: read
+concurrency:
+  group: harneto-spike
+  cancel-in-progress: false
+jobs:
+  s1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+      clickhouse:
+        image: clickhouse/clickhouse-server:25.8.8
+        env:
+          CLICKHOUSE_PASSWORD: clickhousePassword
+        ports:
+          - 8123:8123
+          - 9000:9000
+    env:
+      NX_CACHE_DIRECTORY: ${{ github.workspace }}/.nx/cache
+      CLICKHOUSE_URL: 'http://default:clickhousePassword@localhost:8123/twenty'
+      CLICKHOUSE_PASSWORD: clickhousePassword
+      TIMES: ${{ runner.temp }}/times.txt
+      SAMPLES: ${{ runner.temp }}/samples.csv
+    steps:
+      - name: Baseline and sampler
+        run: |
+          nproc; free -m; df -h /
+          echo "disk_start_mb=$(df -BM --output=used / | tail -1 | tr -dc 0-9)" >> "$TIMES"
+          nohup bash -c 'while true; do echo "$(date +%s),$(free -m | awk "/Mem:/{print \$3}"),$(df -BM --output=used / | tail -1 | tr -dc 0-9)"; sleep 5; done' > "$SAMPLES" 2>/dev/null &
+      - name: Shallow checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 1
+          persist-credentials: false
+      - run: echo "t_checkout_done_disk_mb=$(df -BM --output=used / | tail -1 | tr -dc 0-9)" >> "$TIMES"
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+      - name: Install
+        run: |
+          yarn --immutable
+          echo "t_install=$SECONDS" >> "$TIMES"
+      - name: Unit tests, one project (twenty-shared)
+        run: |
+          npx nx test twenty-shared
+          echo "t_unit=$SECONDS" >> "$TIMES"
+      - name: Build server
+        run: |
+          npx nx build twenty-server
+          echo "t_build_server=$SECONDS" >> "$TIMES"
+      - name: Prepare test database
+        env:
+          NODE_ENV: test
+          NODE_OPTIONS: --max-old-space-size=12288
+        run: |
+          PGPASSWORD=postgres psql -h localhost -p 5432 -U postgres -d postgres -c 'CREATE DATABASE "test";'
+          npx nx clickhouse:migrate twenty-server
+          npx nx database:reset twenty-server --excludeTaskDependencies
+          echo "t_database=$SECONDS" >> "$TIMES"
+      - name: One server integration test
+        working-directory: packages/twenty-server
+        env:
+          NODE_ENV: test
+          NODE_OPTIONS: --max-old-space-size=6144
+          SPEC: ${{ inputs.spec }}
+        run: |
+          npx jest --config ./jest-integration.config.ts --logHeapUsage "$SPEC"
+          echo "t_integration=$SECONDS" >> "$TIMES"
+      - name: Report
+        if: always()
+        run: |
+          peak_mem=$(awk -F, 'BEGIN{m=0} $2>m{m=$2} END{print m}' "$SAMPLES")
+          peak_disk=$(awk -F, 'BEGIN{m=0} $3>m{m=$3} END{print m}' "$SAMPLES")
+          first=$(head -1 "$SAMPLES" | cut -d, -f1); last=$(tail -1 "$SAMPLES" | cut -d, -f1)
+          {
+            echo "### harneto spike S1"
+            echo '```'
+            cat "$TIMES"
+            echo "peak_mem_used_mb=$peak_mem"
+            echo "peak_disk_used_mb=$peak_disk"
+            echo "wall_seconds=$((last-first))"
+            echo "commit=$(git rev-parse HEAD)"
+            df -h / | tail -1
+            free -m | sed -n 2p
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY" > s1-report.txt
+          cp "$SAMPLES" s1-samples.csv
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: s1-report
+          path: |
+            s1-report.txt
+            s1-samples.csv
