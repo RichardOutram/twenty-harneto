@@ -1,0 +1,122 @@
+# harneto spike S3: isolation by attack. A build-shaped job, holding what the
+# builder would hold, tries to reach things it must not. Then a separate trusted
+# job publishes a patch. Started by hand only.
+name: harneto-spike-s3
+on:
+  workflow_dispatch:
+    inputs:
+      base:
+        description: Old upstream commit the task branch is built on (it carries upstream's own workflow files)
+        required: true
+      other_repo:
+        description: A repository this run's token was not issued for (never the upstream project)
+        required: true
+permissions: {}
+concurrency:
+  group: harneto-spike
+  cancel-in-progress: false
+jobs:
+  build-shaped:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      # Environment secrets are not given to a job that names no environment.
+      CANARY: ${{ secrets.HARNETO_CANARY }}
+      OTHER_REPO: ${{ inputs.other_repo }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Attacks
+        run: |
+          set +e
+          R="$GITHUB_REPOSITORY"
+          report() { echo "| $1 | $2 | $3 |" | tee -a rows.md; }
+          # Each line: what was tried, FAILED (good) or SUCCEEDED (bad), and the evidence.
+          attempt() { # name, command...
+            local name="$1"; shift
+            local out; out=$("$@" 2>&1); local code=$?
+            local ev; ev=$(echo "$out" | tr '\n' ' ' | cut -c1-140 | sed 's/|/\//g')
+            if [ $code -eq 0 ]; then report "$name" "**SUCCEEDED**" "$ev"; else report "$name" "failed" "$ev"; fi
+          }
+          git config user.name spike; git config user.email spike@example.invalid
+          attempt "push a branch with the job token" git push "https://x-access-token:${GH_TOKEN}@github.com/${R}.git" HEAD:refs/heads/harneto-attack-push
+          attempt "create a branch through the API" gh api -X POST "repos/$R/git/refs" -f ref=refs/heads/harneto-attack-api -f sha="$GITHUB_SHA"
+          attempt "edit a workflow through the API" gh api -X PUT "repos/$R/contents/.github/workflows/harneto-attack.yml" -f message=attack -f content="$(echo 'name: x' | base64)" -f branch=main
+          attempt "edit a file on the default branch through the API" gh api -X PUT "repos/$R/contents/harneto-attack.txt" -f message=attack -f content="$(echo x | base64)" -f branch=main
+          attempt "open a pull request in this repository" gh api -X POST "repos/$R/pulls" -f title=attack -f head=main -f base=main
+          attempt "open an issue in this repository" gh api -X POST "repos/$R/issues" -f title=attack
+          attempt "start a workflow" gh api -X POST "repos/$R/actions/workflows/harneto-spike-s1.yml/dispatches" -f ref=main
+          attempt "list this repository's secrets" gh api "repos/$R/actions/secrets"
+          attempt "list the trusted environment's secrets" gh api "repos/$R/environments/harneto-trusted/secrets"
+          attempt "change the repository's Actions settings" gh api -X PUT "repos/$R/actions/permissions" -F enabled=true -f allowed_actions=all
+          attempt "open a pull request in a repository the token was not issued for" gh api -X POST "repos/$OTHER_REPO/pulls" -f title=attack -f head=main -f base=main
+          attempt "open an issue in a repository the token was not issued for" gh api -X POST "repos/$OTHER_REPO/issues" -f title=attack
+          if [ -n "$CANARY" ]; then report "read the environment secret" "**SUCCEEDED**" "secret was present, length ${#CANARY}"; else report "read the environment secret" "failed" "empty in a job that names no environment"; fi
+          # The token itself, as the builder could inspect it.
+          echo "token permissions header: $(gh api -i "repos/$R" 2>/dev/null | grep -i '^x-accepted-github-permissions\|^x-oauth-scopes' | tr '\n' ' ')" | tee -a notes.md
+          mkdir -p poisoned && echo "written by the build-shaped job, run $GITHUB_RUN_ID" > poisoned/marker.txt
+          # What the builder legitimately hands on: a patch, as a file.
+          mkdir -p handoff
+          printf '%s\n' '--- a/README.md' '+++ b/README.md' '@@ -0,0 +1 @@' '+<!-- harneto spike S3 patch -->' > handoff/patch.diff
+      - name: Write a cache (the platform allows this from any job)
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: poisoned
+          key: harneto-s3-poison-${{ github.run_id }}
+      - name: Report
+        if: always()
+        run: |
+          { echo "### build-shaped job"; echo "| Attack | Result | Evidence |"; echo "|---|---|---|"; cat rows.md; echo; cat notes.md; } >> "$GITHUB_STEP_SUMMARY"
+          cp rows.md handoff/build-attacks.md
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: handoff
+          path: handoff
+  publish:
+    needs: build-shaped
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Secrets live only in this environment, which only the default branch may use.
+    environment: harneto-trusted
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      CANARY: ${{ secrets.HARNETO_CANARY }}
+      BASE: ${{ inputs.base }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ inputs.base }}
+          fetch-depth: 1
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: handoff
+          path: ${{ runner.temp }}/handoff
+      - name: Publish the patch as a task branch and a pull request
+        run: |
+          set -e
+          P="$RUNNER_TEMP/handoff/patch.diff"
+          # The patch is data: only README.md may be touched, and it is checked before it is applied.
+          test "$(grep -c '^+++ ' "$P")" = "1" && grep -q '^+++ b/README.md$' "$P"
+          git apply --check "$P" && git apply "$P"
+          ls .github/workflows | wc -l | xargs echo "upstream workflow files on this base:"
+          git config user.name "harneto spike"; git config user.email "spike@example.invalid"
+          RUN="s3-$GITHUB_RUN_ID"
+          git push origin "HEAD:refs/heads/harneto/$RUN-base"
+          git checkout -q -b "harneto/$RUN-task"
+          git commit -q -am "harneto spike S3: published patch"
+          git push origin "harneto/$RUN-task"
+          gh pr create --repo "$GITHUB_REPOSITORY" --base "harneto/$RUN-base" --head "harneto/$RUN-task" --title "harneto spike S3 ($GITHUB_RUN_ID)" --body "Published by the trusted job of spike S3. Not for merging." | tee pr.txt
+          {
+            echo "### trusted publish job"
+            echo "- environment secret readable here: $([ -n "$CANARY" ] && echo yes, length ${#CANARY} || echo NO)"
+            echo "- pull request: $(cat pr.txt)"
+            echo "- cache restore steps in this job: 0 (it has none; the cache key written by the build-shaped job was not read)"
+          } >> "$GITHUB_STEP_SUMMARY"
