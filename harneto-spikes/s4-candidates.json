@@ -1,84 +1,5 @@
 [
  {
-  "pr": 31654,
-  "sha": "67af849907e0d5d6c2079c83e21b95ea85708728",
-  "parent": "646b8b26f4e9eff9741ce51c12495a1d4ffe4ab4",
-  "package": "twenty-server",
-  "tests": [
-   "packages/twenty-server/src/engine/core-modules/tool-provider/output-transforms/__tests__/add-chat-references-to-tool-output.util.spec.ts",
-   "packages/twenty-server/src/engine/metadata-modules/ai/ai-agent-execution/pausing-tools/__tests__/propose-tool-call.pausing-tool.spec.ts"
-  ],
-  "lines": 254,
-  "nfiles": 12,
-  "subject": "fix(ai-chat): give record references a ready-made chat reference string (#31654)",
-  "date": "2026-11-27T14:05:10Z"
- },
- {
-  "pr": 31568,
-  "sha": "8125253865e813990d71a217903b90d60a1c1bf8",
-  "parent": "9c9435d0bfe16d45ce865e7169f73170e7c18ab2",
-  "package": "twenty-shared",
-  "tests": [
-   "packages/twenty-shared/src/expression/utils/__tests__/printExpressionNode.test.ts"
-  ],
-  "lines": 305,
-  "nfiles": 4,
-  "subject": "Print any expression tree back to text (#31568)",
-  "date": "2026-11-26T17:44:59+01:00"
- },
- {
-  "pr": 31576,
-  "sha": "8e215d76bde147f9c8b235002752ba4be9831698",
-  "parent": "5cfed1e2646f6e60cb2a54447e1c99d887458c9b",
-  "package": "twenty-server",
-  "tests": [
-   "packages/twenty-server/src/engine/permissions/channel-visibility/utils/__tests__/build-channel-visibility-object-records-permissions.util.spec.ts"
-  ],
-  "lines": 34,
-  "nfiles": 3,
-  "subject": "Drop per-rule field locks on calendar event visibility rules (#31576)",
-  "date": "2026-11-26T13:07:16+01:00"
- },
- {
-  "pr": 31536,
-  "sha": "df8f1aaaf4780392742a3fa84f4bd50aa974a513",
-  "parent": "47980ecfb9368548657aca4c15b7e414c55d92d4",
-  "package": "twenty-server",
-  "tests": [
-   "packages/twenty-server/src/database/commands/upgrade-version-command/__tests__/instance-command-renames-are-upgrade-aware.spec.ts"
-  ],
-  "lines": 194,
-  "nfiles": 3,
-  "subject": "Declare core column renames for the upgrade-aware ORM and guard them in a test (#31536)",
-  "date": "2026-11-26T09:18:21+01:00"
- },
- {
-  "pr": 31501,
-  "sha": "86cb95aad1066e827a091586cd2ecd6265e2cbfc",
-  "parent": "10d9d3667a50077ff43b8f44e1438e352d8f815a",
-  "package": "twenty-server",
-  "tests": [
-   "packages/twenty-server/src/engine/metadata-modules/webhook/utils/__tests__/find-webhooks-matching-event-name.util.spec.ts"
-  ],
-  "lines": 104,
-  "nfiles": 5,
-  "subject": "Match webhooks through the shared database-event matcher (#31501)",
-  "date": "2026-11-25T20:24:33Z"
- },
- {
-  "pr": 31236,
-  "sha": "9f41c272e61bded321d5cfa6321fef03893110a5",
-  "parent": "cd1ffa0e145f65b06bec5bc339d80342bfca7e03",
-  "package": "twenty-server",
-  "tests": [
-   "packages/twenty-server/src/engine/core-modules/frontend/utils/__tests__/build-iframe-media-permissions-policy.util.spec.ts"
-  ],
-  "lines": 17,
-  "nfiles": 2,
-  "subject": "Deny geolocation in the frontend document Permissions-Policy (#31236)",
-  "date": "2026-11-23T18:57:01Z"
- },
- {
   "pr": 31669,
   "sha": "7339631ce63289bc0ba09a10c8c958531f34e88d",
   "parent": "c4c34b05a6caed0c9daa51dd8e31a8a9d2e78f90",
@@ -149,21 +70,6 @@
   "date": "2026-11-27T08:54:52Z"
  },
  {
-  "pr": 31639,
-  "sha": "8f9241b65967fcb5ea3daa37e47a4e39f6709765",
-  "parent": "e7944d7804acff873d6d9b163ebc694f2de43372",
-  "package": "twenty-front",
-  "tests": [
-   "packages/twenty-front/src/modules/command-menu-item/display/utils/__tests__/getCommandMenuDefaultSelectedItemId.test.ts",
-   "packages/twenty-front/src/modules/command-menu-item/display/utils/__tests__/getCommandMenuInlineSearchRecordRows.test.ts",
-   "packages/twenty-front/src/modules/navigation-menu-item/edit/hooks/__tests__/useNavigationMenuItemSearchRecords.test.ts"
-  ],
-  "lines": 312,
-  "nfiles": 12,
-  "subject": "[Sidebar 5/7] Command menu search rows (#31639)",
-  "date": "2026-11-27T08:45:24Z"
- },
- {
   "pr": 31635,
   "sha": "56d7a6d133fed72ea8fed02bea70f0d9906e9660",
   "parent": "198d824ee401f01c89eacece1b88fb8b836bfc0f",
@@ -189,33 +95,6 @@
   "nfiles": 14,
   "subject": "Stop selecting the auth token pair in the front's auth mutations (#31657)",
   "date": "2026-11-26T22:59:08+01:00"
- },
- {
-  "pr": 31613,
-  "sha": "f43f7ecc99bb38661caac8a295436793f992b024",
-  "parent": "6625eeb676a88cf935a34e5ccc15131d27efc3d7",
-  "package": "twenty-front",
-  "tests": [
-   "packages/twenty-front/src/modules/command-menu-item/display/utils/__tests__/getCommandMenuInlineSearchRecordRows.test.ts",
-   "packages/twenty-front/src/modules/side-panel/pages/search/utils/__tests__/getSidePanelSearchRecordsToDisplay.test.ts"
-  ],
-  "lines": 316,
-  "nfiles": 8,
-  "subject": "Speed up Command K record search and keep results while typing (#31613)",
-  "date": "2026-11-26T16:24:02Z"
- },
- {
-  "pr": 31614,
-  "sha": "52820f61bd1bd3cddbc1b5a9a64af0c356f23ad0",
-  "parent": "26b6ae6b64241cb072b339f823118babb9c3fcb3",
-  "package": "twenty-front",
-  "tests": [
-   "packages/twenty-front/src/modules/metadata-store/effect-components/__tests__/MetadataStoreSSEEffect.test.tsx"
-  ],
-  "lines": 141,
-  "nfiles": 3,
-  "subject": "Refetch metadata when an update arrives for a record the store does not have (#31614)",
-  "date": "2026-11-26T16:16:34Z"
  },
  {
   "pr": 31478,
@@ -285,6 +164,19 @@
   "date": "2026-11-26T12:06:20Z"
  },
  {
+  "pr": 31576,
+  "sha": "8e215d76bde147f9c8b235002752ba4be9831698",
+  "parent": "5cfed1e2646f6e60cb2a54447e1c99d887458c9b",
+  "package": "twenty-server",
+  "tests": [
+   "packages/twenty-server/src/engine/permissions/channel-visibility/utils/__tests__/build-channel-visibility-object-records-permissions.util.spec.ts"
+  ],
+  "lines": 34,
+  "nfiles": 3,
+  "subject": "Drop per-rule field locks on calendar event visibility rules (#31576)",
+  "date": "2026-11-26T13:07:16+01:00"
+ },
+ {
   "pr": 31571,
   "sha": "5cfed1e2646f6e60cb2a54447e1c99d887458c9b",
   "parent": "cd8e9b829f37d72fd80dab753ad09ae5a724e3b5",
@@ -311,32 +203,137 @@
   "date": "2026-11-26T11:31:19Z"
  },
  {
-  "pr": 31564,
-  "sha": "a5543d6aa14a06c010123b83010aed6dcf98873d",
-  "parent": "e8abacad6dcf29779cae81b13b45aa43dca86afc",
+  "pr": 31538,
+  "sha": "e2824ad9fa968272ea449cdfd07d1059eb0bff17",
+  "parent": "63ba48a7cf87f1790415ba8f27ff5fe8af0023d0",
   "package": "twenty-front",
   "tests": [
-   "packages/twenty-front/src/modules/log-console/states/__tests__/logConsoleTimeRangeState.test.ts"
-  ],
-  "lines": 100,
-  "nfiles": 8,
-  "subject": "Persist log console filters per tab, time range and time zone (#31564)",
-  "date": "2026-11-26T11:26:28Z"
- },
- {
-  "pr": 31542,
-  "sha": "a03c6958a924f003f8145e2fb883e314a568ccf7",
-  "parent": "78c73405e3ac8f4ee5f9cb7404b62b411cbf5eb2",
-  "package": "twenty-front",
-  "tests": [
-   "packages/twenty-front/src/modules/navigation-menu-item/common/utils/__tests__/getNavigationMenuContainersInDisplayOrder.test.ts",
-   "packages/twenty-front/src/modules/navigation-menu-item/common/utils/__tests__/getNavigationMenuTabLabel.test.ts",
-   "packages/twenty-front/src/modules/navigation/components/__tests__/MainNavigationDrawerTabSwitcher.test.tsx",
+   "packages/twenty-front/src/modules/navigation-menu-item/display/hooks/__tests__/useNavigationMenuChatAttention.test.ts",
+   "packages/twenty-front/src/modules/navigation/hooks/__tests__/useActiveNavigationDrawerTab.test.tsx",
    "packages/twenty-front/src/modules/navigation/hooks/__tests__/useMobileNavigationBarItems.test.tsx"
   ],
-  "lines": 160,
-  "nfiles": 11,
-  "subject": "Show unnamed sidebar tabs as \"Tab\" instead of hiding them (#31542)",
-  "date": "2026-11-26T10:39:10Z"
+  "lines": 108,
+  "nfiles": 9,
+  "subject": "Restore flag-off sidebar behaviour from the customizable sidebar work (#31538)",
+  "date": "2026-11-26T08:05:20Z"
+ },
+ {
+  "pr": 31475,
+  "sha": "4cde7743ff5ff28baaf50cd131247127216ccb96",
+  "parent": "1ce9f35cc6021c2e1d3595e84ce78f03170af78b",
+  "package": "twenty-front",
+  "tests": [
+   "packages/twenty-front/src/modules/navigation/hooks/__tests__/useSwitchNavigationDrawerTab.test.tsx"
+  ],
+  "lines": 68,
+  "nfiles": 3,
+  "subject": "Always open a sidebar tab's first item instead of a remembered page (#31475)",
+  "date": "2026-11-25T17:41:57Z"
+ },
+ {
+  "pr": 31463,
+  "sha": "9fc62159c19722a898e968632fbf69a64272b3c5",
+  "parent": "67af12c715c45c69bca6cfd5be47f4c2e2ba77a9",
+  "package": "twenty-front",
+  "tests": [
+   "packages/twenty-front/src/modules/marketplace/utils/__tests__/buildApplicationBillingSummary.test.ts"
+  ],
+  "lines": 103,
+  "nfiles": 8,
+  "subject": "LinkedIn app QA fixes: install consent billing row and chat composer placeholder (#31463)",
+  "date": "2026-11-25T17:06:45Z"
+ },
+ {
+  "pr": 31479,
+  "sha": "3d0d973e8bfb50185385d975e8d397cb34952285",
+  "parent": "0aac0c639d9cd8241d413de79c7f69740ff0dfaa",
+  "package": "twenty-front",
+  "tests": [
+   "packages/twenty-front/src/modules/navigation/hooks/__tests__/useMobileNavigationBarItems.test.tsx"
+  ],
+  "lines": 29,
+  "nfiles": 2,
+  "subject": "Hide the mobile Inbox item when the sidebar has an AI chat section (#31479)",
+  "date": "2026-11-25T16:59:53Z"
+ },
+ {
+  "pr": 31447,
+  "sha": "2c77b4437ce58fc81a194cfdd12aaf35cf1f0441",
+  "parent": "e2eacccc9c4c1b1c1b76fd14bd7d8c41aed6a57c",
+  "package": "twenty-front",
+  "tests": [
+   "packages/twenty-front/src/modules/navigation/components/__tests__/AppNavigationDrawer.test.tsx"
+  ],
+  "lines": 39,
+  "nfiles": 3,
+  "subject": "Remove the New AI chat row from the customizable sidebar (#31447)",
+  "date": "2026-11-25T14:02:06Z"
+ },
+ {
+  "pr": 31442,
+  "sha": "e2eacccc9c4c1b1c1b76fd14bd7d8c41aed6a57c",
+  "parent": "500adc1e5e26f5cafdb6ed63d132c5a3450cfe5b",
+  "package": "twenty-front",
+  "tests": [
+   "packages/twenty-front/src/modules/navigation/components/__tests__/MainNavigationDrawerTabSwitcher.test.tsx"
+  ],
+  "lines": 43,
+  "nfiles": 2,
+  "subject": "Open a sidebar tab's menu on right-click in edit mode (#31442)",
+  "date": "2026-11-25T13:46:28Z"
+ },
+ {
+  "pr": 31429,
+  "sha": "248783ab1f9d06f36608393e3ed403bfd971bc85",
+  "parent": "d035f256fc54c74be22f612cf9a3f6717d70344e",
+  "package": "twenty-front",
+  "tests": [
+   "packages/twenty-front/src/modules/inbox/components/__tests__/InboxThreadListItemActions.test.tsx",
+   "packages/twenty-front/src/modules/navigation/hooks/__tests__/useMobileNavigationBarItems.test.tsx"
+  ],
+  "lines": 138,
+  "nfiles": 4,
+  "subject": "fix(inbox): reach the Inbox from the mobile navigation bar (#31429)",
+  "date": "2026-11-25T13:10:13Z"
+ },
+ {
+  "pr": 31396,
+  "sha": "caba9cd4483721bf2df86d140703436766b2e724",
+  "parent": "b77105bbd9d8f696c443e1f7370626fcb6ca896c",
+  "package": "twenty-front",
+  "tests": [
+   "packages/twenty-front/src/modules/navigation/components/__tests__/AppNavigationDrawer.test.tsx",
+   "packages/twenty-front/src/modules/navigation/components/__tests__/MainNavigationDrawerTabSwitcher.test.tsx"
+  ],
+  "lines": 279,
+  "nfiles": 8,
+  "subject": "Sidebar: tabs at the bottom and a search field at the top (#31396)",
+  "date": "2026-11-25T12:34:59Z"
+ },
+ {
+  "pr": 31380,
+  "sha": "b77105bbd9d8f696c443e1f7370626fcb6ca896c",
+  "parent": "5dac9204a37837438d1297a0ee9dc6cd4fb3b452",
+  "package": "twenty-front",
+  "tests": [
+   "packages/twenty-front/src/modules/navigation-menu-item/display/hooks/__tests__/useNavigationMenuChatAttention.test.ts"
+  ],
+  "lines": 58,
+  "nfiles": 3,
+  "subject": "Show the chat dot only on tabs with Inbox and hide mobile Conversations with chat sections (#31380)",
+  "date": "2026-11-25T11:29:44Z"
+ },
+ {
+  "pr": 31417,
+  "sha": "4ad47dd60b0b656c07d24cae7b5c1e1bc249c802",
+  "parent": "f444576d1592e0835760ba920054931b61f4b27f",
+  "package": "twenty-front",
+  "tests": [
+   "packages/twenty-front/src/modules/app/effect-components/__tests__/PageChangeEffect.test.tsx"
+  ],
+  "lines": 80,
+  "nfiles": 2,
+  "subject": "Keep the record selection when opening the command menu with Cmd+K (#31417)",
+  "date": "2026-11-25T08:06:22Z"
  }
 ]
