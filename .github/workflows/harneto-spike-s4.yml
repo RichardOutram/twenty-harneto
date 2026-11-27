@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       only:
-        description: Space-separated PR numbers to run (default: all candidates)
+        description: "Space-separated PR numbers to run; default is all candidates"
         required: false
         default: ''
 permissions:

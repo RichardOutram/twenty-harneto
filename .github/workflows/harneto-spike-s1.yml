@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       ref:
-        description: Commit to measure (default: the branch this is run from)
+        description: "Commit to measure; default is the branch this is run from"
         required: false
         default: ''
       spec:
