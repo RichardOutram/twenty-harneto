@@ -50,11 +50,11 @@ jobs:
       NX_CACHE_DIRECTORY: ${{ github.workspace }}/.nx/cache
       CLICKHOUSE_URL: 'http://default:clickhousePassword@localhost:8123/twenty'
       CLICKHOUSE_PASSWORD: clickhousePassword
-      TIMES: ${{ runner.temp }}/times.txt
-      SAMPLES: ${{ runner.temp }}/samples.csv
     steps:
       - name: Baseline and sampler
         run: |
+          export TIMES="$RUNNER_TEMP/times.txt" SAMPLES="$RUNNER_TEMP/samples.csv"
+          echo "TIMES=$TIMES" >> "$GITHUB_ENV"; echo "SAMPLES=$SAMPLES" >> "$GITHUB_ENV"
           nproc; free -m; df -h /
           echo "disk_start_mb=$(df -BM --output=used / | tail -1 | tr -dc 0-9)" >> "$TIMES"
           nohup bash -c 'while true; do echo "$(date +%s),$(free -m | awk "/Mem:/{print \$3}"),$(df -BM --output=used / | tail -1 | tr -dc 0-9)"; sleep 5; done' > "$SAMPLES" 2>/dev/null &
